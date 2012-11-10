@@ -1,4 +1,6 @@
 Dunamis::Application.routes.draw do
+  resources :candidates
+
   get "home/index"
 
   # The priority is based upon order of creation:
