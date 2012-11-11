@@ -1,4 +1,4 @@
-<%= form_for(@candidate) do |f| %>
+<%= form_for(@candidate, :html => {:class =>"form-horizontal bs-docs-example"}) do |f| %>
   <% if @candidate.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@candidate.errors.count, "error") %> prohibited this candidate from being saved:</h2>
@@ -11,27 +11,40 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
+  <div class="control-group">
+    <%= f.label 'Nombre:', :class => 'control-label'%>
+    <div class="controls">
+      <%= f.text_field :name, :placeholder => 'Nombre' %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :organization %><br />
-    <%= f.text_field :organization %>
+  <div class="control-group">
+    <%= f.label 'organización:', :class => 'control-label'%>
+    <div class="controls">
+      <%= f.text_field :organization, :placeholder => 'Organización' %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :state %><br />
-    <%= f.text_field :state %>
+  <div class="control-group">
+    <%= f.label 'Estado:', :class => 'control-label'%>
+    <div class="controls">
+      <%= f.text_field :state, :placeholder => 'Estado' %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :description %><br />
-    <%= f.text_field :description %>
+  <div class="control-group">
+    <%= f.label 'descripción:', :class => 'control-label'%>
+    <div class="controls">
+      <%= f.text_field :description, :placeholder => 'descripción' %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :foto %><br />
-    <%= f.text_field :foto %>
+  <div class="control-group">
+    <%= f.label 'Imagen:', :class => 'control-label'%>
+    <div class="controls">
+      <%= f.text_field :foto, :placeholder => 'Imagen' %>
+    </div>
   </div>
-  <div class="actions">
-    <%= f.submit %>
+  <div class="control-group">
+    <div class="controls">
+	  <%= f.submit :class => 'btn' %>
+    </div>
   </div>
+
 <% end %>
