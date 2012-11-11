@@ -1,4 +1,8 @@
 Dunamis::Application.routes.draw do
+  resources :organizaciones
+
+  resources :estados
+
   resources :candidates
 
   get "home/index"

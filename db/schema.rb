@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121110185713) do
+ActiveRecord::Schema.define(:version => 20121111193749) do
 
   create_table "candidates", :force => true do |t|
     t.string   "name",         :null => false
@@ -19,6 +19,23 @@ ActiveRecord::Schema.define(:version => 20121110185713) do
     t.string   "state",        :null => false
     t.string   "description"
     t.string   "foto"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "estados", :force => true do |t|
+    t.string   "nombre"
+    t.string   "descripcion"
+    t.string   "nombre_corto"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "organizaciones", :force => true do |t|
+    t.string   "nombre"
+    t.string   "descripcion"
+    t.string   "nombre_corto"
+    t.string   "rif"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
