@@ -1,0 +1,33 @@
+<h1>Listing cunas</h1>
+
+<table>
+  <tr>
+    <th>Sigecup</th>
+    <th>Sigecup creacion</th>
+    <th>Duracion</th>
+    <th>Ordanizacion</th>
+    <th>Candidate</th>
+    <th>Video</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @cunas.each do |cuna| %>
+  <tr>
+    <td><%= cuna.sigecup_id %></td>
+    <td><%= cuna.sigecup_creacion %></td>
+    <td><%= cuna.duracion %></td>
+    <td><%= cuna.ordanizacion_id %></td>
+    <td><%= cuna.candidate_id %></td>
+    <td><%= cuna.video %></td>
+    <td><%= link_to 'Show', cuna %></td>
+    <td><%= link_to 'Edit', edit_cuna_path(cuna) %></td>
+    <td><%= link_to 'Destroy', cuna, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Cuna', new_cuna_path %>

@@ -1,0 +1,2 @@
+module CunasHelper
+end

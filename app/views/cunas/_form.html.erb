@@ -1,0 +1,41 @@
+<%= form_for(@cuna) do |f| %>
+  <% if @cuna.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@cuna.errors.count, "error") %> prohibited this cuna from being saved:</h2>
+
+      <ul>
+      <% @cuna.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :sigecup_id %><br />
+    <%= f.text_field :sigecup_id %>
+  </div>
+  <div class="field">
+    <%= f.label :sigecup_creacion %><br />
+    <%= f.date_select :sigecup_creacion %>
+  </div>
+  <div class="field">
+    <%= f.label :duracion %><br />
+    <%= f.number_field :duracion %> (Segundos)
+  </div>
+  <div class="field">
+    <%= f.label :organizacion_id %><br />
+    <%= f.collection_select :organizacion_id, Organizacion.all, :id, :nombre, {:prompt => '--Seleccione Organización--'}%>
+  </div>
+  <div class="field">
+    <%= f.label :candidate_id %><br />
+    <%= f.number_field :candidate_id %>
+  </div>
+  <div class="field">
+    <%= f.label :video %><br />
+    <%= f.text_field :video %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

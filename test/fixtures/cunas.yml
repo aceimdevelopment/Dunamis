@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  sigecup_id: MyString
+  sigecup_creacion: 2012-11-12
+  duracion: 1
+  ordanizacion_id: 1
+  candidate_id: 1
+  video: MyString
+
+two:
+  sigecup_id: MyString
+  sigecup_creacion: 2012-11-12
+  duracion: 1
+  ordanizacion_id: 1
+  candidate_id: 1
+  video: MyString

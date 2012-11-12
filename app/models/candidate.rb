@@ -4,6 +4,9 @@ class Candidate < ActiveRecord::Base
   belongs_to :organizacion
   belongs_to :estado
   
+  has_many :cunas
+  accepts_nested_attributes_for :cunas
+  
   validates_presence_of :name, :organizacion_id, :estado_id
   
 end

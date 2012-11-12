@@ -1,5 +1,7 @@
 Dunamis::Application.routes.draw do
 
+  resources :cunas
+
   resources :organizaciones
 
   resources :estados
