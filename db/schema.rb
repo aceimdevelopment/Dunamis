@@ -11,16 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121111193749) do
+ActiveRecord::Schema.define(:version => 20121112194550) do
 
   create_table "candidates", :force => true do |t|
-    t.string   "name",         :null => false
-    t.string   "organization", :null => false
-    t.string   "state",        :null => false
+    t.string   "name",            :null => false
     t.string   "description"
     t.string   "foto"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "organizacion_id"
+    t.integer  "estado_id"
   end
 
   create_table "estados", :force => true do |t|
@@ -36,8 +36,15 @@ ActiveRecord::Schema.define(:version => 20121111193749) do
     t.string   "descripcion"
     t.string   "nombre_corto"
     t.string   "rif"
+    t.integer  "tolda_id"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+  end
+
+  create_table "toldas", :force => true do |t|
+    t.string   "nombre"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
 end

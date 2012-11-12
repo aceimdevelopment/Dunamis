@@ -27,6 +27,10 @@
     <%= f.label :rif %><br />
     <%= f.text_field :rif %>
   </div>
+  <div class="field">
+    <%= f.label :tolda %><br />
+	<%= f.collection_select :tolda_id, Tolda.all, :id, :nombre, {:prompt => '--Seleccione Tolda--'}%>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

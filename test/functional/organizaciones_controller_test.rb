@@ -18,7 +18,7 @@ class OrganizacionesControllerTest < ActionController::TestCase
 
   test "should create organizacion" do
     assert_difference('Organizacion.count') do
-      post :create, organizacion: { descripcion: @organizacion.descripcion, nombre: @organizacion.nombre, nombre_corto: @organizacion.nombre_corto, rif: @organizacion.rif }
+      post :create, organizacion: { descripcion: @organizacion.descripcion, nombre: @organizacion.nombre, nombre_corto: @organizacion.nombre_corto, rif: @organizacion.rif, tolda: @organizacion.tolda }
     end
 
     assert_redirected_to organizacion_path(assigns(:organizacion))
@@ -35,7 +35,7 @@ class OrganizacionesControllerTest < ActionController::TestCase
   end
 
   test "should update organizacion" do
-    put :update, id: @organizacion, organizacion: { descripcion: @organizacion.descripcion, nombre: @organizacion.nombre, nombre_corto: @organizacion.nombre_corto, rif: @organizacion.rif }
+    put :update, id: @organizacion, organizacion: { descripcion: @organizacion.descripcion, nombre: @organizacion.nombre, nombre_corto: @organizacion.nombre_corto, rif: @organizacion.rif, tolda: @organizacion.tolda }
     assert_redirected_to organizacion_path(assigns(:organizacion))
   end
 

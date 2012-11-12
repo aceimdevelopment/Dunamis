@@ -6,6 +6,7 @@
     <th>Descripcion</th>
     <th>Nombre corto</th>
     <th>Rif</th>
+    <th>Tolda</th>
     <th></th>
     <th></th>
     <th></th>
@@ -17,6 +18,7 @@
     <td><%= organizacion.descripcion %></td>
     <td><%= organizacion.nombre_corto %></td>
     <td><%= organizacion.rif %></td>
+    <td><%= organizacion.tolda.nombre %></td>
     <td><%= link_to 'Show', organizacion %></td>
     <td><%= link_to 'Edit', edit_organizacion_path(organizacion) %></td>
     <td><%= link_to 'Destroy', organizacion, method: :delete, data: { confirm: 'Are you sure?' } %></td>

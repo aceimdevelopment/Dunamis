@@ -15,12 +15,11 @@
     </thead>
     <tbody>
 	<% @candidates.each do |candidate| %>
-	  <% @tone_orga %>
-	  <% @tone_orga = candidate.organization.to_s == 'Psuv' ? 'error' : 'info' %>
+	  <% @tone_orga = candidate.organizacion.tolda.nombre.to_s == 'Chavismo' ? 'error' : 'info' %>
 	  <tr class='<%=@tone_orga%>'>
 	    <td><%= candidate.name %></td>
-	    <td><%= candidate.organization %></td>
-	    <td><%= candidate.state %></td>
+	    <td><%= candidate.organizacion.nombre_corto %></td>
+	    <td><%= candidate.estado.nombre %></td>
 	    <td><%= image_tag candidate.foto, :title => "foto", :class => "img-rounded", :style => 'max-width: 50px; max-height:50px'%></td>
 		<td><%= link_to 'Detalle', candidate, :class => 'btn btn-mini btn-info' %></td>
 		<td><%= link_to 'Editar', edit_candidate_path(candidate), :class => 'btn btn-mini btn-warning' %></td>

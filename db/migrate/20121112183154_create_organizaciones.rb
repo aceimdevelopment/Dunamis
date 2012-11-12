@@ -5,6 +5,7 @@ class CreateOrganizaciones < ActiveRecord::Migration
       t.string :descripcion
       t.string :nombre_corto
       t.string :rif
+      t.integer :tolda_id
 
       t.timestamps
     end

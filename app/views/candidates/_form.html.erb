@@ -20,13 +20,13 @@
   <div class="control-group">
     <%= f.label 'organización:', :class => 'control-label'%>
     <div class="controls">
-      <%= f.text_field :organization, :placeholder => 'Organización' %>
+	  <%= f.collection_select :organizacion_id, Organizacion.all, :id, :nombre, {:prompt => '--Seleccione Organización--'}%>
     </div>
   </div>
   <div class="control-group">
     <%= f.label 'Estado:', :class => 'control-label'%>
     <div class="controls">
-      <%= f.text_field :state, :placeholder => 'Estado' %>
+      <%= f.collection_select :estado_id, Estado.all, :id, :nombre, {:prompt => '--Seleccione Estado--'}%>
     </div>
   </div>
   <div class="control-group">

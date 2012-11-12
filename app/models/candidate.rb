@@ -1,6 +1,9 @@
 class Candidate < ActiveRecord::Base
-  attr_accessible :description, :foto, :name, :organization, :state
+  attr_accessible :description, :foto, :name, :organizacion_id, :estado_id
   
-  validates_presence_of :name, :organization, :state
+  belongs_to :organizacion
+  belongs_to :estado
+  
+  validates_presence_of :name, :organizacion_id, :estado_id
   
 end

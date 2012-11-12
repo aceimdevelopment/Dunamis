@@ -20,6 +20,11 @@
   <%= @organizacion.rif %>
 </p>
 
+<p>
+  <b>Tolda:</b>
+  <%= @organizacion.tolda.nombre %>
+</p>
+
 
 <%= link_to 'Edit', edit_organizacion_path(@organizacion) %> |
 <%= link_to 'Back', organizaciones_path %>
