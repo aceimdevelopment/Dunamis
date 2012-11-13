@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  cuna_id: 1
+  momento: 
+  canal_id: 1
+
+two:
+  cuna_id: 1
+  momento: 
+  canal_id: 1

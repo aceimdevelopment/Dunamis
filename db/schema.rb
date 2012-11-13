@@ -11,7 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121112221059) do
+ActiveRecord::Schema.define(:version => 20121113172811) do
+
+  create_table "apariciones", :id => false, :force => true do |t|
+    t.integer  "cuna_id",    :null => false
+    t.time     "momento",    :null => false
+    t.integer  "canal_id",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "canales", :force => true do |t|
+    t.string   "nombre"
+    t.string   "siglas"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "candidates", :force => true do |t|
     t.string   "name",            :null => false

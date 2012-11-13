@@ -1,12 +1,20 @@
 Dunamis::Application.routes.draw do
 
+  resources :apariciones
+
   resources :cunas
+  # resources :cunas do
+  #   resources :candidates
+  # end
 
   resources :organizaciones
 
   resources :estados
 
   resources :candidates
+  # resources :candidates do
+  #     resources :cunas
+  # end
 
   get "home/index"
 

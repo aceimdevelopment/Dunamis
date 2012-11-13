@@ -3,7 +3,10 @@ class Cuna < ActiveRecord::Base
   
   belongs_to :organizacion
   
-  has_many :candidates
-  accepts_nested_attributes_for :candidates
+  belongs_to :candidate
+  # has_and_belongs_to_many :candidates
+  # accepts_nested_attributes_for :candidates
+  
+  validates_presence_of :duracion, :organizacion_id, :sigecup_id, :sigecup_creacion
   
 end

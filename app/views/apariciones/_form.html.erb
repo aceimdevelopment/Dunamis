@@ -1,0 +1,29 @@
+<%= form_for(@aparicion) do |f| %>
+  <% if @aparicion.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@aparicion.errors.count, "error") %> prohibited this aparicion from being saved:</h2>
+
+      <ul>
+      <% @aparicion.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :cuna_id %><br />
+    <%= f.number_field :cuna_id %>
+  </div>
+  <div class="field">
+    <%= f.label :momento %><br />
+    <%= f.text_field :momento %>
+  </div>
+  <div class="field">
+    <%= f.label :canal_id %><br />
+    <%= f.number_field :canal_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

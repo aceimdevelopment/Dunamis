@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Cuna:</b>
+  <%= @aparicion.cuna_id %>
+</p>
+
+<p>
+  <b>Momento:</b>
+  <%= @aparicion.momento %>
+</p>
+
+<p>
+  <b>Canal:</b>
+  <%= @aparicion.canal_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_aparicion_path(@aparicion) %> |
+<%= link_to 'Back', apariciones_path %>

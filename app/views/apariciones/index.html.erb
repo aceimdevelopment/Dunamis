@@ -1,0 +1,27 @@
+<h1>Listing apariciones</h1>
+
+<table>
+  <tr>
+    <th>Cuna</th>
+    <th>Momento</th>
+    <th>Canal</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @apariciones.each do |aparicion| %>
+  <tr>
+    <td><%= aparicion.cuna_id %></td>
+    <td><%= aparicion.momento %></td>
+    <td><%= aparicion.canal_id %></td>
+    <td><%= link_to 'Show', aparicion %></td>
+    <td><%= link_to 'Edit', edit_aparicion_path(aparicion) %></td>
+    <td><%= link_to 'Destroy', aparicion, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Aparicion', new_aparicion_path %>

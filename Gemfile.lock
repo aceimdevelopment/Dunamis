@@ -38,11 +38,14 @@ GEM
       execjs
     coffee-script-source (1.4.0)
     commonjs (0.2.6)
+    composite_primary_keys (5.0.9)
+      activerecord (~> 3.2.0, >= 3.2.8)
     domain_name (0.5.4)
       unf (~> 0.0.3)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
+    haml (3.1.7)
     hike (1.2.1)
     i18n (0.6.1)
     journey (1.0.4)
@@ -136,6 +139,8 @@ PLATFORMS
 
 DEPENDENCIES
   coffee-rails (~> 3.2.1)
+  composite_primary_keys
+  haml
   jquery-rails
   mechanize (~> 2.5.1)
   mysql2
