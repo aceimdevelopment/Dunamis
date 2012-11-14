@@ -57,7 +57,8 @@ class AparicionesController < ApplicationController
   # PUT /apariciones/1
   # PUT /apariciones/1.json
   def update
-    @aparicion = Aparicion.find(params[:id])
+    canal_id, cuna_id, momento = params[:id].split(",")
+    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.split(" ")[1]).first
 
     respond_to do |format|
       if @aparicion.update_attributes(params[:aparicion])
@@ -73,7 +74,8 @@ class AparicionesController < ApplicationController
   # DELETE /apariciones/1
   # DELETE /apariciones/1.json
   def destroy
-    @aparicion = Aparicion.find(params[:id])
+    canal_id, cuna_id, momento = params[:id].split(",")
+    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.split(" ")[1]).first
     @aparicion.destroy
 
     respond_to do |format|

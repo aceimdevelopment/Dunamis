@@ -31,6 +31,10 @@
     <%= f.label :tolda %><br />
 	<%= f.collection_select :tolda_id, Tolda.all, :id, :nombre, {:prompt => '--Seleccione Tolda--'}%>
   </div>
+  <div class="field">
+    <%= f.label :tipo %><br />
+	<%= f.collection_select :tipo_id, Tipo.all, :id, :nombre, {:prompt => '--Seleccione Tipo Organiozacion--'}%>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>
