@@ -16,6 +16,10 @@
     <%= f.text_field :sigecup_id %>
   </div>
   <div class="field">
+    <%= f.label :nombre %><br />
+    <%= f.text_field :nombre %>
+  </div>
+  <div class="field">
     <%= f.label :sigecup_creacion %><br />
     <%= f.date_select :sigecup_creacion %>
   </div>
@@ -28,8 +32,15 @@
     <%= f.collection_select :organizacion_id, Organizacion.all, :id, :nombre, {:prompt => '--Seleccione Organización--'}%>
   </div>
   <div class="field">
-    <%= f.label :candidate_id %><br />
-    <%= f.number_field :candidate_id %>
+	
+	<% current_candidate_ids = @cuna.candidate_ids %>
+
+	  <% Candidate.all.each do |candidate| %>
+	    <label><%= candidate.name %>
+	      <%= check_box_tag "cuna[candidate_ids][]", candidate.id, current_candidate_ids.include?(candidate.id) %>
+	    </label>
+	  <% end %>
+	
   </div>
   <div class="field">
     <%= f.label :video %><br />

@@ -13,7 +13,8 @@
 
   <div class="field">
     <%= f.label :cuna_id %><br />
-    <%= f.number_field :cuna_id %>
+    <%= f.collection_select :cuna_id, Cuna.all, :id, :nombre, {:prompt => '--Seleccione Cuña--'}%>
+
   </div>
   <div class="field">
     <%= f.label :momento %><br />
@@ -21,7 +22,7 @@
   </div>
   <div class="field">
     <%= f.label :canal_id %><br />
-    <%= f.number_field :canal_id %>
+    <%= f.collection_select :canal_id, Canal.all, :id, :siglas, {:prompt => '--Seleccione Canal--'}%>
   </div>
   <div class="actions">
     <%= f.submit %>

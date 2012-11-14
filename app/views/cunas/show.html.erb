@@ -1,6 +1,11 @@
 <p id="notice"><%= notice %></p>
 
 <p>
+  <b>Nombre:</b>
+  <%= @cuna.nombre %>
+</p>
+
+<p>
   <b>Sigecup:</b>
   <%= @cuna.sigecup_id %>
 </p>
@@ -21,8 +26,11 @@
 </p>
 
 <p>
-  <b>Candidate:</b>
-  <%= @cuna.candidate_id %>
+  <b>Candidatos:</b>
+	<% @cuna.candidates.each do |candidate| %>
+		<br />
+		<%= candidate.name %>
+	<% end %>
 </p>
 
 <p>

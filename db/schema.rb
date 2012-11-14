@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121113172811) do
+ActiveRecord::Schema.define(:version => 20121114210050) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(:version => 20121113172811) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "apariciones", ["canal_id", "cuna_id", "momento"], :name => "index_apariciones_on_canal_id_and_cuna_id_and_momento", :unique => true
 
   create_table "canales", :force => true do |t|
     t.string   "nombre"
@@ -38,16 +40,29 @@ ActiveRecord::Schema.define(:version => 20121113172811) do
     t.integer  "estado_id"
   end
 
+  add_index "candidates", ["estado_id"], :name => "key_estados_idx"
+  add_index "candidates", ["organizacion_id"], :name => "key_organizaciones_idx"
+
+  create_table "candidates_cunas", :id => false, :force => true do |t|
+    t.integer "candidate_id", :null => false
+    t.integer "cuna_id",      :null => false
+  end
+
+  add_index "candidates_cunas", ["candidate_id", "cuna_id"], :name => "index_candidates_cunas_on_candidate_id_and_cuna_id", :unique => true
+
   create_table "cunas", :force => true do |t|
     t.string   "sigecup_id"
     t.date     "sigecup_creacion"
     t.integer  "duracion"
-    t.integer  "candidate_id"
     t.string   "video"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.integer  "organizacion_id"
+    t.string   "nombre",           :null => false
   end
+
+  add_index "cunas", ["nombre"], :name => "index_cunas_on_nombre", :unique => true
+  add_index "cunas", ["organizacion_id"], :name => "key_cunas_organizacion_idx"
 
   create_table "estados", :force => true do |t|
     t.string   "nombre"
