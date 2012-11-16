@@ -1,8 +1,10 @@
+# coding: utf-8
 class CandidatesController < ApplicationController
   # GET /candidates
   # GET /candidates.json
   def index
     @candidates = Candidate.all
+    # IMPORTE DE CANDIDATOS
     import
     
     respond_to do |format|
@@ -103,38 +105,43 @@ class CandidatesController < ApplicationController
     page3 = a.submit(page2_form, page2_form.buttons.first)
   
     page3_form2 = page3.search("table")[2]
-    puts page3_form2
-    rows = page3_form2.search("tr")
-    rows.each do |tr|
-      tds = tr.search("td")
-      puts "num: #{tds[1].get_attribute('a')}"
-      
-    end
     # puts page3_form2
-    
-    
-    # 
-    # <td>5</td>
-    # <td id="NroCuna_column_4"><a href="http://sigecup.cne.gob.ve/index.php/cunas_en_vivo/consultar/registro/172">CUÑA-0025</a></td>
-    # <td id="Fecha_column_4">13-11-2012</td>
-    # <td id="Tiempo_column_4">30 seg.</td>
-    # <td id="NombreClave_column_4"><a href="http://sigecup.cne.gob.ve/index.php/cunas_en_vivo/consultar/registro/172">EJaua PSUV Marta González Prod Cacao</a></td>
-    # <td id="Grupo_column_4"><a href="http://sigecup.cne.gob.ve/index.php/cunas_en_vivo/grupo_de_cuna/registro/1">Sin Grupo</a></td>
-    # <td id="Partido_column_4" style="display: none;"><a href="http://sigecup.cne.gob.ve/index.php/political_party/political_party_controller/show_political_party/2">Psuv</a></td>
-    # <td id="Tolda_column_4">Chavismo</td>
-    # <td id="Adj_column_4">1</td>
-    # <td id="Ilicitos_column_4">No</td>
-    # <td id="Voceros_column_4" style="display: none;"> </td>
-    # <td id="Candidatos_column_4" style="display: none;"><a href="http://sigecup.cne.gob.ve/index.php/general/political_representative_controller/show_political_representative/8" title="Ver datos de vocero">Elías  Jaua</a></td>
-    
-    
-    # ======================= VIEW ========================#
-    
-    
-    
-    
-    
-      
+    rows = page3_form2.search("tr")
+    puts rows.shift
+
+    rows.each do |tr|
+    puts "================DATOS de FILA========"
+    begin
+    cuna = Cuna.new
+      tds = tr.search("td")
+      puts "id: #{tds[1].search('a').text}"
+      cuna.sigecup_id = tds[1].search('a').text
+      puts "fechas: #{tds[2].text}"
+      cuna.sigecup_creacion = tds[2].text
+      puts "duracion: #{tds[3].text}"
+      cuna.duracion = tds[3].text.split[0]
+      puts "nombre: #{tds[4].search('a').text}"
+      cuna.nombre = tds[4].search('a').text
+      puts "grupo: #{tds[5].search('a').text}"
+      cuna.grupo = tds[5].search('a').text
+      puts "partido: #{tds[6].search('a').text}"
+      organizacion = Organizacion.find_by_nombre_corto(tds[6].search('a').text)
+      # @pages = current_account.pages.all(:conditions => "name not like 'Home' and name not like 'Contacto'", :order => "created_at asc")
+      cuna.organizacion_id = organizacion.id if not organizacion.nil?
+      # puts "tolda: #{tds[7].text}"
+      # candidatos = Candidate.all(:conditions =>"name like '%jaua%' or name like '%capriles%'")
+      # cuna.candidates.push candidatos.first
+      candidates = tds[11].search('a')
+      candidates.each do |c|
+        candidate = Candidate.all(:conditions =>"name like '%#{c.text}%' or name like '%#{c.text.split[0]}%'").first
+        cuna.candidates.push candidate if not candidate.nil?
+        puts "candidato: #{c.text.split[0]}"
+      end
+      cuna.save
+      rescue
+        puts "no se pudo cargar la cuña"
+      end
+    end      
   end
   
   def login_sigecup a

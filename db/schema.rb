@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121114220620) do
+ActiveRecord::Schema.define(:version => 20121116221837) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(:version => 20121114220620) do
   end
 
   add_index "apariciones", ["canal_id", "cuna_id", "momento"], :name => "index_apariciones_on_canal_id_and_cuna_id_and_momento", :unique => true
+  add_index "apariciones", ["canal_id"], :name => "FK aparicon canal_idx"
+  add_index "apariciones", ["cuna_id"], :name => "key aparicion cuna_idx"
 
   create_table "canales", :force => true do |t|
     t.string   "nombre"
@@ -49,6 +51,8 @@ ActiveRecord::Schema.define(:version => 20121114220620) do
   end
 
   add_index "candidates_cunas", ["candidate_id", "cuna_id"], :name => "index_candidates_cunas_on_candidate_id_and_cuna_id", :unique => true
+  add_index "candidates_cunas", ["candidate_id"], :name => "FK_idx"
+  add_index "candidates_cunas", ["cuna_id"], :name => "FK cunas_idx"
 
   create_table "cunas", :force => true do |t|
     t.string   "sigecup_id"
@@ -59,10 +63,12 @@ ActiveRecord::Schema.define(:version => 20121114220620) do
     t.datetime "updated_at",       :null => false
     t.integer  "organizacion_id"
     t.string   "nombre",           :null => false
+    t.string   "grupo"
   end
 
   add_index "cunas", ["nombre"], :name => "index_cunas_on_nombre", :unique => true
   add_index "cunas", ["organizacion_id"], :name => "key_cunas_organizacion_idx"
+  add_index "cunas", ["sigecup_id"], :name => "index_cunas_on_sigecup_id", :unique => true
 
   create_table "estados", :force => true do |t|
     t.string   "nombre"
@@ -84,6 +90,9 @@ ActiveRecord::Schema.define(:version => 20121114220620) do
     t.datetime "updated_at",   :null => false
     t.integer  "tipo_id"
   end
+
+  add_index "organizaciones", ["tipo_id"], :name => "FK tipo_idx"
+  add_index "organizaciones", ["tolda_id"], :name => "FK tolda_idx"
 
   create_table "tipos", :force => true do |t|
     t.string   "nombre",      :null => false

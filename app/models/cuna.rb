@@ -9,4 +9,13 @@ class Cuna < ActiveRecord::Base
   
   validates_presence_of :duracion, :organizacion_id, :sigecup_id, :sigecup_creacion
   
+  def candidates_names
+    candidates_mames = ""
+    candidates.each do |candidate|
+      candidates_mames += "#{candidate.name} "
+    end
+    candidates_mames
+    
+  end
+  
 end
