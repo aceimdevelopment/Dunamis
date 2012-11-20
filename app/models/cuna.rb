@@ -12,6 +12,9 @@ class Cuna < ActiveRecord::Base
   validates_presence_of :duracion, :organizacion_id, :sigecup_id, :sigecup_creacion
   validates :sigecup_id, :uniqueness => true
   
+  # scope :organizacion, lambda {|name| where(["name ILIKE ? OR aliases ILIKE ?","%#{name}%","%#{name}%"])}
+  # scope :gob_opo, joins(:organizacion).where('tolda_id = ? AND tipo_id = ?', 1, 2)
+  
   def candidates_names
     candidates_mames = ""
     candidates.each do |candidate|

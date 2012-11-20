@@ -24,7 +24,7 @@ end
 gem 'jquery-rails'
 gem 'haml'
 gem 'composite_primary_keys'
-
+gem 'pdf-writer', :git => 'git://github.com/metaskills/pdf-writer.git'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

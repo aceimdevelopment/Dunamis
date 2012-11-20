@@ -4,10 +4,8 @@ class CandidatesController < ApplicationController
   # GET /candidates.json
   require 'importer'
   def index
-
+    Pdf.generar_reporte_candidatos if params[:import]
     @candidates = Candidate.all
-    # IMPORTE DE CANDIDATOS
-    # Importer.import_cunas
     
     respond_to do |format|
       format.html # index.html.erb

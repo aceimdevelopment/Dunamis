@@ -4,10 +4,10 @@ class CunasController < ApplicationController
   require 'importer'
   def index
     @cunas = Cuna.all
-    if params[:import]
-      # Importación de Apariciones
-      Importer.import_cunas
-    end
+    
+    # Importación de Apariciones
+    Importer.import_cunas if params[:import]
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @cunas }
