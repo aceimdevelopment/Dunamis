@@ -1,5 +1,7 @@
 <h1>Listing apariciones</h1>
 
+<%= link_to 'Importar de apariciones de Sigecup', :action => 'index', :import => 1 %>
+
 <table>
   <tr>
     <th>Cuna</th>
@@ -12,9 +14,9 @@
 
 <% @apariciones.each do |aparicion| %>
   <tr>
-    <td><%= aparicion.cuna_id %></td>
+    <td><%= aparicion.cuna.descripcion %></td>
     <td><%= aparicion.momento %></td>
-    <td><%= aparicion.canal_id %></td>
+    <td><%= aparicion.canal.nombre %></td>
     <td><%= link_to 'Show', aparicion %></td>
     <td><%= link_to 'Edit', edit_aparicion_path(aparicion) %></td>
     <td><%= link_to 'Destroy', aparicion, method: :delete, data: { confirm: 'Are you sure?' } %></td>

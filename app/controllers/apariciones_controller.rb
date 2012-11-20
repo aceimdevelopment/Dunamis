@@ -1,9 +1,15 @@
 class AparicionesController < ApplicationController
   # GET /apariciones
   # GET /apariciones.json
+  require 'importer'
+  
   def index
     @apariciones = Aparicion.all
-
+    if params[:import]
+      # Importación de Apariciones
+      Importer.import_apariciones
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @apariciones }
@@ -14,7 +20,7 @@ class AparicionesController < ApplicationController
   # GET /apariciones/1.json
   def show
     canal_id, cuna_id, momento = params[:id].split(",")
-    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.split(" ")[1]).first
+    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.to_datetime).first
 
     respond_to do |format|
       format.html # show.html.erb
@@ -35,12 +41,14 @@ class AparicionesController < ApplicationController
 
   # GET /apariciones/1/edit
   def edit
-    @aparicion = Aparicion.find(params[:id])
+    canal_id, cuna_id, momento = params[:id].split(",")
+    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.to_datetime).first
   end
 
   # POST /apariciones
   # POST /apariciones.json
   def create
+
     @aparicion = Aparicion.new(params[:aparicion])
 
     respond_to do |format|
@@ -58,7 +66,7 @@ class AparicionesController < ApplicationController
   # PUT /apariciones/1.json
   def update
     canal_id, cuna_id, momento = params[:id].split(",")
-    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.split(" ")[1]).first
+    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.to_datetime).first
 
     respond_to do |format|
       if @aparicion.update_attributes(params[:aparicion])
@@ -75,7 +83,7 @@ class AparicionesController < ApplicationController
   # DELETE /apariciones/1.json
   def destroy
     canal_id, cuna_id, momento = params[:id].split(",")
-    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.split(" ")[1]).first
+    @aparicion = Aparicion.where(:cuna_id => cuna_id, :canal_id => canal_id, :momento => momento.to_datetime).first
     @aparicion.destroy
 
     respond_to do |format|
@@ -83,4 +91,9 @@ class AparicionesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  
+  
+  
+  
 end

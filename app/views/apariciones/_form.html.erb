@@ -13,12 +13,13 @@
 
   <div class="field">
     <%= f.label :cuna_id %><br />
-    <%= f.collection_select :cuna_id, Cuna.all, :id, :nombre, {:prompt => '--Seleccione Cuña--'}%>
+    <%= f.collection_select :cuna_id, Cuna.all, :id, :descripcion, {:prompt => '--Seleccione Cuña--'}%>
 
   </div>
   <div class="field">
     <%= f.label :momento %><br />
-    <%= f.text_field :momento %>
+    <%# f.text_field :momento %>
+	<%= f.datetime_select :momento %>
   </div>
   <div class="field">
     <%= f.label :canal_id %><br />

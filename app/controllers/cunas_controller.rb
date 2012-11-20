@@ -1,9 +1,13 @@
 class CunasController < ApplicationController
   # GET /cunas
   # GET /cunas.json
+  require 'importer'
   def index
     @cunas = Cuna.all
-
+    if params[:import]
+      # Importación de Apariciones
+      Importer.import_cunas
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @cunas }

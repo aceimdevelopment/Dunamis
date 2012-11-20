@@ -11,11 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121116221837) do
+ActiveRecord::Schema.define(:version => 20121119193932) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
-    t.time     "momento",    :null => false
+    t.datetime "momento",    :null => false
     t.integer  "canal_id",   :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(:version => 20121116221837) do
   add_index "candidates_cunas", ["cuna_id"], :name => "FK cunas_idx"
 
   create_table "cunas", :force => true do |t|
-    t.string   "sigecup_id"
+    t.string   "sigecup_id",       :null => false
     t.date     "sigecup_creacion"
     t.integer  "duracion"
     t.string   "video"
