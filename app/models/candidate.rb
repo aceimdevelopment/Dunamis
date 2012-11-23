@@ -10,4 +10,6 @@ class Candidate < ActiveRecord::Base
   
   validates_presence_of :name, :organizacion_id, :estado_id
   
+  scope :by_cunas, joins(:cunas).where('apariciones.momento = ?', Time.now)
+  
 end

@@ -11,7 +11,7 @@ class Aparicion < ActiveRecord::Base
   # 
   # scope :organizacion, lambda {|name| where(["name ILIKE ? OR aliases ILIKE ?","%#{name}%","%#{name}%"])}
   # 
-  # scope :gob_opo, joins(:cunas).where('cunas.id = ?', 'value')
+  # scope :gob_opo, joins(:cuna).cunas.gob_opo
   
   def fecha
     momento.to_date
