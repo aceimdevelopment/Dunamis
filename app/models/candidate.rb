@@ -9,6 +9,7 @@ class Candidate < ActiveRecord::Base
   # accepts_nested_attributes_for :cunas
   
   validates_presence_of :name, :organizacion_id, :estado_id
+  validates :name, :uniqueness => true
   
   scope :by_cunas, joins(:cunas).where('apariciones.momento = ?', Time.now)
   

@@ -3,33 +3,59 @@ module Importer
   require 'uri'
   require 'mechanize'
   
+  
+  def self.import_candidatos
+    voceros_url = "http://sigecup.cne.gob.ve/index.php/general/political_representative_controller/show_all_political_representatives"
+    a = Mechanize.new
+    page = login_sigecup a
+    rows = load_data_rows voceros_url, page, a
+    
+    rows.each do |tr|
+      organizacion = Organizacion.new
+      tds = tr.search("td")
+      vocero_pag = tds[1].search('a').click
+      puts raw vocero_pag
+      # vocero_pag = page.link_with(:href => url).click
+    end
+    
+    
+  end
+  
+  
+  
   def self.import_cunas
 
     cunas_fichas_url = "http://sigecup.cne.gob.ve/index.php/cunas_en_vivo/consultar/por_ficha"
-    aparicion_cunas  = "http://sigecup.cne.gob.ve/index.php/cunas_en_vivo/reportes/aparicion_de_cunas"
-  
+    # a = Mechanize.new
+    # page = login_sigecup a
+    # rows = load_data_rows cunas_fichas_url, page, a
+
     a = Mechanize.new
     page = login_sigecup a
     page2 = page.link_with(:href => cunas_fichas_url).click
-
+    
     page2_form = page2.forms.first
     page2_form.fields.each { |f| puts f.name }
     puts "Inicio......"
     page2_form.limit = -1
     page3 = a.submit(page2_form, page2_form.buttons.first)
-  
+      
     page3_form2 = page3.search("table")[2]
     # puts page3_form2
     rows = page3_form2.search("tr")
     puts rows.shift
+    
+    #-------- Limpiesa de Datos ---------#
     Cuna.delete_all_candidates
     Aparicion.delete_all
     Cuna.delete_all
-    
+    #-------- Fin Limpiesa de Datos ---------#
+        
     rows.each do |tr|
       begin
         cuna = Cuna.new
         tds = tr.search("td")
+        
         cuna.sigecup_id = tds[1].search('a').text
         cuna.sigecup_creacion = tds[2].text
         cuna.duracion = tds[3].text.split[0]
@@ -44,8 +70,18 @@ module Importer
           cuna.candidates.push candidate if not candidate.nil?
         end
         cuna.save
+        
+        if aparicion.save
+          puts "=============== IMPORTACION DE CUÑA CORRECTA ============="
+        else
+          puts "IMPORTACIÓN NO COMPLETADA"
+          puts "tds #{tr}"
+        end
+        
       rescue
-        puts "no se pudo cargar la cuña"
+        puts "=============== ERROR DE IMPORTACIÓN ============="
+        puts "tds #{tr}"
+        puts cuna
       end
     end      
   end
@@ -56,18 +92,21 @@ module Importer
   
     a = Mechanize.new
     page = login_sigecup a
+    # rows = load_data_rows aparicion_cunas_url, page, a
+    
     page2 = page.link_with(:href => aparicion_cunas_url).click
-
+    
     page2_form = page2.forms.first
     page2_form.fields.each { |f| puts f.name }
     puts "Inicio......"
     page2_form.limit = -1
     page3 = a.submit(page2_form, page2_form.buttons.first)
-  
+      
     page3_form2 = page3.search("table")[2]
     # puts page3_form2
     rows = page3_form2.search("tr")
     puts rows.shift
+    
     Aparicion.delete_all
     rows.each do |tr|
       begin
@@ -84,15 +123,10 @@ module Importer
         aparicion.canal_id = (Canal.find_by_siglas canal).id
         
         if aparicion.save
-          puts "=============== RESULTADO IMPORTACION APARICIONES ============="
-          puts "Fecha: <#{aparicion.momento}>"
-          puts "Cuña: <#{aparicion.cuna.sigecup_id}>"
-          puts "Canal: <#{aparicion.canal.nombre}>"
-          puts "====================================================="
+          puts "=============== IMPORTACION APARICION CORRECTA ============="
         else
           puts "IMPORTACIÓN NO COMPLETADA"
-          puts "Fecha: <#{fecha}>"
-          puts "Hora: <#{hora}>"
+          puts "Fecha: <#{fecha} | #{hora}>"
           puts "Cuña: <#{cuna}>"
           puts "Canal: <#{canal}>"
           puts "====================================================="
@@ -100,7 +134,7 @@ module Importer
         
         
       rescue
-        puts "no se pudo cargar la cuña"
+        puts "=============== ERROR DE IMPORTACIÓN ============="
         puts "Fecha: <#{fecha} | #{hora}>"
         puts "Cuña: <#{cuna}>"
         puts "Canal: <#{canal}>"
@@ -131,6 +165,25 @@ module Importer
     login_form.captcha = captcha
   
     # Carga de principal de la aplicación
+    puts "Login Completado"
     a.submit(login_form, login_form.buttons.first)
   end  
+  
+  def self.load_data_rows url, page, a
+        
+    page2 = page.link_with(:href => url).click
+
+    page2_form = page2.forms.first
+    page2_form.fields.each { |f| puts f.name }
+    puts "Inicio......"
+    puts "Gargando ......"
+    page2_form.limit = -1
+    page3 = a.submit(page2_form, page2_form.buttons.first)
+  
+    page3_form2 = page3.search("table")[2]
+    rows = page3_form2.search("tr")
+    puts "Carga de Rows Completada"
+    rows.shift
+  end
+  
 end

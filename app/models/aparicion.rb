@@ -4,7 +4,8 @@ class Aparicion < ActiveRecord::Base
   belongs_to :cuna
   belongs_to :canal
   
-  set_primary_keys :canal_id, :cuna_id, :momento
+  # set_primary_keys :canal_id, :cuna_id, :momento
+  self.primary_keys = :canal_id, :cuna_id, :momento
   validates_presence_of :canal_id, :cuna_id, :momento
   
   # scope :with_name, lambda {|name| where(["name ILIKE ? OR aliases ILIKE ?","%#{name}%","%#{name}%"])}

@@ -9,7 +9,7 @@ class Organizacion < ActiveRecord::Base
   has_many :cunas
   accepts_nested_attributes_for :cunas
   
-  validates_presence_of :nombre, :nombre_corto, :rif, :tolda_id, :tipo_id
+  validates_presence_of :nombre, :nombre_corto, :tolda_id, :tipo_id
   
   # Gobernaciones
   scope :gob_opo, where('tolda_id = ? AND tipo_id = ?', 1, 2)

@@ -5,7 +5,8 @@ class CandidatesController < ApplicationController
   require 'importer'
   def index
     Pdf.generar_reporte_candidatos if params[:import]
-    @candidates = Candidate.all
+    Importer.import_candidatos if params[:import_candi]
+    @candidates = Candidate.all.sort_by {|c| c.name}
     
     respond_to do |format|
       format.html # index.html.erb
