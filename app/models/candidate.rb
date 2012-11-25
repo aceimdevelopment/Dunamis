@@ -13,4 +13,8 @@ class Candidate < ActiveRecord::Base
   
   scope :by_cunas, joins(:cunas).where('apariciones.momento = ?', Time.now)
   
+  def full_descripcion
+    "#{id} - #{name} - #{description}"
+  end
+  
 end

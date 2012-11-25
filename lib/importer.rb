@@ -43,13 +43,17 @@ module Importer
     page3_form2 = page3.search("table")[2]
     # puts page3_form2
     rows = page3_form2.search("tr")
-    puts rows.shift
+    rows.shift
     
     #-------- Limpiesa de Datos ---------#
     Cuna.delete_all_candidates
     Aparicion.delete_all
     Cuna.delete_all
     #-------- Fin Limpiesa de Datos ---------#
+    
+    importadas = 0
+    no_importadas = 0
+    errores = 0
         
     rows.each do |tr|
       begin
@@ -64,26 +68,42 @@ module Importer
         organizacion = Organizacion.find_by_nombre_corto(tds[6].search('a').text)
         cuna.organizacion_id = organizacion.id if not organizacion.nil?
         candidates = tds[11].search('a')
-        
-        candidates.each do |c|
-          candidate = Candidate.all(:conditions =>"name like '%#{c.text}%' or name like '%#{c.text.split[0]}%'").first
-          cuna.candidates.push candidate if not candidate.nil?
+        if not candidates.nil?
+          candidates.each do |c|
+            # candidate = Candidate.all(:conditions =>"name like '#{c.text.squeeze(" ")}'").first
+            candidate = Candidate.find_by_name c.text.squeeze(" ")
+          end
+        elsif cuna.organizacion.nombre_corto = "Causa R"
+          candidate = Candidate.find_by_name "Nacional"
+          puts "candidato: #{candidate}"
         end
-        cuna.save
+        cuna.candidates.push candidate if not candidate.nil?
         
-        if aparicion.save
+        if mssg = cuna.save
           puts "=============== IMPORTACION DE CUÑA CORRECTA ============="
+          importadas += 1
         else
           puts "IMPORTACIÓN NO COMPLETADA"
           puts "tds #{tr}"
+          puts "Error: #{cuna.errors}" if cuna.errors.any?
+          puts "=================================================="
+          no_importadas += 1
         end
         
-      rescue
+      rescue Exception => msg
         puts "=============== ERROR DE IMPORTACIÓN ============="
+        puts msg
         puts "tds #{tr}"
-        puts cuna
+        puts "=================================================="
+        errores += 1
       end
-    end      
+    end 
+    puts "============================================="
+    puts "============RESULTADOS======================="
+    puts "=== IMPORTADOS: #{importadas}             ==="
+    puts "=== NO IMPORTADOS: #{no_importadas}       ==="
+    puts "=== ERRORES: #{errores}                   ==="
+    puts "=============================================" 
   end
   
   def self.import_apariciones
@@ -108,6 +128,9 @@ module Importer
     puts rows.shift
     
     Aparicion.delete_all
+    importadas = 0
+    no_importadas = 0
+    errores = 0
     rows.each do |tr|
       begin
         aparicion = Aparicion.new
@@ -124,23 +147,30 @@ module Importer
         
         if aparicion.save
           puts "=============== IMPORTACION APARICION CORRECTA ============="
+          importadas += 1
         else
           puts "IMPORTACIÓN NO COMPLETADA"
-          puts "Fecha: <#{fecha} | #{hora}>"
-          puts "Cuña: <#{cuna}>"
-          puts "Canal: <#{canal}>"
+          puts "Error: #{cuna.errors}" if cuna.errors.any?
           puts "====================================================="
+          no_importadas += 1
         end
         
         
-      rescue
+      rescue Exception => msg
+        errores += 1
         puts "=============== ERROR DE IMPORTACIÓN ============="
-        puts "Fecha: <#{fecha} | #{hora}>"
-        puts "Cuña: <#{cuna}>"
-        puts "Canal: <#{canal}>"
+        puts msg
+        puts "tds #{tr}"
         puts "====================================================="
       end
-    end      
+    end
+    
+    puts "============================================="
+    puts "============RESULTADOS======================="
+    puts "=== IMPORTADOS: #{importadas}             ==="
+    puts "=== NO IMPORTADOS: #{no_importadas}       ==="
+    puts "=== ERRORES: #{errores}                   ==="
+    puts "============================================="
   end
     
   def self.login_sigecup a
