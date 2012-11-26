@@ -25,7 +25,7 @@ class Cuna < ActiveRecord::Base
   end
 
   def descripcion
-    "#{sigecup_id} - #{nombre}"
+    "#{sigecup_id} - #{nombre} - #{duracion} Seg."
   end
   
   def delete_candidates

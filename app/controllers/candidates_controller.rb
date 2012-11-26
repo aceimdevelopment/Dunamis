@@ -18,7 +18,16 @@ class CandidatesController < ApplicationController
   # GET /candidates/1.json
   def show
     @candidate = Candidate.find(params[:id])
-
+    @cunas = @candidate.cunas
+    @apariciones = []
+    @tiempo = 0
+    @cunas.each do |cuna|
+    aux = Aparicion.where(:cuna_id => cuna.id)
+    @tiempo += aux.count * cuna.duracion if aux
+    @apariciones += aux
+    end
+     
+    apariciones = 
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @candidate }

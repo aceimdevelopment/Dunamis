@@ -26,10 +26,8 @@ class Pdf
     
     for fecha in fecha..Date.today
       # data << {"fecha" => fecha}
-      pdf.text fecha.to_s, :justification => :center
-      
-      
-      
+      pdf.text fecha.to_s, :justification => :center, :font_size => 8
+      pdf.text "\n"
       
       tab = encabezado_tabla
       tab.data
@@ -86,14 +84,6 @@ class Pdf
           col.heading.justification= :center
         }      
       end
-
-      # Inicialización de Variables
-      
-      
-      
-      
-      
-      
       
       for i in 1..4
         case i
@@ -102,12 +92,12 @@ class Pdf
         when 2
             alianza = "Gobierno Cha"; tipo = 2; tolda = 2
         when 3
-            alianza = "Partidos Opo"; tipo = 1; tolda = 1
+            alianza = "MUD"; tipo = 1; tolda = 1
         else
-            alianza = "Partidos Cha"; tipo = 1; tolda = 2
+            alianza = "Psuv"; tipo = 1; tolda = 2
         end
         
-        apariciones = Aparicion.where(["momento >= ? AND momento <= ?",fecha.to_datetime, fecha+1.day-1.second])
+        apariciones = Aparicion.where(["momento >= ? AND momento <= ?",fecha.to_datetime, (fecha+1.day-1.second).to_s])
         pars_opos = apariciones.delete_if {|a| a.cuna.organizacion.tipo_id != tipo || a.cuna.organizacion.tolda_id != tolda}
         data = []
         
@@ -140,7 +130,7 @@ class Pdf
         end #end do candidato
         (tab.data.replace data; tab.render_on(pdf)) if not data.empty?
       end #end for i
-       pdf.text "________________________________________________________", :justification => :center
+       pdf.text "___________________________________________________________________________________________", :justification => :center
        pdf.text "\n"
       # break
     end # end for fecha
@@ -148,6 +138,7 @@ class Pdf
     pdf.save_as "prueba.pdf"
     
   end
+  
   def self.encabezado_tabla
       require 'pdf/writer'
       require 'pdf/simpletable'

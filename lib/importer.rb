@@ -72,15 +72,18 @@ module Importer
           candidates.each do |c|
             # candidate = Candidate.all(:conditions =>"name like '#{c.text.squeeze(" ")}'").first
             candidate = Candidate.find_by_name c.text.squeeze(" ")
+            
+            if candidate.nil? && cuna.organizacion.nombre_corto == "Causa R"
+              candidate = Candidate.find_by_name "Nacional"
+            end
+            
+            cuna.candidates.push candidate if not candidate.nil?
           end
-        elsif cuna.organizacion.nombre_corto = "Causa R"
-          candidate = Candidate.find_by_name "Nacional"
-          puts "candidato: #{candidate}"
         end
-        cuna.candidates.push candidate if not candidate.nil?
+        
         
         if mssg = cuna.save
-          puts "=============== IMPORTACION DE CUÑA CORRECTA ============="
+          puts "=============== IMPORTACIÓN DE CUÑA CORRECTA ============="
           importadas += 1
         else
           puts "IMPORTACIÓN NO COMPLETADA"

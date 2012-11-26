@@ -14,6 +14,10 @@ class Aparicion < ActiveRecord::Base
   # 
   # scope :gob_opo, joins(:cuna).cunas.gob_opo
   
+  def descripcion
+    "Canal: #{canal.siglas} | #{fecha} | Cuna: #{cuna.descripcion} "
+  end
+  
   def fecha
     momento.to_date
   end

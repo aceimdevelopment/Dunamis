@@ -25,6 +25,26 @@
   <%= @candidate.foto %>
 </p>
 
+<p>
+  <b>Cunas:</b>
+  <% @cunas.each do |cuna| %>
+	<br>
+	<%= cuna.descripcion %>
+  <% end %>
+  <br>
+  <strong><%= "Total Cunas: #{@cunas.count}" %></strong>
+</p>
+
+
+<p>
+  <b>Apariciones:</b>
+  <% @apariciones.each do |aparicion| %>
+  	<br>
+	<%= aparicion.descripcion %>
+  <% end %>
+	<br>
+	<strong><%= "Total Apariciones: #{@apariciones.count} | Tiempo Exposición: #{@tiempo} Segundos" %></strong>
+</p>
 
 <%= link_to 'Edit', edit_candidate_path(@candidate) %> |
 <%= link_to 'Back', candidates_path %>
