@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121119193932) do
+ActiveRecord::Schema.define(:version => 20121127223933) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(:version => 20121119193932) do
     t.integer  "canal_id",   :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.date     "fecha"
   end
 
   add_index "apariciones", ["canal_id", "cuna_id", "momento"], :name => "index_apariciones_on_canal_id_and_cuna_id_and_momento", :unique => true

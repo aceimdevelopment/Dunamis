@@ -6,6 +6,7 @@ class Candidate < ActiveRecord::Base
   
   # has_many :cunas
   has_and_belongs_to_many :cunas, :join_table => "candidates_cunas"
+  # has_and_belongs_to_many :apariciones, :join_table => "candidates_apariciones"
   # accepts_nested_attributes_for :cunas
   
   validates_presence_of :name, :organizacion_id, :estado_id

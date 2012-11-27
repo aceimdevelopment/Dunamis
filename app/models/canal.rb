@@ -3,5 +3,7 @@ class Canal < ActiveRecord::Base
   
   has_many :apariciones
   accepts_nested_attributes_for :apariciones
+  
+  # default_scope order('nombre')
     
 end

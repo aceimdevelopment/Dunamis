@@ -144,6 +144,7 @@ module Importer
         cuna = tds[4].search('a').text
         canal = tds[9].search('a').text
         
+        aparicion.fecha = fecha
         aparicion.momento = "#{fecha} #{hora} -0430"
         aparicion.cuna_id = (Cuna.find_by_sigecup_id cuna).id 
         aparicion.canal_id = (Canal.find_by_siglas canal).id
