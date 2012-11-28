@@ -14,10 +14,14 @@ class Organizacion < ActiveRecord::Base
   # Gobernaciones
   scope :gob_opo, where('tolda_id = ? AND tipo_id = ?', 1, 2)
   scope :gob_ch, where('tolda_id = ? AND tipo_id = ?', 2, 2)
-
+  
   # Partidos
   scope :mud, where('tolda_id = ? AND tipo_id = ?', 1, 1)
   scope :psuv, where('tolda_id = ? AND tipo_id = ?', 2, 1)
   
   scope :nombre_completo, lambda {|nombre| where(["nombre LIKE ? OR nombre_corto LIKE ? OR descripcion LIKE ?","%#{nombre}%","%#{nombre}%","%#{nombre}%"])}
+  
+  def alianza
+    "#{self.tipo.nombre[0..2].capitalize}-#{self.tolda.nombre[0..2].capitalize}"
+  end
 end

@@ -68,17 +68,24 @@ module Importer
         organizacion = Organizacion.find_by_nombre_corto(tds[6].search('a').text)
         cuna.organizacion_id = organizacion.id if not organizacion.nil?
         candidates = tds[11].search('a')
-        if not candidates.nil?
+        puts candidates
+        puts candidates.count
+        if candidates.count > 0
           candidates.each do |c|
             # candidate = Candidate.all(:conditions =>"name like '#{c.text.squeeze(" ")}'").first
             candidate = Candidate.find_by_name c.text.squeeze(" ")
-            
-            if candidate.nil? && cuna.organizacion.nombre_corto == "Causa R"
-              candidate = Candidate.find_by_name "Nacional"
-            end
-            
             cuna.candidates.push candidate if not candidate.nil?
           end
+        else
+          case cuna.grupo
+          when 'MUD'
+              candidate = Candidate.oposicion
+          when 'PSUV'
+              candidate = Candidate.chavismo
+          when 'Sin Grupo'
+              candidate = Candidate.independiente
+          end
+          cuna.candidates.push candidate if not candidate.nil?
         end
         
         

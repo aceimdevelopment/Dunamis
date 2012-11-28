@@ -14,6 +14,10 @@ class Candidate < ActiveRecord::Base
   
   scope :by_cunas, joins(:cunas).where('apariciones.momento = ?', Time.now)
   
+  scope :oposicion, joins(:organizacion).where('organizaciones.tolda_id = 1')
+  scope :chavismo, joins(:organizacion).where('organizaciones.tolda_id = 2')
+  scope :independiente, joins(:organizacion).where('organizaciones.tolda_id = 3')
+  
   def full_descripcion
     "#{id} - #{name} - #{description}"
   end

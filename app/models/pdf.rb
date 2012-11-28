@@ -22,7 +22,7 @@ class Pdf
     # pdf.text "Hello, Ruby.", :font_size => 72, :justification => :center
 
     
-    fecha = Date.new(2012,11,21)
+    fecha = Date.new(2012,11,01)
     candidatos = Candidate.order :name
     canales = Canal.order :siglas
     
@@ -36,8 +36,11 @@ class Pdf
       tab.show_lines    = :outer
       tab.show_headings = true
       tab.shade_headings = true
-      tab.shade_heading_color = Color::RGB.new(230,238,238)
-      tab.shade_rows = :none
+      tab.shade_heading_color = Color::RGB::Metallic::Iron
+      tab.heading_color = Color::RGB.new(255,255,255)
+      tab.shade_rows = :striped
+      tab.shade_color = Color::RGB.new(230,238,238)
+      tab.shade_color2 = Color::RGB.new(250,250,250)
       tab.orientation   = :center
       tab.heading_font_size = 8
       tab.font_size = 6
@@ -67,7 +70,7 @@ class Pdf
       canales.each do |canal|
         tab.columns[canal.siglas] = PDF::SimpleTable::Column.new(canal.siglas) { |col|
           col.width = 50
-          col.justification = :left
+          col.justification = :center
           col.heading = (to_utf16 canal.siglas)
           col.heading = "VV" if canal.siglas.eql? "VENEVISIÓN"
           col.heading = "GLOBO" if canal.siglas.eql? "GLOBOVISIÓN"
@@ -79,242 +82,265 @@ class Pdf
       # ================================================#      
       
       
-      for i in 1..2
+      for i in 1..3
         apariciones = Aparicion.por_fecha fecha # Aparicion.where(["momento >= ? AND momento <= ?",fecha.to_datetime, (fecha+1.day-1.second).to_s])
-        i==1 ? alianza = "MUD" : (alianza = "PSUV"; tab.show_headings = false;)
-        pars_opos = apariciones.delete_if {|a| a.cuna.grupo != alianza}
-        
-        data = []
-        
-        candidatos.each_with_index do |candidato, index_candi|
-          aparicion_candidato = 0
-          canales_conteo = Hash.new
-          canales.each {|c| canales_conteo["#{c.siglas}"]=0}
-          
-          
-          pars_opos.each do |par_opo|
-            if par_opo.cuna.candidates.include? candidato
-              aparicion_candidato += par_opo.cuna.duracion
-              canales_conteo["#{par_opo.canal.siglas}"] += par_opo.cuna.duracion
-            end
-          end # end do par_opo
-          presente = false
-          canales_conteo.each_value{|v| presente = true if v > 0}
-          
-          if presente
-            # aux = {"fecha" => fecha, "alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
-            # alianza = "" if index_candi != 0
-            aux = {"alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
-            aux = canales_conteo.merge aux
-            aux.delete_if {|key, value| value == 0 } 
-            data << aux
-            puts aux
-          end #end if presente
-        # pdf.text "candidato: #{candidato.name} - #{aparicion_candidato}"  
-        end #end do candidato
-        (tab.data.replace data; tab.render_on(pdf)) if not data.empty?
-      end #end for i
-       pdf.text "___________________________________________________________________________________________", :justification => :center
-       pdf.text "\n"
-      # break
-    end # end for fecha
-    
-    pdf.save_as "prueba.pdf"
-    
-  end
-  
-  
-  
-  
-  def self.generar_reporte_candidatos
-    require 'pdf/writer'
-    require 'pdf/simpletable'
-    
-    pdf = PDF::Writer.new(:paper => "letter") #:orientation => :landscape,
-    
-    ss = PDF::Writer::StrokeStyle.new(2)
-		ss.cap = :round
-		pdf.stroke_style ss
-		
-    # pdf.select_font "Times-Roman"
-    # pdf.text "Hello, Ruby.", :font_size => 72, :justification => :center
-
-    
-    fecha = Date.new(2012,11,1)
-    candidatos = Candidate.all
-    canales = Canal.all
-    
-    for fecha in fecha..Date.today
-      # data << {"fecha" => fecha}
-      pdf.text fecha.to_s, :justification => :center, :font_size => 8
-      pdf.text "\n"
-      
-      tab = encabezado_tabla
-      tab.data
-      tab.data = [{ "alianza" => ""}]
-      tab.render_on(pdf)
-
-      tab = PDF::SimpleTable.new
-      tab.bold_headings = true
-      tab.show_lines    = :outer
-      tab.shade_color = Color::RGB.new(230,238,238)
-      tab.shade_color2 = Color::RGB::White
-      tab.shade_rows = :striped
-      tab.split_rows = true
-      # tab.outer_line_style = 1
-      tab.show_headings = false
-      tab.shade_rows = :none
-      tab.orientation   = :center
-      tab.heading_font_size = 8
-      tab.font_size = 8
-      tab.row_gap = 2
-      tab.title_gap = 10
-      tab.minimum_space = 1
-      column_order  = []
-      column_order << %w(alianza candidato)
-      Canal.all.each{ |c| column_order << c.siglas}
-      column_order = column_order.flatten
-
-      tab.column_order = column_order
-      # tab.columns["fecha"] = PDF::SimpleTable::Column.new("fecha") { |col|
-      #   col.width = 80
-      #   col.justification = :center
-      #   col.heading = "Fecha"
-      #   col.heading.justification= :center
-      # }
-      tab.columns["alianza"] = PDF::SimpleTable::Column.new("alianza") { |col|
-        col.width = 50
-        col.justification = :left
-        col.heading = "Alizanza"
-        col.heading.justification= :center
-      }
-      tab.columns["candidato"] = PDF::SimpleTable::Column.new("candidato") { |col|
-        col.width = 90
-        col.justification = :left
-        col.heading = "Candidato"
-        col.heading.justification= :center
-      }
-
-
-      Canal.all.each do |canal|
-        tab.columns[canal.siglas] = PDF::SimpleTable::Column.new(canal.siglas) { |col|
-          col.width = 50
-          col.justification = :left
-          col.heading = (to_utf16 canal.siglas).capitalize
-          col.heading.justification= :center
-        }      
-      end
-      
-      for i in 1..4
+        # i==1 ? alianza = "MUD" : (alianza = "PSUV"; tab.show_headings = false;)
         case i
         when 1
-            alianza = "Gobierno Opo"; tipo = 2; tolda = 1
+            alianza = "MUD"
         when 2
-            alianza = "Gobierno Cha"; tipo = 2; tolda = 2
-        when 3
-            alianza = "MUD"; tipo = 1; tolda = 1
+            alianza = "PSUV"
         else
-            alianza = "Psuv"; tipo = 1; tolda = 2
+            alianza = "Sin Grupo"
         end
+        #     tipo = 1; tolda = 1
+        # when 4
+        #     tipo = 1; tolda = 2
+        # when 5
+        #     tipo = 2; tolda = 3
+        # else
+        #     tipo = 2; tolda = 3
+        # end
+        tab.show_headings = false if i!=1
         
-        apariciones = Aparicion.where(["momento >= ? AND momento <= ?",fecha.to_datetime, (fecha+1.day-1.second).to_s])
-        pars_opos = apariciones.delete_if {|a| a.cuna.organizacion.tipo_id != tipo || a.cuna.organizacion.tolda_id != tolda}
+        # pars_opos = apariciones.delete_if {|a| a.cuna.organizacion.tipo_id != tipo || a.cuna.organizacion.tolda_id != tolda}
+        pars_opos = apariciones.delete_if {|a| a.cuna.grupo != alianza}
+        # alianza = pars_opos.first.cuna.organizacion.alianza if pars_opos.first
         data = []
-        
-        candidatos.each_with_index do |candidato, index_candi|
+        primera = 0
+        candidatos.each do |candidato|
           aparicion_candidato = 0
           canales_conteo = Hash.new
           canales.each {|c| canales_conteo["#{c.siglas}"]=0}
-          puts "canales: #{canales_conteo}."
+          
           
           pars_opos.each do |par_opo|
             if par_opo.cuna.candidates.include? candidato
               aparicion_candidato += par_opo.cuna.duracion
               canales_conteo["#{par_opo.canal.siglas}"] += par_opo.cuna.duracion
             end
-
           end # end do par_opo
           presente = false
           canales_conteo.each_value{|v| presente = true if v > 0}
           
           if presente
             # aux = {"fecha" => fecha, "alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
-            # alianza = "" if index_candi != 0
+            alianza = "" if primera > 0
             aux = {"alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
             aux = canales_conteo.merge aux
             aux.delete_if {|key, value| value == 0 } 
             data << aux
             puts aux
+            primera += 1
           end #end if presente
-          
         end #end do candidato
-        (tab.data.replace data; tab.render_on(pdf)) if not data.empty?
+        if not data.empty?
+          tab.data.replace data
+          # tab.text_ 
+          tab.render_on(pdf)
+        end
       end #end for i
-       pdf.text "___________________________________________________________________________________________", :justification => :center
-       pdf.text "\n"
+       # pdf.text "___________________________________________________________________________________________", :justification => :center
+       pdf.text "\n\n"
       # break
     end # end for fecha
     
-    pdf.save_as "prueba.pdf"
+    pdf.save_as "reporte_apariciones_Candidatos desde #{fecha.to_s}.pdf"
     
   end
   
-  def self.encabezado_tabla
-      require 'pdf/writer'
-      require 'pdf/simpletable'
-
-      tab = PDF::SimpleTable.new
-      tab.bold_headings = true
-      tab.show_lines    = :none
-      tab.show_headings = true
-      tab.shade_headings = true
-      tab.shade_heading_color = Color::RGB.new(230,238,238)
-      tab.shade_rows = :none
-      tab.orientation   = :center
-      tab.heading_font_size = 8
-      tab.font_size = 6
-      tab.row_gap = 3
-      tab.minimum_space = 0
-      column_order  = []
-      column_order << %w(alianza candidato)
-      Canal.all.each{ |c| column_order << c.siglas}
-      column_order = column_order.flatten
-
-      tab.column_order = column_order
-      # tab.columns["fecha"] = PDF::SimpleTable::Column.new("fecha") { |col|
-      #   col.width = 80
-      #   col.justification = :center
-      #   col.heading = "Fecha"
-      #   col.heading.justification= :center
-      # }
-      tab.columns["alianza"] = PDF::SimpleTable::Column.new("alianza") { |col|
-        col.width = 50
-        col.justification = :left
-        col.heading = "Alizanza"
-        col.heading.justification= :center
-        # col.heading.background_color = Color::RGB::Black
-      }
-      tab.columns["candidato"] = PDF::SimpleTable::Column.new("candidato") { |col|
-        col.width = 90
-        col.justification = :left
-        col.heading = "Candidato"
-        col.heading.justification= :center
-      }
-
-      Canal.all.each do |canal|
-        tab.columns[canal.siglas] = PDF::SimpleTable::Column.new(canal.siglas) { |col|
-          col.width = 50
-          col.justification = :left
-          col.heading = (to_utf16 canal.siglas)
-          col.heading = "VV" if canal.siglas.eql? "VENEVISIÓN"
-          col.heading = "GLOBO" if canal.siglas.eql? "GLOBOVISIÓN"
-          col.heading = "MERI" if canal.siglas.eql? "MERIDIANO"
-          col.heading.justification= :center
-        }      
-      end
-      return tab
-  end
-
+  
+    # 
+    # 
+    # def self.generar_reporte_candidatos
+    #   require 'pdf/writer'
+    #   require 'pdf/simpletable'
+    #   
+    #   pdf = PDF::Writer.new(:paper => "letter") #:orientation => :landscape,
+    #   
+    #   ss = PDF::Writer::StrokeStyle.new(2)
+    #     ss.cap = :round
+    #     pdf.stroke_style ss
+    #     
+    #   # pdf.select_font "Times-Roman"
+    #   # pdf.text "Hello, Ruby.", :font_size => 72, :justification => :center
+    # 
+    #   
+    #   fecha = Date.new(2012,11,1)
+    #   candidatos = Candidate.all
+    #   canales = Canal.all
+    #   
+    #   for fecha in fecha..Date.today
+    #     # data << {"fecha" => fecha}
+    #     pdf.text fecha.to_s, :justification => :center, :font_size => 8
+    #     pdf.text "\n"
+    #     
+    #     tab = encabezado_tabla
+    #     tab.data
+    #     tab.data = [{ "alianza" => ""}]
+    #     tab.render_on(pdf)
+    # 
+    #     tab = PDF::SimpleTable.new
+    #     tab.bold_headings = true
+    #     tab.show_lines    = :outer
+    #     tab.shade_color = Color::RGB.new(230,238,238)
+    #     tab.shade_color2 = Color::RGB::White
+    #     tab.shade_rows = :striped
+    #     tab.split_rows = true
+    #     # tab.outer_line_style = 1
+    #     tab.show_headings = false
+    #     tab.shade_rows = :none
+    #     tab.orientation   = :center
+    #     tab.heading_font_size = 8
+    #     tab.font_size = 8
+    #     tab.row_gap = 2
+    #     tab.title_gap = 10
+    #     tab.minimum_space = 1
+    #     column_order  = []
+    #     column_order << %w(alianza candidato)
+    #     Canal.all.each{ |c| column_order << c.siglas}
+    #     column_order = column_order.flatten
+    # 
+    #     tab.column_order = column_order
+    #     # tab.columns["fecha"] = PDF::SimpleTable::Column.new("fecha") { |col|
+    #     #   col.width = 80
+    #     #   col.justification = :center
+    #     #   col.heading = "Fecha"
+    #     #   col.heading.justification= :center
+    #     # }
+    #     tab.columns["alianza"] = PDF::SimpleTable::Column.new("alianza") { |col|
+    #       col.width = 50
+    #       col.justification = :left
+    #       col.heading = "Alizanza"
+    #       col.heading.justification= :center
+    #     }
+    #     tab.columns["candidato"] = PDF::SimpleTable::Column.new("candidato") { |col|
+    #       col.width = 90
+    #       col.justification = :left
+    #       col.heading = "Candidato"
+    #       col.heading.justification= :center
+    #     }
+    # 
+    # 
+    #     Canal.all.each do |canal|
+    #       tab.columns[canal.siglas] = PDF::SimpleTable::Column.new(canal.siglas) { |col|
+    #         col.width = 50
+    #         col.justification = :left
+    #         col.heading = (to_utf16 canal.siglas).capitalize
+    #         col.heading.justification= :center
+    #       }      
+    #     end
+    #     
+    #     for i in 1..4
+    #       case i
+    #       when 1
+    #           alianza = "Gobierno Opo"; tipo = 2; tolda = 1
+    #       when 2
+    #           alianza = "Gobierno Cha"; tipo = 2; tolda = 2
+    #       when 3
+    #           alianza = "MUD"; tipo = 1; tolda = 1
+    #       else
+    #           alianza = "Psuv"; tipo = 1; tolda = 2
+    #       end
+    #       
+    #       apariciones = Aparicion.where(["momento >= ? AND momento <= ?",fecha.to_datetime, (fecha+1.day-1.second).to_s])
+    #       pars_opos = apariciones.delete_if {|a| a.cuna.organizacion.tipo_id != tipo || a.cuna.organizacion.tolda_id != tolda}
+    #       data = []
+    #       
+    #       candidatos.each_with_index do |candidato, index_candi|
+    #         aparicion_candidato = 0
+    #         canales_conteo = Hash.new
+    #         canales.each {|c| canales_conteo["#{c.siglas}"]=0}
+    #         puts "canales: #{canales_conteo}."
+    #         
+    #         pars_opos.each do |par_opo|
+    #           if par_opo.cuna.candidates.include? candidato
+    #             aparicion_candidato += par_opo.cuna.duracion
+    #             canales_conteo["#{par_opo.canal.siglas}"] += par_opo.cuna.duracion
+    #           end
+    # 
+    #         end # end do par_opo
+    #         presente = false
+    #         canales_conteo.each_value{|v| presente = true if v > 0}
+    #         
+    #         if presente
+    #           # aux = {"fecha" => fecha, "alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
+    #           # alianza = "" if index_candi != 0
+    #           aux = {"alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
+    #           aux = canales_conteo.merge aux
+    #           aux.delete_if {|key, value| value == 0 } 
+    #           data << aux
+    #           puts aux
+    #         end #end if presente
+    #         
+    #       end #end do candidato
+    #       (tab.data.replace data; tab.render_on(pdf)) if not data.empty?
+    #     end #end for i
+    #      pdf.text "___________________________________________________________________________________________", :justification => :center
+    #      pdf.text "\n"
+    #     # break
+    #   end # end for fecha
+    #   
+    #   pdf.save_as "prueba.pdf"
+    #   
+    # end
+    # 
+  # def self.encabezado_tabla
+  #     require 'pdf/writer'
+  #     require 'pdf/simpletable'
+  # 
+  #     tab = PDF::SimpleTable.new
+  #     tab.bold_headings = true
+  #     tab.show_lines    = :none
+  #     tab.show_headings = true
+  #     tab.shade_headings = true
+  #     tab.shade_heading_color = Color::RGB.new(230,238,238)
+  #     tab.shade_rows = :none
+  #     tab.orientation   = :center
+  #     tab.heading_font_size = 8
+  #     tab.font_size = 6
+  #     tab.row_gap = 3
+  #     tab.minimum_space = 0
+  #     column_order  = []
+  #     column_order << %w(alianza candidato)
+  #     Canal.all.each{ |c| column_order << c.siglas}
+  #     column_order = column_order.flatten
+  # 
+  #     tab.column_order = column_order
+  #     # tab.columns["fecha"] = PDF::SimpleTable::Column.new("fecha") { |col|
+  #     #   col.width = 80
+  #     #   col.justification = :center
+  #     #   col.heading = "Fecha"
+  #     #   col.heading.justification= :center
+  #     # }
+  #     tab.columns["alianza"] = PDF::SimpleTable::Column.new("alianza") { |col|
+  #       col.width = 50
+  #       col.justification = :left
+  #       col.heading = "Alizanza"
+  #       col.heading.justification= :center
+  #       # col.heading.background_color = Color::RGB::Black
+  #     }
+  #     tab.columns["candidato"] = PDF::SimpleTable::Column.new("candidato") { |col|
+  #       col.width = 90
+  #       col.justification = :left
+  #       col.heading = "Candidato"
+  #       col.heading.justification= :center
+  #     }
+  # 
+  #     Canal.all.each do |canal|
+  #       tab.columns[canal.siglas] = PDF::SimpleTable::Column.new(canal.siglas) { |col|
+  #         col.width = 50
+  #         col.justification = :left
+  #         col.heading = (to_utf16 canal.siglas)
+  #         col.heading = "VV" if canal.siglas.eql? "VENEVISIÓN"
+  #         col.heading = "GLOBO" if canal.siglas.eql? "GLOBOVISIÓN"
+  #         col.heading = "MERI" if canal.siglas.eql? "MERIDIANO"
+  #         col.heading.justification= :center
+  #       }      
+  #     end
+  #     return tab
+  # end
+  # 
 
 end
 
