@@ -22,13 +22,16 @@ class Pdf
     # pdf.text "Hello, Ruby.", :font_size => 72, :justification => :center
 
     
-    fecha = Date.new(2012,11,01)
+    fecha = Date.new(2012,11,28)
     candidatos = Candidate.order :name
     canales = Canal.order :siglas
-    
-    for fecha in fecha..Date.today
+    pdf.start_page_numbering(255, 722, 7, nil, to_utf16("#{fecha.strftime("%d %b %Y")}       Página: <PAGENUM> de <TOTALPAGENUM>"), 1)
+    pdf.text (to_utf16 ("Tiempo de Exposición de Candidatos por Día")), :justification => :center, :font_size => 10
+    pdf.text "Desde '#{fecha.strftime("%d %b %Y")}' hasta '#{Date.today.strftime("%d %b %Y")}'", :justification => :center, :font_size => 9
+    pdf.text "\n"
+    for fecha in fecha..Date.yesterday
       # data << {"fecha" => fecha}
-      pdf.text "Fecha: #{fecha.to_s}", :justification => :center, :font_size => 8
+        pdf.text (to_utf16("#{fecha.strftime("%a, %d de %b de %Y")}")), :justification => :center, :font_size => 8
       pdf.text "\n"
 
       tab = PDF::SimpleTable.new
@@ -44,14 +47,13 @@ class Pdf
       tab.orientation   = :center
       tab.heading_font_size = 8
       tab.font_size = 6
-      tab.row_gap = 3
+      tab.row_gap = 2
       tab.minimum_space = 0
       # =================== ORDEN DE COLUMNAS ===================#
       column_order  = []
       column_order << %w(alianza candidato)
       canales.each{ |c| column_order << c.siglas}
-      column_order = column_order.flatten
-      tab.column_order = column_order
+      tab.column_order = column_order.flatten
 
       # =================== COLUMNAS ===================#
       tab.columns["alianza"] = PDF::SimpleTable::Column.new("alianza") { |col|
@@ -123,10 +125,17 @@ class Pdf
           presente = false
           canales_conteo.each_value{|v| presente = true if v > 0}
           
+          
+          canales_conteo.each_value do |value|
+            presente = true if value > 0
+            puts "ALERTA!!!!:#{value}" if value.to_i > 180 # (value = "<b>#{value}</b>"; puts value if value.to_i > 180
+            
+          end
+          
           if presente
             # aux = {"fecha" => fecha, "alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
             alianza = "" if primera > 0
-            aux = {"alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
+            aux = {"alianza" => "<b>#{alianza}</b>", "candidato" =>  (to_utf16 candidato.name).capitalize }
             aux = canales_conteo.merge aux
             aux.delete_if {|key, value| value == 0 } 
             data << aux
@@ -135,6 +144,11 @@ class Pdf
           end #end if presente
         end #end do candidato
         if not data.empty?
+          # data.each do |d|
+          #   d.each do |key, value|
+          #      tab.text_color = Color::RGB::Red if key != 'Alianza' && key != 'Candidato' && value.to_i > 180
+          #   end 
+          # end
           tab.data.replace data
           # tab.text_ 
           tab.render_on(pdf)
@@ -145,7 +159,7 @@ class Pdf
       # break
     end # end for fecha
     
-    pdf.save_as "reporte_apariciones_Candidatos desde #{fecha.to_s}.pdf"
+    pdf.save_as "Reporte_apariciones_candidatos hasta #{fecha.to_s}.pdf"
     
   end
   

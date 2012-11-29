@@ -8,7 +8,20 @@ module Importer
     voceros_url = "http://sigecup.cne.gob.ve/index.php/general/political_representative_controller/show_all_political_representatives"
     a = Mechanize.new
     page = login_sigecup a
-    rows = load_data_rows voceros_url, page, a
+    
+    page2 = page.link_with(:href => cunas_fichas_url).click
+    
+    page2_form = page2.forms.first
+    page2_form.fields.each { |f| puts f.name }
+    puts "Inicio......"
+    page2_form.limit = -1
+    page3 = a.submit(page2_form, page2_form.buttons.first)
+      
+    page3_form2 = page3.search("table")[2]
+    # puts page3_form2
+    rows = page3_form2.search("tr")
+    rows.shift
+    
     
     rows.each do |tr|
       organizacion = Organizacion.new
@@ -21,6 +34,12 @@ module Importer
     
   end
   
+  # def self.import_candidate agent link_name
+  #   
+  #   puts a.get(link_name)
+  #   
+  # end
+  # 
   
   
   def self.import_cunas
@@ -74,7 +93,11 @@ module Importer
           candidates.each do |c|
             # candidate = Candidate.all(:conditions =>"name like '#{c.text.squeeze(" ")}'").first
             candidate = Candidate.find_by_name c.text.squeeze(" ")
-            cuna.candidates.push candidate if not candidate.nil?
+            if not candidate.nil?
+              cuna.candidates.push candidate
+            else
+              a.get(c)
+            end
           end
         else
           case cuna.grupo
