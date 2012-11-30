@@ -4,10 +4,12 @@ class CandidatesController < ApplicationController
   # GET /candidates.json
   require 'importer'
   def index
-    Pdf.generar_reporte_candidatos if params[:import]
     Importer.import_candidatos if params[:import_candi]
     @candidates = Candidate.all.sort_by {|c| c.name}
-    
+    if params[:generar_reporte]
+      # Pdf.generar_reporte_candidatos 
+      
+    end
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @candidates }
@@ -94,7 +96,25 @@ class CandidatesController < ApplicationController
     end
   end
   
+  def generar_reporte
+    # Pdf.generar_reporte_candidatos pa if params[:generar_reporte]
+    
+  end
   
+  def generar_reporte_exportar
+    if params[:dp4].blank? or params[:dp5].blank?
+      respond_to do |format|
+        format.html { redirect_to generar_reporte_url, flash[:mensaje] => 'fecha invalida'}
+        format.json { head :no_content }
+      end
+    else
+      Pdf.generar_reporte_candidatos params[:dp4], params[:dp5]
+      respond_to do |format|
+        format.html { redirect_to candidates_url, notice: 'Reporte Generado'}
+        format.json { head :no_content }
+      end
+    end
+  end
   # ===================== DEFINIDAS INTERNAMENTE =============================== #
   
   # def import

@@ -28,20 +28,11 @@ module Importer
       tds = tr.search("td")
       vocero_pag = tds[1].search('a').click
       puts raw vocero_pag
-      # vocero_pag = page.link_with(:href => url).click
     end
     
     
   end
-  
-  # def self.import_candidate agent link_name
-  #   
-  #   puts a.get(link_name)
-  #   
-  # end
-  # 
-  
-  
+
   def self.import_cunas
 
     cunas_fichas_url = "http://sigecup.cne.gob.ve/index.php/cunas_en_vivo/consultar/por_ficha"
