@@ -22,4 +22,14 @@ class Candidate < ActiveRecord::Base
     "#{id} - #{name} - #{description}"
   end
   
+  def apariciones_candidatos apariciones
+    canales_conteo = Hash.new
+    canales = Canal.order :siglas
+    canales.each {|c| canales_conteo["#{c.siglas}"]=0}
+    apariciones.each do |aparicion|
+      canales_conteo["#{aparicion.canal.siglas}"] += aparicion.cuna.duracion if aparicion.cuna.candidates.include? self
+    end
+    return canales_conteo
+  end
+  
 end

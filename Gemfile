@@ -22,6 +22,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'spreadsheet'
 gem 'haml'
 gem 'composite_primary_keys'
 gem 'pdf-writer', :git => 'git://github.com/metaskills/pdf-writer.git'
