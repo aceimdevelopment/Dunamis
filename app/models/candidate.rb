@@ -31,5 +31,51 @@ class Candidate < ActiveRecord::Base
     end
     return canales_conteo
   end
+
+  def apariciones_candidatos_cantidad apariciones
+    canales_conteo = Hash.new
+    canales = Canal.order :siglas
+    canales_conteo["total"] = 0
+    canales_conteo["solo"] = 0
+    canales_conteo["combo"] = 0
+    canales_conteo["nacional"] = 0
+    canales.each {|c| canales_conteo["#{c.siglas}"]=0}
+    apariciones.each do |aparicion|
+      if aparicion.cuna.candidates.include? self
+        count = aparicion.cuna.candidates.count
+        canales_conteo["#{aparicion.canal.siglas}"] += aparicion.cuna.duracion 
+        canales_conteo["total"] += 1
+        # case count
+        #   when 1
+        #       canales_conteo["solo"] += 1
+        #   when count > 9
+        #       canales_conteo["nacional"] += 1
+        #   else
+        #       canales_conteo["combo"] += 1
+        # end #fin case
+
+        if count == 1
+          canales_conteo["solo"] += 1
+        elsif count > 9
+          canales_conteo["nacional"] += 1
+        else
+          canales_conteo["combo"] += 1
+        end #fin if_anidado
+      end #fin if
+    end # fin do
+    return canales_conteo
+  end
+  
+  def solo
+    count = 0
+    self.cunas.each{|cuna| count += 1 if cuna.candidates.count == 1}
+    return count
+  end
+  
+  def nacional
+    count = 0
+    self.cunas.each{|cuna| count += 1 if cuna.candidates.count >= 6}
+    return count    
+  end
   
 end
