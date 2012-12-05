@@ -1,0 +1,74 @@
+<% if flash[:mensaje] %>
+	<%= flash[:mensaje] %>
+<% end %>
+<div class="well">  
+	<div class="alert alert-error" id="alert" style="display: none; ">
+		<strong>La fecha de inicio no puede ser mayor a la fecha final</strong>
+	</div>
+	
+	<%= form_tag( :controller => 'candidates', :action => 'generar_reporte_exportar') do %>
+
+		
+		<%# date_select_tag :fecha_inicial %>
+		
+		
+	  <div class="control-group">
+
+	    <div class="controls">
+	      Fecha Inicial: <%= text_field_tag 'dp4', nil , :placeholder => 'Fecha Inicial', :class => 'span2'%>
+	    </div>
+	  </div>
+	
+	  <div class="control-group">
+	    <div class="controls">
+	      Fecha  _Final: <%= text_field_tag 'dp5', nil , :placeholder => 'Fecha Final', :class => 'span2'%>
+	    </div>
+	  </div>
+	
+	  <%= submit_tag "exportar", :id => "submit", :name => "submit", :class => "btn btn-primary small", :disabled => false, :disable_with => "Espere..." %>
+	
+	<% end -%>
+</div>
+
+
+<script>
+	$(function(){
+		window.prettyPrint && prettyPrint();
+		$('#dp1').datepicker({
+			format: 'dd-mm-yyyy'
+		});
+		$('#dp2').datepicker();
+		$('#dp3').datepicker();
+		$('#dp3').datepicker();
+		$('#dpYears').datepicker();
+		$('#dpMonths').datepicker();
+		
+		
+		var startDate = new Date();
+		var endDate = new Date();
+		$('#dp4').datepicker({
+			format: 'dd-mm-yyyy'
+			})
+			.on('changeDate', function(ev){
+				if (ev.date.valueOf() > endDate.valueOf()){
+					$('#alert').show().find('strong').text('La fecha de inicio no puede ser mayor a la fecha final');
+				} else {
+					$('#alert').hide();
+					startDate = new Date(ev.date);
+					$('#startDate').text($('#dp4').data('date'));
+				}
+				$('#dp4').datepicker('hide');
+			});
+		$('#dp5').datepicker({format: 'dd-mm-yyyy'})
+			.on('changeDate', function(ev){
+				if (ev.date.valueOf() < startDate.valueOf()){
+					$('#alert').show().find('strong').text('La fecha final no puede ser menor a la fecha inicial');
+				} else {
+					$('#alert').hide();
+					endDate = new Date(ev.date);
+					$('#endDate').text($('#dp5').data('date'));
+				}
+				$('#dp5').datepicker('hide');
+			});
+	});
+</script>
