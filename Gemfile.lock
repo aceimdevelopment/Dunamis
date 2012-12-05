@@ -6,6 +6,12 @@ GIT
       color (>= 1.4.0)
       transaction-simple (~> 1.3)
 
+GIT
+  remote: https://github.com/tanob/ofa-ruby.git
+  revision: a82a6a8918fd61c9f4ab2ec665eb148c7a077eff
+  specs:
+    ofa (1.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -157,6 +163,7 @@ DEPENDENCIES
   jquery-rails
   mechanize (~> 2.5.1)
   mysql2
+  ofa!
   pdf-writer!
   rails (= 3.2.8)
   sass-rails (~> 3.2.3)
