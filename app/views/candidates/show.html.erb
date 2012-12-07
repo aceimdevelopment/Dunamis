@@ -1,29 +1,48 @@
-<p id="notice"><%= notice %></p>
+<div class="bs-docs-example">
+  <table class="table table-striped table-bordered table-hover table-condensed">
+	  <tr>
+	    <td>
+			<p id="notice"><%= notice %></p>
+			<p><%= image_tag @candidate.foto, :title => "foto", :class => "img-rounded", :style => 'width: 150px; height:150px;'%></p>
+			<p>
+		</td>
+	    <td>
+		<br>
+			<p>
+			  <b>Name:</b>
+			  <%= @candidate.name %>
+			</p>
 
-<p>
-  <b>Name:</b>
-  <%= @candidate.name %>
-</p>
+			<p>
+			  <b>Organization:</b>
+			  <%= @candidate.organizacion.nombre_corto %>
+			</p>
 
-<p>
-  <b>Organization:</b>
-  <%= @candidate.organizacion.nombre_corto %>
-</p>
+			<p>
+			  <b>State:</b>
+			  <%= @candidate.estado.nombre %>
+			</p>
 
-<p>
-  <b>State:</b>
-  <%= @candidate.estado.nombre %>
-</p>
+			<p>
+			  <b>Description:</b>
+			  <%= @candidate.description %>
+			</p>
+			
+			<p>
+			  <b>Cunas:</b>
+			  <%= @cunas.count %>
+			</p>
+			
+			<p>
+			  <b>Apariciones:</b>
+			  <%= @apariciones.count %>
+			</p>
+	
+	    </td>
+	  </tr>
+  </table>
+</div>
 
-<p>
-  <b>Description:</b>
-  <%= @candidate.description %>
-</p>
-
-<p>
-  <b>Foto:</b>
-  <%= @candidate.foto %>
-</p>
 
 <p>
   <b>Cunas:</b>

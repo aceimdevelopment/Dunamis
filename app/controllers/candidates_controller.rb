@@ -4,7 +4,7 @@ class CandidatesController < ApplicationController
   # GET /candidates.json
   require 'importer'
   def index
-    Importer.import_candidatos if params[:import_candi]
+    # Importer.import_candidatos if params[:import_candi]
     @candidates = Candidate.all.sort_by {|c| c.name}
     if params[:generar_reporte]
       # Pdf.generar_reporte_candidatos 
