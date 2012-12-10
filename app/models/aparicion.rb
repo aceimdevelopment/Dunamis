@@ -17,7 +17,7 @@ class Aparicion < ActiveRecord::Base
   # scope :gob_opo, joins(:cuna).cunas.gob_opo
   
   scope :por_canal, lambda {|canal_id| where(:canal_id => canal_id)}
-  
+  scope :por_cuna, lambda {|cuna_id| where(:cuna_id => cuna_id)}
   # scope :por_fecha, lambda {|fecha| where(["momento >= ? AND momento <= ?",fecha.to_s, (fecha+1.day-1.second).to_s])}
   
   scope :por_fecha, lambda {|fecha| where(:fecha => fecha)}

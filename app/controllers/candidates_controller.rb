@@ -24,7 +24,7 @@ class CandidatesController < ApplicationController
     @apariciones = []
     @tiempo = 0
     @cunas.each do |cuna|
-    aux = Aparicion.where(:cuna_id => cuna.id)
+    aux = Aparicion.por_cuna cuna.id
     @tiempo += aux.count * cuna.duracion if aux
     @apariciones += aux
     end
