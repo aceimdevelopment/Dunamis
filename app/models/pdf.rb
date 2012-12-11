@@ -216,7 +216,15 @@ class Pdf
         i=2
         if not data.empty?
           data.each do |d|
+
+              bold = Spreadsheet::Format.new :color => :red #:weight => :bold
+              # sheet1.row(0).default_format = format
+
+              # bold = Spreadsheet::Format.new :weight => :bold
+              # 4.times do |x| sheet1.row(x + 1).set_format(0, bold) end
               @sheet.row(i).concat d.values
+              d.each_value{|v| @sheet.row(i).default_format = bold if v.to_i > 180 }
+              
               # d.each_value{|v| @sheet.row(i).push v; puts "VALUE:!!#{i}:#{to_utf16 v.to_s}"}
               i+=1
           end
@@ -357,8 +365,8 @@ class Pdf
           if presente
             # aux = {"fecha" => fecha, "alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
             alianza = "" if primera > 0
-            aux = {"alianza" => "#{alianza}", "candidato" =>  (to_utf16 candidato.name).capitalize }
-            canales_conteo.each_value {|v| (v = "<b> #{v} </b> "; puts v) if v.to_i > 180}
+            aux = {"alianza" => "#{alianza}", "candidato" =>  (to_utf16 candidato.name) }
+            # canales_conteo.each_value {|v| (v = "<b> #{v} </b> "; puts "ALERTA!!!#{v}") if v.to_i > 180}
             aux = canales_conteo.merge aux
             aux.delete_if {|key, value| value == 0 }
             data << aux
@@ -383,165 +391,6 @@ class Pdf
     end # end for fecha
     
     pdf.save_as "Reporte_apariciones_candidatos desde #{fecha_inicial} hasta #{fecha_final}.pdf"
-    
-  end
-  
-  
-  
-  
-  
-  def self.generar_reporte_candidatos_2
-    require 'pdf/writer'
-    require 'pdf/simpletable'
-    
-    pdf = PDF::Writer.new(:paper => "letter") #:orientation => :landscape,
-    
-    ss = PDF::Writer::StrokeStyle.new(2)
-		ss.cap = :round
-		pdf.stroke_style ss
-		
-    # pdf.select_font "Times-Roman"
-    # pdf.text "Hello, Ruby.", :font_size => 72, :justification => :center
-
-    
-    fecha = Date.new(2012,11,28)
-    candidatos = Candidate.order :name
-    canales = Canal.order :siglas
-    pdf.start_page_numbering(255, 722, 7, nil, to_utf16("#{fecha.strftime("%d %b %Y")}       Página: <PAGENUM> de <TOTALPAGENUM>"), 1)
-    pdf.text (to_utf16 ("Tiempo de Exposición de Candidatos por Día")), :justification => :center, :font_size => 10
-    pdf.text "Desde '#{fecha.strftime("%d %b %Y")}' hasta '#{Date.today.strftime("%d %b %Y")}'", :justification => :center, :font_size => 9
-    pdf.text "\n"
-    for fecha in fecha..Date.yesterday
-      # data << {"fecha" => fecha}
-        pdf.text (to_utf16("#{fecha.strftime("%a, %d de %b de %Y")}")), :justification => :center, :font_size => 8
-      pdf.text "\n"
-
-      tab = PDF::SimpleTable.new
-      tab.bold_headings = true
-      tab.show_lines    = :outer
-      tab.show_headings = true
-      tab.shade_headings = true
-      tab.shade_heading_color = Color::RGB::Metallic::Iron
-      tab.heading_color = Color::RGB.new(255,255,255)
-      tab.shade_rows = :striped
-      tab.shade_color = Color::RGB.new(230,238,238)
-      tab.shade_color2 = Color::RGB.new(250,250,250)
-      tab.orientation   = :center
-      tab.heading_font_size = 8
-      tab.font_size = 6
-      tab.row_gap = 2
-      tab.minimum_space = 0
-      # =================== ORDEN DE COLUMNAS ===================#
-      column_order  = []
-      column_order << %w(alianza candidato)
-      canales.each{ |c| column_order << c.siglas}
-      tab.column_order = column_order.flatten
-
-      # =================== COLUMNAS ===================#
-      tab.columns["alianza"] = PDF::SimpleTable::Column.new("alianza") { |col|
-        col.width = 50
-        col.justification = :left
-        col.heading = "Alizanza"
-        col.heading.justification= :center
-      }
-      tab.columns["candidato"] = PDF::SimpleTable::Column.new("candidato") { |col|
-        col.width = 90
-        col.justification = :left
-        col.heading = "Candidato"
-        col.heading.justification= :center
-      }
-
-      canales.each do |canal|
-        tab.columns[canal.siglas] = PDF::SimpleTable::Column.new(canal.siglas) { |col|
-          col.width = 50
-          col.justification = :center
-          col.heading = (to_utf16 canal.siglas)
-          col.heading = "VV" if canal.siglas.eql? "VENEVISIÓN"
-          col.heading = "GLOBO" if canal.siglas.eql? "GLOBOVISIÓN"
-          col.heading = "MERI" if canal.siglas.eql? "MERIDIANO"
-          col.heading.justification= :center
-        }      
-      end
-      
-      # ================================================#      
-      
-      
-      for i in 1..3
-        apariciones = Aparicion.por_fecha fecha # Aparicion.where(["momento >= ? AND momento <= ?",fecha.to_datetime, (fecha+1.day-1.second).to_s])
-        # i==1 ? alianza = "MUD" : (alianza = "PSUV"; tab.show_headings = false;)
-        case i
-        when 1
-            alianza = "MUD"
-        when 2
-            alianza = "PSUV"
-        else
-            alianza = "Sin Grupo"
-        end
-        #     tipo = 1; tolda = 1
-        # when 4
-        #     tipo = 1; tolda = 2
-        # when 5
-        #     tipo = 2; tolda = 3
-        # else
-        #     tipo = 2; tolda = 3
-        # end
-        tab.show_headings = false if i!=1
-        
-        # pars_opos = apariciones.delete_if {|a| a.cuna.organizacion.tipo_id != tipo || a.cuna.organizacion.tolda_id != tolda}
-        pars_opos = apariciones.delete_if {|a| a.cuna.grupo != alianza}
-        # alianza = pars_opos.first.cuna.organizacion.alianza if pars_opos.first
-        data = []
-        primera = 0
-        candidatos.each do |candidato|
-          aparicion_candidato = 0
-          canales_conteo = Hash.new
-          canales.each {|c| canales_conteo["#{c.siglas}"]=0}
-          
-          
-          pars_opos.each do |par_opo|
-            if par_opo.cuna.candidates.include? candidato
-              aparicion_candidato += par_opo.cuna.duracion
-              canales_conteo["#{par_opo.canal.siglas}"] += par_opo.cuna.duracion
-            end
-          end # end do par_opo
-          presente = false
-          canales_conteo.each_value{|v| presente = true if v > 0}
-          
-          
-          canales_conteo.each_value do |value|
-            presente = true if value > 0
-            puts "ALERTA!!!!:#{value}" if value.to_i > 180 # (value = "<b>#{value}</b>"; puts value if value.to_i > 180
-            
-          end
-          
-          if presente
-            # aux = {"fecha" => fecha, "alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
-            alianza = "" if primera > 0
-            aux = {"alianza" => "<b>#{alianza}</b>", "candidato" =>  (to_utf16 candidato.name).capitalize }
-            aux = canales_conteo.merge aux
-            aux.delete_if {|key, value| value == 0 } 
-            data << aux
-            puts aux
-            primera += 1
-          end #end if presente
-        end #end do candidato
-        if not data.empty?
-          # data.each do |d|
-          #   d.each do |key, value|
-          #      tab.text_color = Color::RGB::Red if key != 'Alianza' && key != 'Candidato' && value.to_i > 180
-          #   end 
-          # end
-          tab.data.replace data
-          # tab.text_ 
-          tab.render_on(pdf)
-        end
-      end #end for i
-       # pdf.text "___________________________________________________________________________________________", :justification => :center
-       pdf.text "\n\n"
-      # break
-    end # end for fecha
-    
-    pdf.save_as "Reporte_apariciones_candidatos hasta #{fecha.to_s}.pdf"
     
   end
   
