@@ -7,6 +7,7 @@ gem 'rails', '3.2.8'
 
 gem 'mysql2'
 gem "mechanize", "~> 2.5.1"
+gem "mhs-rvideo", "~> 0.9.7"
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -27,7 +28,7 @@ gem 'haml'
 gem 'composite_primary_keys'
 gem 'pdf-writer', :git => 'git://github.com/metaskills/pdf-writer.git'
 
-gem 'ofa', :git => 'https://github.com/tanob/ofa-ruby.git'
+# gem 'ofa', :git => 'https://github.com/tanob/ofa-ruby.git'
 
 gem 'jquery-tablesorter'
 # To use ActiveModel has_secure_password

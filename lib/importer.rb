@@ -197,31 +197,234 @@ module Importer
     puts "=== ERRORES: #{errores}                   ==="
     puts "============================================="
   end
+  
+  
+  def self.change_register
+    url = 'http://sigem.cne.gob.ve/index.php/general/political_representative_controller/edit_political_representative?to_edit='
+
+    # Se Crea el Objeto Mechanize para comunicarse con la Aplicación Externa (Sigem)
+    a = Mechanize.new
+    i = 1
+    n = 1328
+    # login_sigecup devuelve la pagina de inicio logeado
+    page = login_sigecup a
+    
+    while i < n  do
+      url_temp = url
+      url_temp += i.to_s
+      candidate_page = a.get url_temp
+      if candidate_form = candidate_page.forms.first
+        puts " #{i} <#{candidate_form['election']}>".center(30,"=")
+        if aplicable candidate_form['election'].strip
+          puts "original: #{candidate_form['election']}".center(30,"=")
+          candidate_form['election'] = "NoAplica"
+          puts "despues: #{candidate_form['election']}".center(30,"=")
+          response = a.submit(candidate_form, candidate_form.buttons[2])
+          puts "EXITO! #{response}".center(30,"=") if response
+        end
+      end
+      i +=1
+    end
+
+  end
+  
+  
+  def self.change_register_political_representative
+    url = 'http://sigem.cne.gob.ve/index.php/general/political_representative_controller/edit_political_representative?to_edit='
+    # Se Crea el Objeto Mechanize para comunicarse con la Aplicación Externa (Sigem)
+    a = Mechanize.new
+    i = 177
+    n = 1795
+    # login_sigecup devuelve la pagina de inicio logeado
+    page = login_sigecup a
+    
+    while i < n  do
+      url_temp = url
+      url_temp += i.to_s
+      candidate_page = a.get url_temp
+      if candidate_form = candidate_page.forms.first
+        puts " #{i} <#{candidate_form['names']} | #{candidate_form['last_names']}>".center(30,"=")     
+        apellido_corregido = chequear_apellido candidate_form['last_names'] # Apellido Corregido
+        nombre_corregido = chequear_nombre candidate_form['names'] # Nombre Corregido
+        
+        puts " Original ".center(30,"=")
+        puts "Nombre: #{candidate_form['names']}".center(30,"=")
+        puts "Apellido: #{candidate_form['last_names']}".center(30,"=")
+        
+        candidate_form['last_names'] = apellido_corregido # cambio
+        candidate_form['names'] = nombre_corregido # cambio
+        
+        puts " Después ".center(30,"=")
+        puts "Nombre: #{candidate_form['names']}".center(30,"=")
+        puts "Apellido: #{candidate_form['last_names']}".center(30,"=")
+        
+        begin
+          response = a.submit(candidate_form, candidate_form.buttons[2])
+          puts "EXITO! #{response}".center(30,"=") if response
+        rescue
+          puts "ERROR! #{$!}".center(30,"=")
+        end
+          
+        
+      end
+      i +=1
+    end
+  end
+  
+  
+  def self.change_rif_register_infomercial
+    
+    url = 'http://sigem.cne.gob.ve/index.php/infomercial/infomercial_controller/edit_infomercial?to_edit='
+    # Se Crea el Objeto Mechanize para comunicarse con la Aplicación Externa (Sigem)
+    a = Mechanize.new
+    i = 107
+    n = 270
+    # login_sigecup devuelve la pagina de inicio logeado
+    page = login_sigecup a
+    
+    while i < n  do
+      url_temp = url
+      url_temp += i.to_s
+      infomercial_page = a.get url_temp
+      if infomercial_form = infomercial_page.forms.first
+        rif = infomercial_form['rif']
+        infomercial_form['rif'] = 'No Aplica' if not rif.include? "J"
+        
+        puts " #{i} RIF: <#{rif} ".center(30,"=")
+        # apellido_corregido = chequear_apellido candidate_form['last_names'] # Apellido Corregido
+        # nombre_corregido = chequear_nombre candidate_form['names'] # Nombre Corregido
+        # 
+        # puts " Original ".center(30,"=")
+        # puts "Nombre: #{candidate_form['names']}".center(30,"=")
+        # puts "Apellido: #{candidate_form['last_names']}".center(30,"=")
+        # 
+        # candidate_form['last_names'] = apellido_corregido # cambio
+        # candidate_form['names'] = nombre_corregido # cambio
+        # 
+        # puts " Después ".center(30,"=")
+        # puts "Nombre: #{candidate_form['names']}".center(30,"=")
+        # puts "Apellido: #{candidate_form['last_names']}".center(30,"=")
+        # 
+        begin
+          response = a.submit(infomercial_form, infomercial_form.buttons[9])
+          if response  
+            puts "EXITO! #{response}".center(30,"=")
+            puts " #{i} RIF: <#{rif} ".center(30,"=")
+          end
+        rescue
+          puts "ERROR! #{$!}".center(30,"=")
+        end
+      end
+      i +=1
+    end
+  end
+  
+  def self.chequear_nombre nombre
+    nombre[3] = 'é' if nombre.include? "Jose "
+    nombre[3] = 'é' if nombre.include? "Andres "
+    nombre = "Andrés" if nombre.eql? "Andres"
+    nombre = "Héctor" if nombre.eql? "Hector"
+    nombre = "José" if nombre.eql? "Jose"
+    nombre = "Ángel" if nombre.eql? "Angel"
+    nombre = "Miguel Ángel" if nombre.eql? "Miguel Angel"
+    nombre = "Jesús" if nombre.eql? "Jesus"
+    return nombre
+  end
+  
+  def self.chequear_apellido apellido
+    apellido = "Pérez" if apellido.eql? "Perez"
+    apellido = "Hernández" if apellido.eql? "Hernandez"
+    apellido = "Fernández" if apellido.eql? "Fernandez"
+    apellido  = "González" if apellido.eql? "Gonzalez"
+    apellido = "García" if apellido.eql? "Garcia"
+    apellido = "Márquez" if apellido.eql? "Marquez"
+    apellido = "Álvarez" if apellido.eql? "Alvarez"
+    apellido = "Rodríguez" if apellido.eql? "Rodriguez"
+    apellido = "Martínez" if apellido.eql? "Martinez"    
+    return apellido
+  end
+  
+  def self.change_general_register url
+    
+    organizacion = "http://sigem.cne.gob.ve/index.php/political_party/political_party_controller/edit_political_party?to_edit=54"
+    vocero = "http://sigem.cne.gob.ve/index.php/general/political_representative_controller/edit_political_representative?to_edit=786"
+    cuña = "http://sigem.cne.gob.ve/index.php/cunas_en_vivo/editar?to_edit=301"
+    tv = "http://sigem.cne.gob.ve/index.php/tv_program/tv_program_controller/edit_tv_program?to_edit=4598"
+    error = "¡Acción inválida!"
+    
+    url = 'http://sigem.cne.gob.ve/index.php/general/political_representative_controller/edit_political_representative?to_edit='
+    
+    # Se Crea el Objeto Mechanize para comunicarse con la Aplicación Externa (Sigem)
+    a = Mechanize.new
+    i = 1
+    n = 1328
+    # login_sigecup devuelve la pagina de inicio logeado
+    page = login_sigecup a
+    
+    while i < n  do
+      url_temp = url
+      url_temp += i.to_s
+      candidate_page = a.get url_temp
+      if candidate_form = candidate_page.forms.first
+        puts " #{i} <#{candidate_form['election']}>".center(30,"=")
+        if aplicable candidate_form['election'].strip
+          puts "original: #{candidate_form['election']}".center(30,"=")
+          candidate_form['election'] = "NoAplica"
+          puts "despues: #{candidate_form['election']}".center(30,"=")
+          response = a.submit(candidate_form, candidate_form.buttons[2])
+          puts "EXITO! #{response}".center(30,"=") if response
+        end
+      end
+      i +=1
+    end
+
+  end
+
+
+  
+  def rollback aplica
+    aplica.eql? "Regionales 2012"
+  end
+  def self.aplicable_reg2012 aplica
+    aplica.include? "Regionales"
+  end
+  
+  def self.aplicable aplica
+    ((aplica.casecmp "no aplica").eql? 0 or (aplica.casecmp "no").eql? 0 or (aplica.casecmp "na").eql? 0) ? true : false
+  end
     
   def self.login_sigecup a
     username = "DMOROS"
-    password = "dm893585"
-    url = URI.parse('http://sigecup.cne.gob.ve')
+    password = "48992675"
+    url = URI.parse('http://sigem.cne.gob.ve/')
+    
+    begin
+      
+      index = a.get(url)
+      # captura de Imagen Captcha
+      img = index.search("img")
+      puts "#{img}"
   
-    index = a.get(url)
-    # captura de Imagen Captcha
-    img = index.search("img")
-    puts "#{img}"
-  
-    puts "Introduzca el Valor del Captcha:"
-    captcha = gets.chomp # lectura por consola de valor Captcha
+      puts "Introduzca el Valor del Captcha:"
+      captcha = gets.chomp # lectura por consola de valor Captcha
   
   
-    # captura de form login
-    login_form = index.forms.first
+      # captura de form login
+      login_form = index.forms.first
   
-    login_form.login = username
-    login_form.password = password
-    login_form.captcha = captcha
+      login_form.login = username
+      login_form.password = password
+      login_form.captcha = captcha
   
     # Carga de principal de la aplicación
-    puts "Login Completado"
-    a.submit(login_form, login_form.buttons.first)
+    
+      response = a.submit(login_form, login_form.buttons.first)
+      error = !((response.search 'label.error').blank?)
+      puts "El Capcha en incorrecto intente nuevamente" if error
+      puts response.search 'label.error'
+    end while error
+    puts "Login Completado ... "
+    response
   end  
   
   def self.load_data_rows url, page, a
@@ -240,5 +443,16 @@ module Importer
     puts "Carga de Rows Completada"
     rows.shift
   end
+  
+  # Error Number:
+  # 
+  # ERROR: secuencia de bytes no válida para codificación «UTF8»: 0xc320
+  # 
+  # INSERT INTO "bitacora_actividad" ("ip", "fecha", "objeto", "detalle", "usuario_fk", "bitacora_accion_fk", "tabla_fk", "tabla_id_fk") VALUES ('10.100.199.47', '2013-03-04 18:28:07', 'Andrés Velasco Bra� ...', 'Nombres&& ##Andrés&&Apellidos&& ##Velasco Brañes', '16', 46, 'representante_politico', '531')
+  # 
+  # Filename: /var/www/html/sigem/models/security/bitacora_model.php
+  # 
+  # Line Number: 570
+  # 
   
 end
