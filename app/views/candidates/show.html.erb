@@ -1,50 +1,101 @@
-<p id="notice"><%= notice %></p>
+<div class="bs-docs-example">
+  <table class="table table-striped table-bordered table-hover table-condensed">
+	  <tr>
+	    <td style='pading:100px'>
+			<p id="notice"><%= notice %></p>
+			<p><%= image_tag @candidate.foto, :title => "foto", :class => "img-rounded", :style => 'width: 150px; height:150px; padding:10px 0 0 40px;'%></p>
+			<%= link_to 'Edit', edit_candidate_path(@candidate) %> |
+			<%= link_to 'Back', candidates_path %>
+			<p>
+		</td>
+	    <td>
+		<br>
+			<p>
+			  <b>Name:</b>
+			  <%= @candidate.name %>
+			</p>
 
-<p>
-  <b>Name:</b>
-  <%= @candidate.name %>
-</p>
+			<p>
+			  <b>Organization:</b>
+			  <%= @candidate.organizacion.nombre_corto %>
+			</p>
 
-<p>
-  <b>Organization:</b>
-  <%= @candidate.organizacion.nombre_corto %>
-</p>
+			<p>
+			  <b>State:</b>
+			  <%= @candidate.estado.nombre %>
+			</p>
 
-<p>
-  <b>State:</b>
-  <%= @candidate.estado.nombre %>
-</p>
+			<p>
+			  <b>Description:</b>
+			  <%= @candidate.description %>
+			</p>
+			
+			<p>
+			  <b>Cunas:</b>
+			  <%= @cunas.count %>
+			</p>
+			
+			<p>
+			  <b>Apariciones:</b>
+			  <%= @apariciones.count %>
+			</p>
+	
+	    </td>
+	  </tr>
+  </table>
+</div>
 
-<p>
-  <b>Description:</b>
-  <%= @candidate.description %>
-</p>
+<% @tone_orga = @candidate.organizacion.tolda.nombre.to_s == 'Chavismo' ? '#EBCCCC' : '#C4E3F3' %>
 
-<p>
-  <b>Foto:</b>
-  <%= @candidate.foto %>
-</p>
+<div class = "well">
+	<p><strong>Cuñas:</strong></p>
+	<div class="bs-docs-example">
+	  <table class="table table-striped table-bordered table-hover table-condensed">
+	    <thead  style="background: <%=@tone_orga%>;">
+		  <tr class='<%=@tone_orga%>'>
+		    <th>Id_Sigecup</th>
+		    <th>Nombre</th>
+		    <th>Duración</th>
+		  </tr>
+	    </thead>
+	    <tbody>
+		<% @cunas.each do |cuna| %>
 
-<p>
-  <b>Cunas:</b>
-  <% @cunas.each do |cuna| %>
-	<br>
-	<%= cuna.descripcion %>
-  <% end %>
-  <br>
-  <strong><%= "Total Cunas: #{@cunas.count}" %></strong>
-</p>
+		  <tr>
+		    <td><%= cuna.sigecup_id %></td>
+		    <td><%= cuna.nombre %></td>
+		    <td><%= cuna.duracion %> Seg</td>
+		  </tr>
+		<% end %>
+	    </tbody>
+	  </table>
+	</div>
+	
+	<p><strong>Apariciones:</strong></p>
+	<p> <strong>Total Apariciones: </strong> <%="#{ @apariciones.count}"%> | <strong>Tiempo Exposición: </strong> <%= "#{@tiempo} Segundos" %></p>
+	<div class="bs-docs-example">
+	  <table class="table table-striped table-bordered table-hover table-condensed">
+	    <thead  style="background: <%=@tone_orga%>;">
+		  <tr class='<%=@tone_orga%>'>
+		    <th>Canal</th>
+		    <th>Fecha</th>
+		    <th>Descripción de Cuña</th>
+		  </tr>
+	    </thead>
+	    <tbody>
+		<% @apariciones.each do |aparicion| %>
 
-
-<p>
-  <b>Apariciones:</b>
-  <% @apariciones.each do |aparicion| %>
-  	<br>
-	<%= aparicion.descripcion %>
-  <% end %>
-	<br>
-	<strong><%= "Total Apariciones: #{@apariciones.count} | Tiempo Exposición: #{@tiempo} Segundos" %></strong>
-</p>
+		  <tr>
+		    <td><%= aparicion.canal.nombre %></td>
+		    <td><%= aparicion.fecha %></td>
+		    <td><%= aparicion.cuna.descripcion %></td>
+		  </tr>
+		<% end %>
+	    </tbody>
+	  </table>
+	</div>
+	<p> <strong>Total Apariciones: </strong> <%="#{ @apariciones.count}"%> | <strong>Tiempo Exposición: </strong> <%= "#{@tiempo} Segundos" %></p>	
+</div>
 
 <%= link_to 'Edit', edit_candidate_path(@candidate) %> |
 <%= link_to 'Back', candidates_path %>

@@ -4,7 +4,7 @@ class CandidatesController < ApplicationController
   # GET /candidates.json
   require 'importer'
   def index
-    Importer.import_candidatos if params[:import_candi]
+    # Importer.import_candidatos if params[:import_candi]
     @candidates = Candidate.all.sort_by {|c| c.name}
     if params[:generar_reporte]
       # Pdf.generar_reporte_candidatos 
@@ -24,7 +24,7 @@ class CandidatesController < ApplicationController
     @apariciones = []
     @tiempo = 0
     @cunas.each do |cuna|
-    aux = Aparicion.where(:cuna_id => cuna.id)
+    aux = Aparicion.por_cuna cuna.id
     @tiempo += aux.count * cuna.duracion if aux
     @apariciones += aux
     end

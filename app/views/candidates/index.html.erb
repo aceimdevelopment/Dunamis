@@ -2,7 +2,7 @@
 
 <%= link_to 'Exportar reporte de candidatos', :action => 'generar_reporte' %> |
 
-<%= link_to 'Importar candidatos', :action => 'index', :import_candi => 1, :html => "disable:true"%>
+<%= link_to 'Importar candidatos', :action => 'index', :import_candi => 1 %>
 
 <br />
 <br />
@@ -25,7 +25,7 @@
 	    <td><%= candidate.name %></td>
 	    <td><%= candidate.organizacion.nombre_corto %></td>
 	    <td><%= candidate.estado.nombre %></td>
-	    <td><%= image_tag candidate.foto, :title => "foto", :class => "img-rounded", :style => 'max-width: 50px; max-height:50px'%></td>
+	    <td><%= image_tag candidate.foto, :title => "foto", :class => "img-rounded", :style => 'width: 40px; height:40px'%></td>
 		<td><%= link_to 'Detalle', candidate, :class => 'btn btn-mini' %></td>
 		<td><%= link_to 'Editar', edit_candidate_path(candidate), :class => 'btn btn-mini' %></td>
 		<td><%= link_to 'Eliminar', candidate, method: :delete, data: { confirm: '¿Estas Seguro?'}, :class => 'btn btn-mini btn-danger' %></td>
@@ -38,3 +38,5 @@
 <br />
 
 <%= link_to 'Nuevo Candidato', new_candidate_path, :class => 'btn btn-primary' %>
+
+<br>

@@ -79,6 +79,84 @@ class Pdf
     
   end
   
+  
+  def self.generar_reporte_candidatos_excel_cantidad fecha_inicial, fecha_final
+      require 'spreadsheet'
+      
+      @book = Spreadsheet::Workbook.new
+       
+      # row = @sheet1.row(0)
+      # row.push %w{Casa Cualquier Cosa} 
+      
+      fecha = fecha_inicial.to_date
+      fecha_2 = fecha_final.to_date
+      candidatos = Candidate.order :name
+      canales = Canal.order :siglas
+      index = 0
+      
+      for fecha in fecha..fecha_2
+        @sheet = @book.create_worksheet :name => "#{fecha.strftime('%d %m %Y')}"
+        @sheet.row(0).push "#{fecha.strftime("%a- %d de %b de %Y")}"
+        # @sheet.writer 0,0, to_utf16("#{fecha.strftime("%a, %d de %b de %Y")}")
+        data = %w{Alianza Candidato Apariciones_total Apariciones_solo Apariciones_combo Apariciones_nacional}
+        
+        canales.each {|c| data << c.siglas}
+        @sheet.row(1).concat data
+        data = []     
+        for i in 1..3
+          apariciones = Aparicion.por_fecha fecha # Aparicion.where(["momento >= ? AND momento <= ?",fecha.to_datetime, (fecha+1.day-1.second).to_s])
+
+          case i
+            when 1
+                alianza = "MUD"
+            when 2
+                alianza = "PSUV"
+            else
+                alianza = "Sin Grupo"
+          end
+          apariciones_alianza = apariciones.delete_if {|a| a.cuna.grupo != alianza}
+      #     # alianza = pars_opos.first.cuna.organizacion.alianza if pars_opos.first
+
+          primera = 0
+          candidatos.each do |candidato|
+            canales_conteo = candidato.apariciones_candidatos_cantidad apariciones_alianza
+            presente = false
+
+            canales_conteo.each_value { |value| presente = true if value > 0}
+            if presente
+              # aux = {"fecha" => fecha, "alianza" => alianza, "candidato" =>  (to_utf16 candidato.name).capitalize }
+              alianza = "" if primera > 0
+              
+              solo = candidato.solo
+              nacional = candidato.nacional
+              total = candidato.cunas.count
+              combo = total - (solo + nacional)
+
+              aux = {"alianza" => "#{alianza}", "candidato" =>  (candidato.name) }
+              # canales_conteo.each_value {|v| (v = "<b> #{v} </b> "; puts v) if v.to_i > 180}
+              aux = aux.merge canales_conteo
+              # aux.delete_if {|key, value| value == 0 }
+              data << aux
+              puts aux
+              primera += 1
+            end #end if presente
+          end #end do candidato
+        end #end for i
+        i=2
+        if not data.empty?
+          data.each do |d|
+              @sheet.row(i).concat d.values
+              # d.each_value{|v| @sheet.row(i).push v; puts "VALUE:!!#{i}:#{to_utf16 v.to_s}"}
+              i+=1
+          end
+        end
+      end # end for fecha
+
+      @book.write "Reporte_apariciones_candidatos_cantidades desde #{fecha_inicial} hasta #{fecha_final}.xls"
+    
+  end
+  
+  
   def self.generar_reporte_candidatos_excel_2 fecha_inicial, fecha_final
       require 'spreadsheet'
       
