@@ -27,7 +27,7 @@ gem 'haml'
 gem 'composite_primary_keys'
 gem 'pdf-writer', :git => 'git://github.com/metaskills/pdf-writer.git'
 
-gem 'ofa', :git => 'https://github.com/tanob/ofa-ruby.git'
+#gem 'ofa', '1.3', :git => 'https://github.com/tanob/ofa-ruby.git'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
