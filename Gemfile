@@ -21,7 +21,11 @@ gem "mechanize", "~> 2.5.1"
   gem 'twitter-bootstrap-rails'
 # end
 
-gem 'less-rails'
+gem "therubyracer"
+gem "less-rails"
+gem "twitter-bootstrap-rails"
+
+
 gem 'jquery-rails'
 gem 'spreadsheet'
 gem 'haml'
