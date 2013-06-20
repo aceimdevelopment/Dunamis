@@ -1,0 +1,27 @@
+<%- model_class = Website -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:url) %>:</strong></dt>
+  <dd><%= @website.url %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:nombre) %>:</strong></dt>
+  <dd><%= @website.nombre %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:descripcion) %>:</strong></dt>
+  <dd><%= @website.descripcion %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:logo) %>:</strong></dt>
+  <dd><%= @website.logo %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              website_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_website_path(@website), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              website_path(@website),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Url:</b>
+  <%= @website.url %>
+</p>
+
+<p>
+  <b>Nombre:</b>
+  <%= @website.nombre %>
+</p>
+
+<p>
+  <b>Descripcion:</b>
+  <%= @website.descripcion %>
+</p>
+
+<p>
+  <b>Logo:</b>
+  <%= @website.logo %>
+</p>
+
+
+<%= link_to 'Edit', edit_website_path(@website) %> |
+<%= link_to 'Back', websites_path %>
