@@ -2,6 +2,7 @@
 
 one:
   url: MyString
+<<<<<<< HEAD
   nombre: MyText
   descripcion: MyText
   logo: MyText
@@ -11,3 +12,12 @@ two:
   nombre: MyText
   descripcion: MyText
   logo: MyText
+=======
+  nombre: MyString
+  descripcion: MyString
+
+two:
+  url: MyString
+  nombre: MyString
+  descripcion: MyString
+>>>>>>> 5c15fe1d515081a9abc7720a1690ba14f4e72998

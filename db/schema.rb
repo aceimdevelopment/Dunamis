@@ -11,7 +11,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(:version => 20130618165426) do
+=======
+ActiveRecord::Schema.define(:version => 20130620171530) do
+>>>>>>> 5c15fe1d515081a9abc7720a1690ba14f4e72998
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -95,13 +99,6 @@ ActiveRecord::Schema.define(:version => 20130618165426) do
   add_index "organizaciones", ["tipo_id"], :name => "FK tipo_idx"
   add_index "organizaciones", ["tolda_id"], :name => "FK tolda_idx"
 
-  create_table "posts", :force => true do |t|
-    t.string   "title"
-    t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
-  end
-
   create_table "tipos", :force => true do |t|
     t.string   "nombre",      :null => false
     t.string   "descripcion"
@@ -119,9 +116,14 @@ ActiveRecord::Schema.define(:version => 20130618165426) do
 
   create_table "websites", :force => true do |t|
     t.string   "url"
+<<<<<<< HEAD
     t.text     "nombre"
     t.text     "descripcion"
     t.text     "logo"
+=======
+    t.string   "nombre"
+    t.string   "descripcion"
+>>>>>>> 5c15fe1d515081a9abc7720a1690ba14f4e72998
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
