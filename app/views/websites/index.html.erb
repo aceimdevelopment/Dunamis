@@ -1,34 +1,3 @@
-<<<<<<< HEAD
-<h1>Listing websites</h1>
-
-<table>
-  <tr>
-    <th>Url</th>
-    <th>Nombre</th>
-    <th>Descripcion</th>
-    <th>Logo</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @websites.each do |website| %>
-  <tr>
-    <td><%= website.url %></td>
-    <td><%= website.nombre %></td>
-    <td><%= website.descripcion %></td>
-    <td><%= website.logo %></td>
-    <td><%= link_to 'Show', website %></td>
-    <td><%= link_to 'Edit', edit_website_path(website) %></td>
-    <td><%= link_to 'Destroy', website, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-  </tr>
-<% end %>
-</table>
-
-<br />
-
-<%= link_to 'New Website', new_website_path %>
-=======
 <%- model_class = Website -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
@@ -69,4 +38,4 @@
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_website_path,
             :class => 'btn btn-primary' %>
->>>>>>> 5c15fe1d515081a9abc7720a1690ba14f4e72998
+

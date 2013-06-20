@@ -1,36 +1,3 @@
-<<<<<<< HEAD
-<%= form_for(@website) do |f| %>
-  <% if @website.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@website.errors.count, "error") %> prohibited this website from being saved:</h2>
-
-      <ul>
-      <% @website.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :url %><br />
-    <%= f.text_field :url %>
-  </div>
-  <div class="field">
-    <%= f.label :nombre %><br />
-    <%= f.text_area :nombre %>
-  </div>
-  <div class="field">
-    <%= f.label :descripcion %><br />
-    <%= f.text_area :descripcion %>
-  </div>
-  <div class="field">
-    <%= f.label :logo %><br />
-    <%= f.text_area :logo %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-=======
 <%= form_for @website, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :url, :class => 'control-label' %>
@@ -55,6 +22,5 @@
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 websites_path, :class => 'btn' %>
->>>>>>> 5c15fe1d515081a9abc7720a1690ba14f4e72998
   </div>
 <% end %>

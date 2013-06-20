@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-<h1>New website</h1>
-
-<%= render 'form' %>
-
-<%= link_to 'Back', websites_path %>
-=======
 <%- model_class = Website -%>
 <div class="page-header">
   <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 <%= render :partial => 'form' %>
->>>>>>> 5c15fe1d515081a9abc7720a1690ba14f4e72998
