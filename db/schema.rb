@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130621170039) do
+ActiveRecord::Schema.define(:version => 20130621170728) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -61,6 +61,20 @@ ActiveRecord::Schema.define(:version => 20130621170039) do
   add_index "candidates_cunas", ["candidate_id", "cuna_id"], :name => "index_candidates_cunas_on_candidate_id_and_cuna_id", :unique => true
   add_index "candidates_cunas", ["candidate_id"], :name => "FK_idx"
   add_index "candidates_cunas", ["cuna_id"], :name => "FK cunas_idx"
+
+  create_table "candidatos", :id => false, :force => true do |t|
+    t.integer  "vocero_id",     :default => 0, :null => false
+    t.integer  "eleccion_id",   :default => 0, :null => false
+    t.integer  "municipio_id"
+    t.integer  "tipo_cargo_id"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  add_index "candidatos", ["eleccion_id"], :name => "index_candidatos_on_eleccion_id"
+  add_index "candidatos", ["municipio_id"], :name => "index_candidatos_on_municipio_id"
+  add_index "candidatos", ["tipo_cargo_id"], :name => "index_candidatos_on_tipo_cargo_id"
+  add_index "candidatos", ["vocero_id"], :name => "index_candidatos_on_vocero_id"
 
   create_table "cunas", :force => true do |t|
     t.string   "sigecup_id",       :null => false
