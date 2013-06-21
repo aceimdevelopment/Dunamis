@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130621165637) do
+ActiveRecord::Schema.define(:version => 20130621170039) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -141,6 +141,13 @@ ActiveRecord::Schema.define(:version => 20130621165637) do
   end
 
   add_index "tipos", ["nombre"], :name => "index_tipos_on_nombre", :unique => true
+
+  create_table "tipos_cargos", :force => true do |t|
+    t.text     "nombre"
+    t.text     "nombre_corto"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "toldas", :force => true do |t|
     t.string   "nombre"

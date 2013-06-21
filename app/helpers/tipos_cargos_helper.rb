@@ -1,0 +1,2 @@
+module TiposCargosHelper
+end

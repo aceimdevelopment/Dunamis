@@ -1,5 +1,7 @@
 Dunamis::Application.routes.draw do
 
+  resources :tipos_cargos
+
   resources :municipios
 
   resources :voceros
