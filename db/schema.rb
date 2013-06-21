@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130621145803) do
+ActiveRecord::Schema.define(:version => 20130621152554) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -25,6 +25,13 @@ ActiveRecord::Schema.define(:version => 20130621145803) do
   add_index "apariciones", ["canal_id", "cuna_id", "momento"], :name => "index_apariciones_on_canal_id_and_cuna_id_and_momento", :unique => true
   add_index "apariciones", ["canal_id"], :name => "FK aparicon canal_idx"
   add_index "apariciones", ["cuna_id"], :name => "key aparicion cuna_idx"
+
+  create_table "asuntos", :force => true do |t|
+    t.text     "nombre"
+    t.text     "descripcion"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "canales", :force => true do |t|
     t.string   "nombre"
@@ -80,6 +87,13 @@ ActiveRecord::Schema.define(:version => 20130621145803) do
   end
 
   add_index "estados", ["nombre"], :name => "index_estados_on_nombre", :unique => true
+
+  create_table "informes", :force => true do |t|
+    t.date     "fecha"
+    t.text     "resumen"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "organizaciones", :force => true do |t|
     t.string   "nombre"

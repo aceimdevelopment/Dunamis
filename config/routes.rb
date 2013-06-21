@@ -1,5 +1,9 @@
 Dunamis::Application.routes.draw do
 
+  resources :informes
+
+  resources :asuntos
+
   resources :temas
 
   resources :websites
