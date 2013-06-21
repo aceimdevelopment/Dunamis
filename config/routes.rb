@@ -1,5 +1,7 @@
 Dunamis::Application.routes.draw do
 
+  resources :resumenes
+
   resources :candidatos
 
   resources :tipos_cargos

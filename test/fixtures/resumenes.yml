@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  titulo: MyText
+  contenido: MyText
+  vocero: 
+  informe: 
+
+two:
+  titulo: MyText
+  contenido: MyText
+  vocero: 
+  informe: 

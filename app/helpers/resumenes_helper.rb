@@ -1,0 +1,2 @@
+module ResumenesHelper
+end
