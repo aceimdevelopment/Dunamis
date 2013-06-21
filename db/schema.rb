@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130621152554) do
+ActiveRecord::Schema.define(:version => 20130621154522) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -77,6 +77,14 @@ ActiveRecord::Schema.define(:version => 20130621152554) do
   add_index "cunas", ["nombre"], :name => "index_cunas_on_nombre", :unique => true
   add_index "cunas", ["organizacion_id"], :name => "key_cunas_organizacion_idx"
   add_index "cunas", ["sigecup_id"], :name => "index_cunas_on_sigecup_id", :unique => true
+
+  create_table "elecciones", :force => true do |t|
+    t.date     "fecha"
+    t.text     "nombre"
+    t.integer  "ano"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "estados", :force => true do |t|
     t.string   "nombre"

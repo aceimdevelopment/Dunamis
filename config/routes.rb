@@ -1,5 +1,7 @@
 Dunamis::Application.routes.draw do
 
+  resources :elecciones
+
   resources :informes
 
   resources :asuntos
