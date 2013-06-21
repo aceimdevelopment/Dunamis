@@ -1,5 +1,7 @@
 Dunamis::Application.routes.draw do
 
+  resources :municipios
+
   resources :voceros
 
   resources :elecciones
