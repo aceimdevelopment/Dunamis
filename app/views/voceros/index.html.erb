@@ -1,0 +1,42 @@
+<%- model_class = Vocero -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:organizacion_id) %></th>
+      <th><%= model_class.human_attribute_name(:nombre) %></th>
+      <th><%= model_class.human_attribute_name(:foto) %></th>
+      <th><%= model_class.human_attribute_name(:descripcion) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @voceros.each do |vocero| %>
+      <tr>
+        <td><%= link_to vocero.id, vocero_path(vocero) %></td>
+        <td><%= vocero.organizacion_id %></td>
+        <td><%= vocero.nombre %></td>
+        <td><%= vocero.foto %></td>
+        <td><%= vocero.descripcion %></td>
+        <td><%=l vocero.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_vocero_path(vocero), :class => 'btn btn-mini' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      vocero_path(vocero),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_vocero_path,
+            :class => 'btn btn-primary' %>
