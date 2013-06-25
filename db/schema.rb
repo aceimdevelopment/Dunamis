@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130621173132) do
+ActiveRecord::Schema.define(:version => 20130625203037) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -173,6 +173,12 @@ ActiveRecord::Schema.define(:version => 20130621173132) do
     t.text     "nombre_corto"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+  end
+
+  create_table "tipos_notas", :force => true do |t|
+    t.text     "nombre"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "toldas", :force => true do |t|
