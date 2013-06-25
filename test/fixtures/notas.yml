@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  titulo: MyText
+  contenido: MyText
+  tipo_nota: 
+  tema: 
+  asunto: 
+  url: MyText
+  website: 
+  resume: 
+
+two:
+  titulo: MyText
+  contenido: MyText
+  tipo_nota: 
+  tema: 
+  asunto: 
+  url: MyText
+  website: 
+  resume: 

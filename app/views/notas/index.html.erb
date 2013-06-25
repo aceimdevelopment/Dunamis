@@ -1,0 +1,37 @@
+<h1>Listing notas</h1>
+
+<table>
+  <tr>
+    <th>Titulo</th>
+    <th>Contenido</th>
+    <th>Tipo nota</th>
+    <th>Tema</th>
+    <th>Asunto</th>
+    <th>Url</th>
+    <th>Website</th>
+    <th>Resume</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @notas.each do |nota| %>
+  <tr>
+    <td><%= nota.titulo %></td>
+    <td><%= nota.contenido %></td>
+    <td><%= nota.tipo_nota %></td>
+    <td><%= nota.tema %></td>
+    <td><%= nota.asunto %></td>
+    <td><%= nota.url %></td>
+    <td><%= nota.website %></td>
+    <td><%= nota.resume %></td>
+    <td><%= link_to 'Show', nota %></td>
+    <td><%= link_to 'Edit', edit_nota_path(nota) %></td>
+    <td><%= link_to 'Destroy', nota, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Nota', new_nota_path %>

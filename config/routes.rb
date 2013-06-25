@@ -1,5 +1,7 @@
 Dunamis::Application.routes.draw do
 
+  resources :notas
+
   resources :tipos_notas
 
   resources :resumenes
