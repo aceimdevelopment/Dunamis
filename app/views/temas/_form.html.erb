@@ -16,7 +16,6 @@
     <%= f.label :asunto_id, :class => 'control-label' %>
     <div class="controls">
 	  <%= f.collection_select :asunto_id, Asunto.all, :id, :nombre, :prompt => true  %>
-      <%# f.number_field :asunto_id, :class => 'number_field' %>
     </div>
   </div>
 
@@ -26,11 +25,3 @@
                 temas_path, :class => 'btn' %>
   </div>
 <% end %>
-
-<!-- Ejemplo Collection_Select -->
-<!-- @post = Post.new(:category_id => 5) -->
-
-<!--<%# form_for @post do |f| %> -->
-  <!-- option with id == 5 is selected -->
-<!--  <%# f.collection_select :category_id, Category.all, :id, :name, :prompt => true  %> -->
-<!--<%# end %> -->
