@@ -25,7 +25,8 @@ class OrganizacionesController < ApplicationController
   # GET /organizaciones/new.json
   def new
     @organizacion = Organizacion.new
-
+    @tipos = Tipo.all
+    @toldas = Tolda.all
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @organizacion }

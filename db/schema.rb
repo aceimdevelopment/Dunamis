@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130625203644) do
+ActiveRecord::Schema.define(:version => 20130626225224) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -176,7 +176,10 @@ ActiveRecord::Schema.define(:version => 20130625203644) do
     t.text     "descripcion"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "asunto_id",   :null => false
   end
+
+  add_index "temas", ["asunto_id"], :name => "index_temas_on_asunto_id"
 
   create_table "tipos", :force => true do |t|
     t.string   "nombre",      :null => false

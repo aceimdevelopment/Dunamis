@@ -5,3 +5,15 @@
  *= require_self
  *= require_tree .
 */
+
+@media (min-width: 980px) {
+    .pull-center {
+        text-align: center;
+    }
+    .pull-center > .nav {
+        float:none;
+        display:inline-block;
+        *display: inline; *zoom: 1;
+        height: 32px;
+    }
+}

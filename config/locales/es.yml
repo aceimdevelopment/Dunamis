@@ -131,6 +131,23 @@ es:
       create: Crear %{model}
       submit: Guardar %{model}
       update: Actualizar %{model}
+      back: Regresar %{model}
+      destroy: Eliminar %{model}
+      cancel: Cancelar
+    actions: "Acciones"
+    links:
+      back: "Atras"
+      cancel: "Cancelar"
+      confirm: "¿Estas Seguro?"
+      destroy: "Eliminar"
+      new: "Nuevo"
+      edit: "Editar"
+    titles:
+      edit: "Editar"
+      save: "Guardar"
+      new: "Nuevo"
+      delete: "Eliminar"
+      
   number:
     currency:
       format:

@@ -1,34 +1,31 @@
-<p id="notice"><%= notice %></p>
+<%- model_class = Organizacion -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
 
-<p>
-  <b>Nombre:</b>
-  <%= @organizacion.nombre %>
-</p>
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:nombre) %>:</strong></dt>
+  <dd><%= @organizacion.nombre %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:descripcion) %>:</strong></dt>
+  <dd><%= @organizacion.descripcion %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:nombre_corto) %>:</strong></dt>
+  <dd><%= @organizacion.nombre_corto %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:rif) %>:</strong></dt>
+  <dd><%= @organizacion.rif %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:tolda_id) %>:</strong></dt>
+  <dd><%= @organizacion.tolda_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:tipo_id) %>:</strong></dt>
+  <dd><%= @organizacion.tipo_id %></dd>
+</dl>
 
-<p>
-  <b>Descripcion:</b>
-  <%= @organizacion.descripcion %>
-</p>
-
-<p>
-  <b>Nombre corto:</b>
-  <%= @organizacion.nombre_corto %>
-</p>
-
-<p>
-  <b>Rif:</b>
-  <%= @organizacion.rif %>
-</p>
-
-<p>
-  <b>Tolda:</b>
-  <%= @organizacion.tolda.nombre %>
-</p>
-<p>
-  <b>Tipo:</b>
-  <%= @organizacion.tipo.nombre %>
-</p>
-
-
-<%= link_to 'Edit', edit_organizacion_path(@organizacion) %> |
-<%= link_to 'Back', organizaciones_path %>
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              organizaciones_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_organizacion_path(@organizacion), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              organizacion_path(@organizacion),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

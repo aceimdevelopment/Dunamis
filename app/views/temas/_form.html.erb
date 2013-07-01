@@ -1,14 +1,22 @@
 <%= form_for @tema, :html => { :class => 'form-horizontal' } do |f| %>
-  <div class="control-group">
+  <div class="control-group warning">
     <%= f.label :nombre, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :nombre, :class => 'text_area' %>
+      <%= f.text_field :nombre, :class => 'text_field', :required => true %>
+	  <span class="help-inline">*</span>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :descripcion, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :descripcion, :class => 'text_area' %>
+      <%= f.text_area :descripcion, :class => 'text_area', :size => '5x5' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :asunto_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :asunto_id, Asunto.all, :id, :nombre, :prompt => true  %>
+      <%# f.number_field :asunto_id, :class => 'number_field' %>
     </div>
   </div>
 
@@ -18,3 +26,11 @@
                 temas_path, :class => 'btn' %>
   </div>
 <% end %>
+
+<!-- Ejemplo Collection_Select -->
+<!-- @post = Post.new(:category_id => 5) -->
+
+<!--<%# form_for @post do |f| %> -->
+  <!-- option with id == 5 is selected -->
+<!--  <%# f.collection_select :category_id, Category.all, :id, :name, :prompt => true  %> -->
+<!--<%# end %> -->

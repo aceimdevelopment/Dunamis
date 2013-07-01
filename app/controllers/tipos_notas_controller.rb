@@ -45,6 +45,7 @@ class TiposNotasController < ApplicationController
     respond_to do |format|
       if @tipo_nota.save
         format.html { redirect_to @tipo_nota, notice: 'Tipo nota was successfully created.' }
+        format.js   {}
         format.json { render json: @tipo_nota, status: :created, location: @tipo_nota }
       else
         format.html { render action: "new" }

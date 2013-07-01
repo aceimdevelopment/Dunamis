@@ -2,13 +2,13 @@
   <div class="control-group">
     <%= f.label :nombre, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :nombre, :class => 'text_area' %>
+      <%= f.text_field :nombre, :class => 'text_field', :required => true %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :descripcion, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :descripcion, :class => 'text_area' %>
+      <%= f.text_area :descripcion, :class => 'text_area', :size => '5x5' %>
     </div>
   </div>
 

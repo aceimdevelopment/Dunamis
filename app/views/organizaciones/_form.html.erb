@@ -1,41 +1,87 @@
-<%= form_for(@organizacion) do |f| %>
-  <% if @organizacion.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@organizacion.errors.count, "error") %> prohibited this organizacion from being saved:</h2>
-
-      <ul>
-      <% @organizacion.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+<%= form_for @organizacion, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :nombre, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :nombre, :class => 'text_field', :required => true %>
     </div>
-  <% end %>
+  </div>
+  <div class="control-group">
+    <%= f.label :descripcion, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :descripcion, :class => 'text_area', :size => "5x5" %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :nombre_corto, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :nombre_corto, :class => 'text_field', :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :rif, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :rif, :class => 'text_field' %>
+    </div>
+  </div>
 
-  <div class="field">
-    <%= f.label :nombre %><br />
-    <%= f.text_field :nombre %>
+
+  <div class="control-group">
+    <%= f.label :tolda_id, :class => 'control-label' %>
+    <!-- <div class="controls">
+	  <%= f.collection_select :tolda_id, @toldas, :id, :nombre, :prompt => true, :required => true %>
+    </div> -->
+	<div class="btn-group" data-toggle="buttons-radio">
+	  <%= @toldas.each do |tolda| %>
+		<%= f.button "#{tolda.nombre}", :type => 'button', :class=> "btn btn-primary", :value => "#{tolda.id}", :id => "organizacion_tolda_id_#{tolda.id}", :name => "organizacion[#{tolda.id}]" %>
+	  <% end %>
+	</div>
+
   </div>
-  <div class="field">
-    <%= f.label :descripcion %><br />
-    <%= f.text_field :descripcion %>
+  <div class="control-group">
+    <%= f.label :tipo_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :tipo_id, @tipos, :id, :nombre, :prompt => true, :required => true %>
+    </div>
   </div>
-  <div class="field">
-    <%= f.label :nombre_corto %><br />
-    <%= f.text_field :nombre_corto %>
+
+<!-- pruebas..... -->
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                organizaciones_path, :class => 'btn' %>
   </div>
-  <div class="field">
-    <%= f.label :rif %><br />
-    <%= f.text_field :rif %>
-  </div>
-  <div class="field">
-    <%= f.label :tolda %><br />
-	<%= f.collection_select :tolda_id, Tolda.all, :id, :nombre, {:prompt => '--Seleccione Tolda--'}%>
-  </div>
-  <div class="field">
-    <%= f.label :tipo %><br />
-	<%= f.collection_select :tipo_id, Tipo.all, :id, :nombre, {:prompt => '--Seleccione Tipo Organiozacion--'}%>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+	<div class="control-group warning">
+	  <label class="control-label" for="inputWarning">Input with warning</label>
+	  <div class="controls">
+	    <input type="text" id="inputWarning">
+	    <span class="help-inline">Something may have gone wrong</span>
+	  </div>
+	</div>
+
+	<div class="control-group error">
+	  <label class="control-label" for="inputError">Input with error</label>
+	  <div class="controls">
+	    <input type="text" id="inputError">
+	    <span class="help-inline">Please correct the error</span>
+	  </div>
+	</div>
+
+	<div class="control-group info">
+	  <label class="control-label" for="inputInfo">Input with info</label>
+	  <div class="controls">
+	    <input type="text" id="inputInfo">
+	    <span class="help-inline">Username is already taken</span>
+	  </div>
+	</div>
+
+	<div class="control-group success">
+	  <label class="control-label" for="inputSuccess">Input with success</label>
+	  <div class="controls">
+	    <input type="text" id="inputSuccess">
+	    <span class="help-inline">Woohoo!</span>
+	  </div>
+	</div>
+
+
 <% end %>
+
