@@ -10,6 +10,7 @@
       <th><%= model_class.human_attribute_name(:contenido) %></th>
       <th><%= model_class.human_attribute_name(:vocero_id) %></th>
       <th><%= model_class.human_attribute_name(:informe_id) %></th>
+      <th><%= model_class.human_attribute_name(:tema_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -22,6 +23,7 @@
         <td><%= resumen.contenido %></td>
         <td><%= resumen.vocero_id %></td>
         <td><%= resumen.informe_id %></td>
+        <td><%= resumen.tema_id %></td>
         <td><%=l resumen.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

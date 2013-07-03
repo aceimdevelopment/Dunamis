@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130626225224) do
+ActiveRecord::Schema.define(:version => 20130703164724) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -130,8 +130,6 @@ ActiveRecord::Schema.define(:version => 20130626225224) do
     t.text     "titulo",       :null => false
     t.text     "contenido",    :null => false
     t.integer  "tipo_nota_id", :null => false
-    t.integer  "tema_id",      :null => false
-    t.integer  "asunto_id",    :null => false
     t.text     "url",          :null => false
     t.integer  "website_id",   :null => false
     t.integer  "resume_id",    :null => false
@@ -139,9 +137,7 @@ ActiveRecord::Schema.define(:version => 20130626225224) do
     t.datetime "updated_at",   :null => false
   end
 
-  add_index "notas", ["asunto_id"], :name => "index_notas_on_asunto_id"
   add_index "notas", ["resume_id"], :name => "index_notas_on_resume_id"
-  add_index "notas", ["tema_id"], :name => "index_notas_on_tema_id"
   add_index "notas", ["tipo_nota_id"], :name => "index_notas_on_tipo_nota_id"
   add_index "notas", ["website_id"], :name => "index_notas_on_website_id"
 
@@ -166,9 +162,11 @@ ActiveRecord::Schema.define(:version => 20130626225224) do
     t.integer  "informe_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.integer  "tema_id",    :null => false
   end
 
   add_index "resumenes", ["informe_id"], :name => "index_resumenes_on_informe_id"
+  add_index "resumenes", ["tema_id"], :name => "index_resumenes_on_tema_id"
   add_index "resumenes", ["vocero_id"], :name => "index_resumenes_on_vocero_id"
 
   create_table "temas", :force => true do |t|
