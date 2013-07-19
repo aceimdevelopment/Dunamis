@@ -25,7 +25,8 @@ class NotasController < ApplicationController
   # GET /notas/new.json
   def new
     @nota = Nota.new
-
+    @tipo_nota = TipoNota.all
+    @website = Website.all
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @nota }

@@ -2,37 +2,38 @@
   <div class="control-group">
     <%= f.label :titulo, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :titulo, :class => 'text_area' %>
+      <%= f.text_field :titulo, :class => 'text_field', :placeholder => "Título…", :required => true %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :contenido, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :contenido, :class => 'text_area' %>
+      <%= f.text_area :contenido, :class => 'text_area', :size => '5x5', :placeholder => "Contenido…", :required => true %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :tipo_nota_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :tipo_nota_id, :class => 'number_field' %>
+      <%# f.number_field :tipo_nota_id, :class => 'number_field' %>
+			<%= f.collection_select :tipo_nota_id, @tipo_nota, :id, :nombre, :prompt => true, :required => true, :class => "selectpicker" %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :url, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :url, :class => 'text_area' %>
+      <%= f.text_field :url, :class => 'text_field', :required => true, :placeholder => "Url…" %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :website_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :website_id, :class => 'number_field' %>
+      <%= f.collection_select :website_id, @website, :id, :nombre, :prompt => true, :required => true, :class => "selectpicker" %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :resume_id, :class => 'control-label' %>
+    <%= f.label :resumen_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :resume_id, :class => 'number_field' %>
+      <%= f.number_field :resumen_id, :class => 'number_field' %>
     </div>
   </div>
 

@@ -3,6 +3,262 @@ module Importer
   require 'uri'
   require 'mechanize'
   
+  def self.import_notas_noticias24
+    puts "NOTICAS 24"
+    website = Website.find_by_nombre("noticias24")
+
+    # Eliminando las notas no asociadas a algun resumen
+    website.eliminar_notas_irrelevantes
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website
+
+    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+    postsGroup = index.search ".postGroup"
+    postsGroup.each_with_index do |posts, i|
+      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "#{i}) #{posts}"
+      titulo = posts.search(".post h2 a")
+      contenido = posts.search(".post.x text")
+      fecha = posts.search(".postTime p")
+      fecha = posts.search(".postTime") if fecha.blank?
+      url = (titulo.attr "href").value
+      titulo = titulo.text
+      fecha = fecha.text
+      puts "titulo: #{titulo}"
+      puts "url: #{url}"
+      puts "Fecha: #{fecha}"
+      puts "Contenido: #{contenido}"
+      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      
+      nota = Nota.new
+      nota.titulo = titulo
+      nota.fecha_publicacion = fecha
+      nota.contenido = contenido.text
+      nota.url = url
+      nota.website_id = website.id
+      nota.tipo_nota_id = tipo_nota.id
+      nota.save
+    end
+  end
+  
+  def self.import_notas_globovision
+    puts "GLOBOVISION"
+    website = Website.find_by_nombre("globovision")
+    # Eliminando las notas no asociadas a algun resumen
+    website.eliminar_notas_irrelevantes
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website_id
+    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+    notas = index.search ".espacio1"
+    notas = index.search ".divnoticiasn2"
+    notas += index.search ".divnoticiasn4"
+    notas += index.search ".divnoticiasn5"
+    puts "<cantidad de Notas: #{notas.count}>"
+    notas.each_with_index do |nota, i|
+
+      titulo = nota.search("h1 a")
+      titulo = nota.search("h2 a") if titulo.blank?
+      titulo = nota.search(".h3titulo") if titulo.blank?
+      fecha = nota.search(".h5s")
+      href = titulo.attr "href"
+      url = "#{website.url}#{(href).value}" if href
+      titulo = titulo.text
+      fecha = fecha.text
+      contenido = nota.search(".sumario_nota p")
+      contenido = nota.search(".sumarioh3 p") if contenido.blank?
+      contenido = nota.search("ctl10_lblMostra") if contenido.blank?      
+      nota_local = Nota.new
+      nota_local.titulo = titulo
+      nota_local.fecha_publicacion = fecha
+      nota_local.contenido = contenido.text
+      nota_local.url = url
+      nota_local.website_id = website.id
+      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.save
+    end
+  end
+  
+  def self.import_notas_union_radio
+    puts "UNION RADIO"
+    website = Website.find_by_nombre "unionradio"
+    # Eliminando las notas no asociadas a algun resumen
+    website.eliminar_notas_irrelevantes
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website
+    
+    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+    
+    # Se Buscan las Todas las Notas de la Web
+    notas = index.search ".TPHomeContent"
+    notas += index.search "#ctl00_columnaPrinc_otrosVitrina div"
+    notas += index.search "#ctl00_columnaPrinc_otrasnotasdevitrina3 div"
+    notas += index.search "#ctl00_columnaPrinc_otrasnotasvit2 div"
+    notas += index.search "#ctl00_columnaPrinc_otrasnotasdevitrina4 div" 
+    
+    notas.each do |nota|
+      # Se buscan titulos (<a></a>) y contenidos
+      titulo = nota.search ".ttlPrinc"
+      titulo = nota.search ".ttlPrinc2" if titulo.blank?
+      contenido = nota.search ".contenidoVit"
+      unless contenido.blank? && titulo.blank?
+        # Si la Nota tiene titulo y contenido
+        href = titulo.attr "href"
+        url = "#{website.url}#{(href).value}" if href
+        titulo = titulo.text
+        fecha = nota.search(".fechaVit")
+        fecha = fecha.text if fecha
+        
+        puts "div:\nfecha:#{fecha}\nurl:#{url}\ntitulo:#{titulo}\ncontenido:#{contenido.text}"
+        puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+        # Se guarda la nota_local
+        nota_local = Nota.new
+        nota_local.titulo = titulo
+        nota_local.fecha_publicacion = fecha
+        nota_local.contenido = contenido.text
+        nota_local.url = url
+        nota_local.website_id = website.id
+        nota_local.tipo_nota_id = tipo_nota.id
+        nota_local.save
+      
+      end
+    end
+
+  end  
+
+  def self.import_notas_noticierodigital
+    puts "NOTICIERO DIGITAL"
+    website = Website.find_by_nombre "noticierodigital"
+    # Eliminando las notas no asociadas a algun resumen
+    website.eliminar_notas_irrelevantes
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website
+    
+    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+    
+    # Se Buscan las Todas las Notas de la Web
+    notas = index.search ".principal"    
+    notas.each do |nota|
+      # Se buscan titulos (<a></a>) y contenidos
+      titulo = nota.search "h2 a"
+      # contenido = nota.search ".contenidoVit"
+      # unless contenido.blank? && titulo.blank?
+        # Si la Nota tiene titulo y contenido
+      href = titulo.attr "href"
+      url = (href).value if href
+      titulo = titulo.text
+      fecha = nota.search(".fecha")
+      fecha = fecha[0] if fecha.count > 1
+      fecha = fecha.text if fecha
+        
+      puts "div:\nfecha:#{fecha}\nurl:#{url}\ntitulo:#{titulo}"
+      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # Se guarda la nota_local
+      nota_local = Nota.new
+      nota_local.titulo = titulo
+      nota_local.fecha_publicacion = fecha
+      # nota_local.contenido = contenido.text
+      nota_local.url = url
+      nota_local.website_id = website.id
+      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.save
+
+    end
+  end
+    
+  def self.import_notas_noticierovenevision
+    puts "NOTICIERO VENEVISION"
+    website = Website.find_by_nombre "noticierovenevision"
+    # Eliminando las notas no asociadas a algun resumen
+    website.eliminar_notas_irrelevantes
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website
+
+    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+
+    # Se Buscan las Todas las Notas de la Web
+    notas = index.search ".MainNews li"
+    # notas += index.search ".MainNews.MoreSummary "
+    notas.each do |nota|
+      # Se buscan titulos (<a></a>) y contenidos
+      titulo = nota.search "h1 a"
+      # contenido = nota.search ".contenidoVit"
+      # unless contenido.blank? && titulo.blank?
+        # Si la Nota tiene titulo y contenido
+      href = titulo.attr "href"
+      url = "#{website.url}#{(href).value}" if href
+      titulo = titulo.text
+      fecha = nota.search("h1 span")
+      fecha = fecha[0] if fecha.count > 1
+      fecha = fecha.text if fecha
+      contenido = nota.search "p"
+      puts "div:\nfecha:#{fecha}\nurl:#{url}\ntitulo:#{titulo}\ncontenido:#{contenido.text}"
+      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # Se guarda la nota_local
+      
+      nota_local = Nota.new
+      nota_local.titulo = titulo
+      nota_local.fecha_publicacion = fecha
+      nota_local.contenido = contenido.text
+      nota_local.url = url
+      nota_local.website_id = website.id
+      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.save
+
+    end
+
+  end  
+
+
+
+  def self.importar_notas_general (nombre_website, class_div)
+    puts nombre_website
+    website = Website.find_by_nombre nombre_website
+
+    # Eliminando las notas no asociadas a algun resumen
+    website.eliminar_notas_irrelevantes
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website
+
+    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+    postsGroup = index.search class_div
+    postsGroup.each_with_index do |posts, i|
+      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "#{i}) #{posts}"
+      titulo = posts.search(".post h1 a")
+      titulo = posts.search(".post h2 a") if titulo.blank?
+      
+      contenido = posts.search(".post.x text")
+      fecha = posts.search(".postTime p")
+      fecha = posts.search(".postTime") if fecha.blank?
+      url = (titulo.attr "href").value
+      titulo = titulo.text
+      fecha = fecha.text
+      puts "titulo: #{titulo}"
+      puts "url: #{url}"
+      puts "Fecha: #{fecha}"
+      puts "Contenido: #{contenido}"
+      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      
+      nota = Nota.new
+      nota.titulo = titulo
+      nota.fecha_publicacion = fecha
+      nota.contenido = contenido.text
+      nota.url = url
+      nota.website_id = website.id
+      nota.tipo_nota_id = tipo_nota.id
+      nota.save
+    end
+  end
+
+# page2 = page.link_with(:href => cunas_fichas_url).click
+
+  
+  def self.cargar_website website
+    url = URI.parse website.url
+    agente = Mechanize.new
+    return agente.get(url)
+  end
+
   
   def self.import_candidatos
     voceros_url = "http://sigecup.cne.gob.ve/index.php/general/political_representative_controller/show_all_political_representatives"

@@ -5,12 +5,12 @@
       <%= f.date_select :fecha, :class => 'date_select' %>
     </div>
   </div>
-  <div class="control-group">
-    <%= f.label :resumen, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :resumen, :class => 'text_area' %>
-    </div>
-  </div>
+		
+	<div class ="well">
+      <%= f.text_area :resumen, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}%>
+
+			<%= link_to "Agregar Nota", new_resumen_path, :id => "nota", :class => 'btn btn-mini btn-info right' %>
+	</div>	
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
@@ -18,3 +18,4 @@
                 informes_path, :class => 'btn' %>
   </div>
 <% end %>
+

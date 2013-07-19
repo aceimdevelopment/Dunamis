@@ -1,30 +1,3 @@
-<<<<<<< HEAD
-<p id="notice"><%= notice %></p>
-
-<p>
-  <b>Url:</b>
-  <%= @website.url %>
-</p>
-
-<p>
-  <b>Nombre:</b>
-  <%= @website.nombre %>
-</p>
-
-<p>
-  <b>Descripcion:</b>
-  <%= @website.descripcion %>
-</p>
-
-<p>
-  <b>Logo:</b>
-  <%= @website.logo %>
-</p>
-
-
-<%= link_to 'Edit', edit_website_path(@website) %> |
-<%= link_to 'Back', websites_path %>
-=======
 <%- model_class = Website -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
@@ -50,4 +23,3 @@
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
 </div>
->>>>>>> 5c15fe1d515081a9abc7720a1690ba14f4e72998

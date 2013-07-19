@@ -1,3 +1,4 @@
+# encoding: utf-8
 class InformesController < ApplicationController
   # GET /informes
   # GET /informes.json
@@ -24,8 +25,19 @@ class InformesController < ApplicationController
   # GET /informes/new
   # GET /informes/new.json
   def new
+    require "Importer"
+    encabezado = " Dirección de Seguimiento de la Información Electoral \n AGENDA TEMÁTICA DE MEDIOS"
+    encabezado += "#{Date.today}"
+    encabezado += "MONITOREO DE MEDIOS (de 10:00am a 05:00pm)
+    El presiente Nicolás Maduro continúa visita oficial en Rusia. Se firmaron cinco acuerdos de cooperación mixta, luego ofreció una entrevista al canal Actualidad Russia Today y después encabezó acto cultural en homenaje a la memoria del presidente Chávez. El vicepresidente Arreaza estuvo en el estado Apure como parte del gobierno de calle. El ministro Haiman El Troudi presentó el plan rector 2013- 2019 en materia de movilidad terrestre; y el presidente de Indepabis, Eduardo Samán, fue entrevistado en Venevisión. Por la oposición, el gobernador Henrique Capriles, durante su programa en Capriles.TV, informó que el Comando “Simón Bolívar” recusó a todos los magistrados de la Sala Constitucional avocados a la impugnación del 14-A. En cuanto al sector universitario, el ministro Héctor Rodríguez se reunió con estudiantes en el Teatro Teresa Carreño. Huelguistas y dirigentes de oposición insisten en mantener la lucha."
+    
+    Importer.import_notas_noticias24
+    Importer.import_notas_globovision
+    Importer.import_notas_union_radio
+    Importer.import_notas_noticierovenevision
+    @websites = Website.all
     @informe = Informe.new
-
+    @informe.resumen = encabezado
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @informe }

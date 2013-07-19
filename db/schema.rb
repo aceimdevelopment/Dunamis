@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130703164724) do
+ActiveRecord::Schema.define(:version => 20130719142643) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -127,17 +127,19 @@ ActiveRecord::Schema.define(:version => 20130703164724) do
   add_index "municipios", ["estado_id"], :name => "index_municipios_on_estado_id"
 
   create_table "notas", :force => true do |t|
-    t.text     "titulo",       :null => false
-    t.text     "contenido",    :null => false
-    t.integer  "tipo_nota_id", :null => false
-    t.text     "url",          :null => false
-    t.integer  "website_id",   :null => false
-    t.integer  "resume_id",    :null => false
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.text     "titulo",            :null => false
+    t.text     "contenido",         :null => false
+    t.integer  "tipo_nota_id",      :null => false
+    t.text     "url",               :null => false
+    t.integer  "website_id",        :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.integer  "resumen_id"
+    t.string   "fecha_publicacion"
+    t.string   "imagen"
   end
 
-  add_index "notas", ["resume_id"], :name => "index_notas_on_resume_id"
+  add_index "notas", ["resumen_id"], :name => "index_notas_on_resumen_id"
   add_index "notas", ["tipo_nota_id"], :name => "index_notas_on_tipo_nota_id"
   add_index "notas", ["website_id"], :name => "index_notas_on_website_id"
 
