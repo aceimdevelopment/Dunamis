@@ -15,28 +15,36 @@ module Importer
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     postsGroup = index.search ".postGroup"
     postsGroup.each_with_index do |posts, i|
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      # puts "#{i}) #{posts}"
+
       titulo = posts.search(".post h2 a")
-      contenido = posts.search(".post.x text")
+      contenido = posts.search(".post")
+      contenido = contenido.text unless contenido.blank?
+      
+      imagen = posts.search(".post img")
+      imagen = imagen.attr "src" unless imagen.blank?
+      
       fecha = posts.search(".postTime p")
       fecha = posts.search(".postTime") if fecha.blank?
-      url = (titulo.attr "href").value
-      titulo = titulo.text
       fecha = fecha.text
-      puts "titulo: #{titulo}"
-      puts "url: #{url}"
-      puts "Fecha: #{fecha}"
-      puts "Contenido: #{contenido}"
+      
+      url = (titulo.attr "href").value unless titulo.blank?
+      titulo = titulo.text
+      
       puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      puts "Titulo: #{titulo}\n"
+      puts "Url: #{url}\n"
+      puts "Fecha: #{fecha}\n"
+      puts "Contenido: #{contenido}\n"
+      puts "Imágen: #{imagen}\n"      
       
       nota = Nota.new
       nota.titulo = titulo
       nota.fecha_publicacion = fecha
-      nota.contenido = contenido.text
+      nota.contenido = contenido
       nota.url = url
       nota.website_id = website.id
       nota.tipo_nota_id = tipo_nota.id
+      nota.imagen = imagen.text
       nota.save
     end
   end
@@ -59,14 +67,30 @@ module Importer
       titulo = nota.search("h1 a")
       titulo = nota.search("h2 a") if titulo.blank?
       titulo = nota.search(".h3titulo") if titulo.blank?
-      fecha = nota.search(".h5s")
       href = titulo.attr "href"
       url = "#{website.url}#{(href).value}" if href
       titulo = titulo.text
+      
+      
+      fecha = nota.search(".h5s")      
       fecha = fecha.text
+      
       contenido = nota.search(".sumario_nota p")
       contenido = nota.search(".sumarioh3 p") if contenido.blank?
       contenido = nota.search("ctl10_lblMostra") if contenido.blank?      
+      
+      imagen = nota.search(".divnoticiasn2img")
+      imagen = nota.search(".divnoticiasn4img") if imagen.blank?
+      
+      imagen = imagen.attr "src" unless imagen.blank?
+      imagen = imagen.text
+      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      puts "Titulo: #{titulo}\n"
+      puts "Url: #{url}\n"
+      puts "Fecha: #{fecha}\n"
+      puts "Contenido: #{contenido}\n"
+      puts "Imágen: #{imagen}\n"
+      
       nota_local = Nota.new
       nota_local.titulo = titulo
       nota_local.fecha_publicacion = fecha
@@ -74,6 +98,7 @@ module Importer
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.imagen = imagen
       nota_local.save
     end
   end
@@ -99,17 +124,31 @@ module Importer
       # Se buscan titulos (<a></a>) y contenidos
       titulo = nota.search ".ttlPrinc"
       titulo = nota.search ".ttlPrinc2" if titulo.blank?
+      
       contenido = nota.search ".contenidoVit"
+      
       unless contenido.blank? && titulo.blank?
         # Si la Nota tiene titulo y contenido
         href = titulo.attr "href"
         url = "#{website.url}#{(href).value}" if href
-        titulo = titulo.text
-        fecha = nota.search(".fechaVit")
-        fecha = fecha.text if fecha
         
-        puts "div:\nfecha:#{fecha}\nurl:#{url}\ntitulo:#{titulo}\ncontenido:#{contenido.text}"
+        titulo = titulo.text
+        
+        fecha = nota.search ".fechaVit"
+        fecha = fecha.text if fecha
+
+        imagen = nota.search "img"
+
+        imagen = imagen.attr "src" unless imagen.blank?
+        imagen = imagen.text
+        imagen = "http://www1.unionradio.net#{imagen}" unless imagen.blank?
         puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+        puts "Titulo: #{titulo}\n"
+        puts "Url: #{url}\n"
+        puts "Fecha: #{fecha}\n"
+        puts "Contenido: #{contenido}\n"
+        puts "Imágen: #{imagen}\n"
+
         # Se guarda la nota_local
         nota_local = Nota.new
         nota_local.titulo = titulo
@@ -118,6 +157,7 @@ module Importer
         nota_local.url = url
         nota_local.website_id = website.id
         nota_local.tipo_nota_id = tipo_nota.id
+        nota_local.imagen = imagen
         nota_local.save
       
       end
@@ -150,8 +190,18 @@ module Importer
       fecha = fecha[0] if fecha.count > 1
       fecha = fecha.text if fecha
         
-      puts "div:\nfecha:#{fecha}\nurl:#{url}\ntitulo:#{titulo}"
+
+      imagen = nota.search "img"
+
+      imagen = imagen.attr "src" unless imagen.blank?
+      imagen = imagen.text
       puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      puts "Titulo: #{titulo}\n"
+      puts "Url: #{url}\n"
+      puts "Fecha: #{fecha}\n"
+      # puts "Contenido: #{contenido}\n"
+      puts "Imágen: #{imagen}\n"
+
       # Se guarda la nota_local
       nota_local = Nota.new
       nota_local.titulo = titulo
@@ -160,6 +210,7 @@ module Importer
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.imagen = imagen
       nota_local.save
 
     end
@@ -191,10 +242,24 @@ module Importer
       fecha = fecha[0] if fecha.count > 1
       fecha = fecha.text if fecha
       contenido = nota.search "p"
-      puts "div:\nfecha:#{fecha}\nurl:#{url}\ntitulo:#{titulo}\ncontenido:#{contenido.text}"
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      # Se guarda la nota_local
       
+      imagen = nota.search ".Photo"
+      
+      unless imagen.blank?
+        imagen = imagen.attr("style").to_s
+        imagen = imagen[16...imagen.length-1]
+        imagen = "#{website.url}#{imagen}" unless imagen.blank?
+        
+      end
+      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"              
+      puts "Titulo: #{titulo}\n"
+      puts "Url: #{url}\n"
+      puts "Fecha: #{fecha}\n"
+      puts "Contenido: #{contenido}\n"
+      puts "Imágen: #{imagen}\n"
+
+
+      # Se guarda la nota_local      
       nota_local = Nota.new
       nota_local.titulo = titulo
       nota_local.fecha_publicacion = fecha
@@ -202,6 +267,7 @@ module Importer
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.imagen = imagen
       nota_local.save
 
     end
