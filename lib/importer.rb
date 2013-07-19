@@ -47,7 +47,7 @@ module Importer
     # Eliminando las notas no asociadas a algun resumen
     website.eliminar_notas_irrelevantes
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website_id
+    index = cargar_website website
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     notas = index.search ".espacio1"
     notas = index.search ".divnoticiasn2"
@@ -210,46 +210,6 @@ module Importer
 
 
 
-  def self.importar_notas_general (nombre_website, class_div)
-    puts nombre_website
-    website = Website.find_by_nombre nombre_website
-
-    # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
-    # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
-
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
-    postsGroup = index.search class_div
-    postsGroup.each_with_index do |posts, i|
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      # puts "#{i}) #{posts}"
-      titulo = posts.search(".post h1 a")
-      titulo = posts.search(".post h2 a") if titulo.blank?
-      
-      contenido = posts.search(".post.x text")
-      fecha = posts.search(".postTime p")
-      fecha = posts.search(".postTime") if fecha.blank?
-      url = (titulo.attr "href").value
-      titulo = titulo.text
-      fecha = fecha.text
-      puts "titulo: #{titulo}"
-      puts "url: #{url}"
-      puts "Fecha: #{fecha}"
-      puts "Contenido: #{contenido}"
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      
-      nota = Nota.new
-      nota.titulo = titulo
-      nota.fecha_publicacion = fecha
-      nota.contenido = contenido.text
-      nota.url = url
-      nota.website_id = website.id
-      nota.tipo_nota_id = tipo_nota.id
-      nota.save
-    end
-  end
-
 # page2 = page.link_with(:href => cunas_fichas_url).click
 
   
@@ -258,7 +218,11 @@ module Importer
     agente = Mechanize.new
     return agente.get(url)
   end
-
+  
+  
+  
+  
+  
   
   def self.import_candidatos
     voceros_url = "http://sigecup.cne.gob.ve/index.php/general/political_representative_controller/show_all_political_representatives"

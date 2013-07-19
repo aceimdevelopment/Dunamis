@@ -34,6 +34,7 @@ class InformesController < ApplicationController
     Importer.import_notas_noticias24
     Importer.import_notas_globovision
     Importer.import_notas_union_radio
+    Importer.import_notas_noticierodigital
     Importer.import_notas_noticierovenevision
     @websites = Website.all
     @informe = Informe.new
