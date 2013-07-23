@@ -36,6 +36,13 @@ class InformesController < ApplicationController
     Importer.import_notas_union_radio
     Importer.import_notas_noticierodigital
     Importer.import_notas_noticierovenevision
+    Importer.import_notas_vtv
+    Importer.import_notas_laverdad
+    Importer.import_notas_informe21
+    Importer.import_notas_eluniversal
+    Importer.import_notas_avn
+    Importer.import_notas_radiomundial
+    
     @websites = Website.all
     @informe = Informe.new
     @informe.resumen = encabezado

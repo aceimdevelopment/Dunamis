@@ -21,7 +21,7 @@
 						<table class="table table-hover">
 		        	<thead>
 		          	<tr>
-			            <th>#</th>
+			            <th># <%= @notas.count %></th>
 									<th>Publicación</th>
 			            <th width="450px;"><%= model_class.human_attribute_name(:titulo) %></th>
 			            <th>Enlace</th>
@@ -35,7 +35,7 @@
 										<td>
 											<%= nota.fecha_publicacion %>
 											<%- unless nota.imagen.blank? -%>
-												<%= image_tag nota.imagen, :title => "imagen", :class => "img-rounded", :style => 'width: 100px; height:100px;'%>
+												<%= image_tag nota.imagen, :title => "imagen", :class => "img-rounded", :style => 'max-width: 120px; max-height:120px;'%>
 											<% end %>
 										</td>
 				            <td>
