@@ -2,13 +2,14 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
+<% if @informes.count > 0 %>
 <table class="table table-striped">
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:fecha) %></th>
       <th><%= model_class.human_attribute_name(:resumen) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.created_at', :default => t("helpers.created_at") %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -32,7 +33,7 @@
     <% end %>
   </tbody>
 </table>
-
+<% end %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_informe_path,
             :class => 'btn btn-primary' %>

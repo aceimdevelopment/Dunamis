@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  div_nota: MyString
+  div_titulo: MyString
+  div_fecha: MyString
+  div_contenido: MyString
+  div_imagen: MyString
+  website: 
+
+two:
+  div_nota: MyString
+  div_titulo: MyString
+  div_fecha: MyString
+  div_contenido: MyString
+  div_imagen: MyString
+  website: 

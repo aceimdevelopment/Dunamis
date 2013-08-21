@@ -3,8 +3,7 @@
   <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 
-
-
+	<%= @error %>
 	<div class="bs-docs-example">
 		<ul id="myTab" class="nav nav-tabs">
 		<%- @websites.each_with_index do |website,i| -%>
@@ -31,7 +30,7 @@
 			        <tbody>
 								<%- @notas.each_with_index do |nota,j| -%>
 				          <tr>
-				            <td><%= j %></td>
+				            <td><%= j+1 %></td>
 										<td>
 											<%= nota.fecha_publicacion %>
 											<%- unless nota.imagen.blank? -%>

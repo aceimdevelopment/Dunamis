@@ -1,0 +1,17 @@
+<%= form_for @post, :html => { :class => 'form-inline' } do |f| %>
+  <% if @post.errors.any? %>
+		<%- @error = "has-error" -%>
+  <% end %>
+	<div class="form-actions <%= @error %>">
+		<% if @post.errors.any? %>
+      <% @post.errors.full_messages.each do |msg| %>
+        <%= msg %>
+      <% end %>
+		<% end %>
+		<%= f.text_field :nombre, :class => 'input-medium', :autofocus => "autofocus", :placeholder => "Nombre…", :required => true %>
+		<%= f.collection_select :website_id, Website.all, :id, :nombre, {:prompt => true}, {:required => true, :class => "selectpicker input-medium"} %>    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                posts_path, :class => 'btn' %>			
+	</div>
+<% end %>
+

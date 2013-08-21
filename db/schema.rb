@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130719142643) do
+ActiveRecord::Schema.define(:version => 20130802170054) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -157,6 +157,15 @@ ActiveRecord::Schema.define(:version => 20130719142643) do
   add_index "organizaciones", ["tipo_id"], :name => "FK tipo_idx"
   add_index "organizaciones", ["tolda_id"], :name => "FK tolda_idx"
 
+  create_table "posts", :force => true do |t|
+    t.string   "nombre"
+    t.integer  "website_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "posts", ["website_id"], :name => "index_posts_on_website_id"
+
   create_table "resumenes", :force => true do |t|
     t.text     "titulo"
     t.text     "contenido"
@@ -202,6 +211,19 @@ ActiveRecord::Schema.define(:version => 20130719142643) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "tipos_webnotas", :force => true do |t|
+    t.string   "div_nota"
+    t.string   "div_titulo"
+    t.string   "div_fecha"
+    t.string   "div_contenido"
+    t.string   "div_imagen"
+    t.integer  "website_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "tipos_webnotas", ["website_id"], :name => "index_tipos_webnotas_on_website_id"
 
   create_table "toldas", :force => true do |t|
     t.string   "nombre"

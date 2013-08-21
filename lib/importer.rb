@@ -4,38 +4,38 @@ module Importer
   require 'mechanize'
   
   def self.import_notas_noticias24
-    puts "NOTICAS 24"
     website = Website.find_by_nombre("noticias24")
-
+    puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
 
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
-    postsGroup = index.search ".postGroup"
-    postsGroup.each_with_index do |posts, i|
+    
+    # Buscamos todos los posibles tipos de notas
+    notas_web = index.search ".postGroup"
 
-      titulo = posts.search(".post h2 a")
-      contenido = posts.search(".post")
+    notas_web.each do |nota_web|
+
+      # buscamos el título
+      titulo = nota_web.search(".post h2 a")
+      
+      # Buscamos Contenido o resumen de la Nota
+      contenido = nota_web.search(".post")
       contenido = contenido.text unless contenido.blank?
       
-      imagen = posts.search(".post img")
+      # Buscamos la imagen
+      imagen = nota_web.search(".post img")
       imagen = imagen.attr "src" unless imagen.blank?
       
-      fecha = posts.search(".postTime p")
-      fecha = posts.search(".postTime") if fecha.blank?
+      fecha = nota_web.search(".postTime p")
+      fecha = nota_web.search(".postTime") if fecha.blank?
       fecha = fecha.text
       
       url = (titulo.attr "href").value unless titulo.blank?
-      titulo = titulo.text
-      
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
-      puts "Fecha: #{fecha}\n"
-      puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"      
+      titulo = titulo.text   
       
       nota = Nota.new
       nota.titulo = titulo
@@ -50,46 +50,58 @@ module Importer
   end
   
   def self.import_notas_globovision
-    puts "GLOBOVISION"
+
     website = Website.find_by_nombre("globovision")
+    puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
+
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+    # Buscamos todos los posibles tipos de notas
     notas = index.search ".espacio1"
-    notas = index.search ".divnoticiasn2"
+    notas += index.search ".divnoticiasn2"
     notas += index.search ".divnoticiasn4"
     notas += index.search ".divnoticiasn5"
-    puts "<cantidad de Notas: #{notas.count}>"
-    notas.each_with_index do |nota, i|
-
+    
+    notas.each do |nota|
+      # buscamos el título
       titulo = nota.search("h1 a")
       titulo = nota.search("h2 a") if titulo.blank?
       titulo = nota.search(".h3titulo") if titulo.blank?
-      href = titulo.attr "href"
-      url = "#{website.url}#{(href).value}" if href
+      
+      # buscamos url de la Nota
+      url = (titulo.attr "href").value unless titulo.blank?
+      # como la ruta es relativa, incluimos root si hay url
+      url = "#{website.url}#{url}" if url
+      
+      # Título en texto plano
       titulo = titulo.text
-      
-      
-      fecha = nota.search(".h5s")      
-      fecha = fecha.text
-      
+
+      # Buscamos Contenido o resumen de la Nota      
       contenido = nota.search(".sumario_nota p")
       contenido = nota.search(".sumarioh3 p") if contenido.blank?
+      contenido = nota.search(".h4sumario p") if contenido.blank?
       contenido = nota.search("ctl10_lblMostra") if contenido.blank?      
       
+      #buscamos fecha
+      fecha = nota.search(".h5s")      
+      fecha = fecha.text  
+      
+      #tratamientop de imagen
       imagen = nota.search(".divnoticiasn2img")
       imagen = nota.search(".divnoticiasn4img") if imagen.blank?
-      
       imagen = imagen.attr "src" unless imagen.blank?
       imagen = imagen.text
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
-      puts "Fecha: #{fecha}\n"
-      puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"
+      
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "Titulo: #{titulo}\n"
+      # puts "Url: #{url}\n"
+      # puts "Fecha: #{fecha}\n"
+      # puts "Contenido: #{contenido}\n"
+      # puts "Imágen: #{imagen}\n"
       
       nota_local = Nota.new
       nota_local.titulo = titulo
@@ -104,28 +116,31 @@ module Importer
   end
   
   def self.import_notas_union_radio
-    puts "UNION RADIO"
+
     website = Website.find_by_nombre "unionradio"
+    puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
-    notas = index.search ".TPHomeContent"
-    notas += index.search "#ctl00_columnaPrinc_otrosVitrina div"
-    notas += index.search "#ctl00_columnaPrinc_otrasnotasdevitrina3 div"
-    notas += index.search "#ctl00_columnaPrinc_otrasnotasvit2 div"
-    notas += index.search "#ctl00_columnaPrinc_otrasnotasdevitrina4 div" 
+    notas_web = index.search ".TPHomeContent"
+    notas_web += index.search "#ctl00_columnaPrinc_otrosVitrina div"
+    notas_web += index.search "#ctl00_columnaPrinc_otrasnotasdevitrina3 div"
+    notas_web += index.search "#ctl00_columnaPrinc_otrasnotasvit2 div"
+    notas_web += index.search "#ctl00_columnaPrinc_otrasnotasdevitrina4 div" 
     
-    notas.each do |nota|
+    notas_web.each do |nota_web|
       # Se buscan titulos (<a></a>) y contenidos
-      titulo = nota.search ".ttlPrinc"
-      titulo = nota.search ".ttlPrinc2" if titulo.blank?
+      titulo = nota_web.search ".ttlPrinc"
+      titulo = nota_web.search ".ttlPrinc2" if titulo.blank?
       
-      contenido = nota.search ".contenidoVit"
+      # Se buscan contenido
+      contenido = nota_web.search ".contenidoVit"
       
       unless contenido.blank? && titulo.blank?
         # Si la Nota tiene titulo y contenido
@@ -134,31 +149,33 @@ module Importer
         
         titulo = titulo.text
         
-        fecha = nota.search ".fechaVit"
+        # Buscamos Fecha
+        fecha = nota_web.search ".fechaVit"
         fecha = fecha.text if fecha
 
-        imagen = nota.search "img"
-
+        # Buscamos Imagen
+        imagen = nota_web.search "img"
         imagen = imagen.attr "src" unless imagen.blank?
         imagen = imagen.text
         imagen = "http://www1.unionradio.net#{imagen}" unless imagen.blank?
-        puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-        puts "Titulo: #{titulo}\n"
-        puts "Url: #{url}\n"
-        puts "Fecha: #{fecha}\n"
-        puts "Contenido: #{contenido}\n"
-        puts "Imágen: #{imagen}\n"
+
+        # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+        # puts "Titulo: #{titulo}\n"
+        # puts "Url: #{url}\n"
+        # puts "Fecha: #{fecha}\n"
+        # puts "Contenido: #{contenido}\n"
+        # puts "Imágen: #{imagen}\n"
 
         # Se guarda la nota_local
-        nota_local = Nota.new
-        nota_local.titulo = titulo
-        nota_local.fecha_publicacion = fecha
-        nota_local.contenido = contenido.text
-        nota_local.url = url
-        nota_local.website_id = website.id
-        nota_local.tipo_nota_id = tipo_nota.id
-        nota_local.imagen = imagen
-        nota_local.save
+        nota = Nota.new
+        nota.titulo = titulo
+        nota.fecha_publicacion = fecha
+        nota.contenido = contenido.text
+        nota.url = url
+        nota.website_id = website.id
+        nota.tipo_nota_id = tipo_nota.id
+        nota.imagen = imagen
+        nota.save
       
       end
     end
@@ -166,47 +183,76 @@ module Importer
   end  
 
   def self.import_notas_noticierodigital
-    puts "NOTICIERO DIGITAL"
+
     website = Website.find_by_nombre "noticierodigital"
+    puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
-    notas = index.search ".principal"    
+    
+    notas = index.search ".principal"
+    # notas =+ index.search "//div[@id='noticiadestacada']"
+    
     notas.each do |nota|
       # Se buscan titulos (<a></a>) y contenidos
       titulo = nota.search "h2 a"
-      # contenido = nota.search ".contenidoVit"
-      # unless contenido.blank? && titulo.blank?
-        # Si la Nota tiene titulo y contenido
+
       href = titulo.attr "href"
       url = (href).value if href
       titulo = titulo.text
+
+      # Buscamos la fecha
       fecha = nota.search(".fecha")
       fecha = fecha[0] if fecha.count > 1
       fecha = fecha.text if fecha
-        
 
+      
+      contenido = nota.search "div"
+      
+      #Limpieza del contenido, quitamos titulos y fechas
+      msg = contenido[1].text
+      msg = nota.text if msg.include? "ver artículo completo »"      
+      msg.slice! titulo if msg.include? titulo
+      msg.slice! fecha if msg.include? fecha
+      
+      if msg.include? "opinan los foristas"  
+        indice = msg.index "opinan los foristas"
+        aux = msg[indice..-1]
+        msg.slice! aux
+      end
+      
+      contenido = msg#.slice! "ver artículo completo »"
+
+      # unless contenido.blank? && titulo.blank?
+        # Si la Nota tiene titulo y contenido
+
+      # Buscamos imagen
       imagen = nota.search "img"
-
       imagen = imagen.attr "src" unless imagen.blank?
       imagen = imagen.text
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
-      puts "Fecha: #{fecha}\n"
+      
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "Titulo: #{titulo}\n"
+      # puts "Url: #{url}\n"
+      # puts "Fecha: #{fecha}\n"
+      # 
+      # # puts "Contenido:\n"
+      # # contenido.each_with_index {|c,i| puts "#{i}.- #{c.text}"}
+      # # puts "=========================="
       # puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"
+      # puts "Imágen: #{imagen}\n"
 
       # Se guarda la nota_local
       nota_local = Nota.new
       nota_local.titulo = titulo
       nota_local.fecha_publicacion = fecha
-      # nota_local.contenido = contenido.text
+      nota_local.contenido = contenido
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -217,10 +263,11 @@ module Importer
   end
     
   def self.import_notas_noticierovenevision
-    puts "NOTICIERO VENEVISION"
     website = Website.find_by_nombre "noticierovenevision"
+    puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
 
@@ -245,18 +292,17 @@ module Importer
       
       imagen = nota.search ".Photo"
       
-      unless imagen.blank?
+      unless imagen.blank? and not imagen.search ".full-frame"
         imagen = imagen.attr("style").to_s
         imagen = imagen[16...imagen.length-1]
         imagen = "#{website.url}#{imagen}" unless imagen.blank?
-        
       end
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"              
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
-      puts "Fecha: #{fecha}\n"
-      puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"              
+      # puts "Titulo: #{titulo}\n"
+      # puts "Url: #{url}\n"
+      # puts "Fecha: #{fecha}\n"
+      # puts "Contenido: #{contenido}\n"
+      # puts "Imágen: #{imagen}\n"
 
 
       # Se guarda la nota_local      
@@ -275,20 +321,25 @@ module Importer
   end  
 
   def self.import_notas_vtv
-    puts "VTV"
     website = Website.find_by_nombre "vtv"
+    puts website.nombre    
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
-    notas = index.search ".vtv-nitf-principal-item"    
+    notas = index.search ".carousel-button"    
+    notas += index.search ".vtv-nitf-principal-item"
+       
     notas.each do |nota|
       # Se buscan titulos (<a></a>) y contenidos
-      titulo = nota.search "h4 a"      
+      titulo = nota.search "h4 a"
+      titulo = nota.search "a" if titulo.blank?
+      
       contenido = nota.search ".principal-description"
       # unless contenido.blank? && titulo.blank?
         # Si la Nota tiene titulo y contenido
@@ -301,16 +352,18 @@ module Importer
         
 
       imagen = nota.search ".vtv-nitf-principal-image-container img"
-      puts "================================================<<<<<<<<<<< imagen >>>>>>>>>>>>>>================================================"
-      puts imagen
+      imagen = nota.search "img" if imagen.blank?
       imagen = imagen.attr "data-original" unless imagen.blank?
       imagen = imagen.text
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
+      
+      # puts "================================================<<<<<<<<<<< imagen >>>>>>>>>>>>>>================================================"
+      # puts imagen
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "Titulo: #{titulo}\n"
+      # puts "Url: #{url}\n"
       # puts "Fecha: #{fecha}\n"
       # puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"
+      # puts "Imágen: #{imagen}\n"
       
       # Se guarda la nota_local
       nota_local = Nota.new
@@ -327,10 +380,11 @@ module Importer
   end
 
   def self.import_notas_laverdad
-    puts "LA VERDAD"
     website = Website.find_by_nombre "laverdad"
+    puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     
@@ -342,6 +396,7 @@ module Importer
       # Se buscan titulos (<a></a>) y contenidos
       titulo = nota.search "h2 a"
       contenido = nota.search "p span"
+      contenido = nota.search "p" if contenido.blank?
       contenido = contenido.text
       # unless contenido.blank? && titulo.blank?
         # Si la Nota tiene titulo y contenido
@@ -353,21 +408,21 @@ module Importer
       # buscamos Fechas
       fecha = nota.search(".fecha")
       fecha = fecha[0] if fecha.count > 1
-      fecha = fecha.text if fecha
-        
+      fecha = fecha.text if fecha 
       # Buscamos imagenes
       imagen = nota.search ".dest_thumb img"
       imagen = nota.search ".thumb img" if imagen.blank?
-      imagen = imagen.attr "src" unless imagen.blank?
+      imagen = nota.search "img" if imagen.blank?
+      # imagen = imagen.attr "src" unless imagen.blank?
       
-      imagen = "#{website.url}#{imagen.text}" if imagen
+      imagen = "#{website.url}#{imagen.attr("src")}" if imagen
 
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
-      puts "Fecha: #{fecha}\n"
-      puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "Titulo: #{titulo}\n"
+      # puts "Url: #{url}\n"
+      # puts "Fecha: #{fecha}\n"
+      # puts "Contenido: #{contenido}\n"
+      # puts "Imágen: #{imagen}\n"
 
       # Se guarda la nota_local
       nota_local = Nota.new
@@ -384,10 +439,11 @@ module Importer
   end
 
   def self.import_notas_informe21
-    puts "INFORME 21"
     website = Website.find_by_nombre "informe21"
+    puts website.nombre    
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     
@@ -418,12 +474,12 @@ module Importer
       imagen = imagen.attr "src" unless imagen.blank?
       imagen = imagen.text
 
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
-      puts "Fecha: #{fecha}\n"
-      puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "Titulo: #{titulo}\n"
+      # puts "Url: #{url}\n"
+      # puts "Fecha: #{fecha}\n"
+      # puts "Contenido: #{contenido}\n"
+      # puts "Imágen: #{imagen}\n"
 
       # Se guarda la nota_local
       nota_local = Nota.new
@@ -440,10 +496,11 @@ module Importer
   end
 
   def self.import_notas_eluniversal
-    puts "EL UNIVERSAL"
     website = Website.find_by_nombre "eluniversal"
+    puts website.nombre    
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     
@@ -464,12 +521,11 @@ module Importer
       end
       
       # Buscamos los contenidos
-      # contenido = nota.search ".contenido333"
-      contenido = nota.search ".contenido333.LH17.LS06"
-      contenido = nota.search ".contenido333.LS06" if contenido.blank?
+      contenido = nota.search ".contenido333"
+      # contenido = nota.search ".contenido333.LH17.LS06"
+      # contenido = nota.search ".contenido333.LS06" if contenido.blank?
       contenido = contenido.text unless contenido.blank?
-      
-      
+
       
       # buscamos Fechas
       fecha = nota.search(".hora2")
@@ -481,12 +537,12 @@ module Importer
       imagen = imagen.attr "src" unless imagen.blank?
       imagen = imagen.text if imagen
 
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
-      puts "Fecha: #{fecha}\n"
-      puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "Titulo: #{titulo}\n"
+      # puts "Url: #{url}\n"
+      # puts "Fecha: #{fecha}\n"
+      # puts "Contenido: #{contenido}\n"
+      # puts "Imágen: #{imagen}\n"
 
       # Se guarda la nota_local
       nota_local = Nota.new
@@ -503,10 +559,11 @@ module Importer
   end
 
   def self.import_notas_avn
-    puts "AGENCIA VENEZOLANA DE NOTICIAS"
     website = Website.find_by_nombre "avn"
+    puts website.nombre    
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     
@@ -519,7 +576,7 @@ module Importer
     notas.each do |nota|
       # Se buscan titulos (<a></a>) y contenidos
       titulo = nota.search ".titulo a"
-      titulo = nota.search "a"
+      titulo = nota.search "a" if titulo.blank?
       # titulo = nota.search ".titulo2.color000.TDno" if titulo.blank?
       
       # Si la Nota tiene titulo
@@ -545,12 +602,12 @@ module Importer
       imagen = imagen.attr "src" unless imagen.blank?
       imagen = imagen.text unless imagen.blank?
 
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      puts "Titulo: #{titulo}\n"
-      puts "Url: #{url}\n"
-      # puts "Fecha: #{fecha}\n"
-      puts "Contenido: #{contenido}\n"
-      puts "Imágen: #{imagen}\n"
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # puts "Titulo: #{titulo}\n"
+      # puts "Url: #{url}\n"
+      # # puts "Fecha: #{fecha}\n"
+      # puts "Contenido: #{contenido}\n"
+      # puts "Imágen: #{imagen}\n"
 
       # Se guarda la nota_local
       nota_local = Nota.new
@@ -566,27 +623,92 @@ module Importer
     end
   end
 
-
-
   def self.import_notas_radiomundial
-    puts "RADIO MUNDIAL"
     website = Website.find_by_nombre "radiomundial"
+    puts website.nombre    
     # Eliminando las notas no asociadas a algun resumen
-    website.eliminar_notas_irrelevantes
+    # website.eliminar_notas_irrelevantes
+    
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website
+    unless index.nil?
+      tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+    
+      # Se Buscan las Todas las Notas de la Web
+      notas = index.search ".views-row"
+      notas.each do |nota|
+        # Se buscan titulos (<a></a>) y contenidos
+        titulo = nota.search ".views-field-title span a"
+        titulo = nota.search ".views-showcase-subitem.views-showcase-big-box-field_main_image_fid span a" if titulo.blank?
+      
+      
+        contenido = nota.search ".field-content p"
+        contenido = contenido.text
+        # unless contenido.blank? && titulo.blank?
+          # Si la Nota tiene titulo y contenido
+        href = titulo.attr "href" unless titulo.blank?
+        url = "#{website.url}#{(href).value}" if href
+      
+        titulo = titulo.text
+      
+        # buscamos Fechas
+        fecha = nota.search(".views-field-created span")
+        fecha = fecha[0] if fecha.count > 1
+        fecha = fecha.text if fecha
+        
+        # Buscamos imagenes
+        imagen = nota.search "img"
+        # imagen = nota.search ".thumb img" if imagen.blank?
+        imagen = imagen.attr "src" unless imagen.blank?
+        imagen = imagen.text
+      
+        puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+        unless titulo.blank?
+          puts "Titulo: #{titulo}\n"
+          puts "Url: #{url}\n"
+          puts "Fecha: #{fecha}\n"
+          puts "Contenido: #{contenido}\n"
+          puts "Imágen: #{imagen}\n"
+        else
+          puts nota
+        end
+
+        # Se guarda la nota_local
+        nota_local = Nota.new
+        nota_local.titulo = titulo
+        nota_local.fecha_publicacion = fecha
+        nota_local.contenido = contenido
+        nota_local.url = url
+        nota_local.website_id = website.id
+        nota_local.tipo_nota_id = tipo_nota.id
+        nota_local.imagen = imagen
+        nota_local.save
+      end
+    end
+    return index
+  end
+
+  def self.import_notas_elnacional
+    website = Website.find_by_nombre "elnacional"
+    puts website.nombre    
+    # Eliminando las notas no asociadas a algun resumen
+    # website.eliminar_notas_irrelevantes
+    
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
-    notas = index.search ".views-row"
+    notas = index.search ".md-24h-nws"
+    notas += index.search ".bd"
+    
     notas.each do |nota|
       # Se buscan titulos (<a></a>) y contenidos
-      titulo = nota.search ".views-field-title span a"
-      titulo = nota.search ".views-showcase-subitem.views-showcase-big-box-field_main_image_fid span a" if titulo.blank?
+      titulo = nota.search ".headline a"
+
       
-      
-      contenido = nota.search ".field-content p"
+      contenido = nota.search ".teaser"
       contenido = contenido.text
       # unless contenido.blank? && titulo.blank?
         # Si la Nota tiene titulo y contenido
@@ -596,26 +718,26 @@ module Importer
       titulo = titulo.text
       
       # buscamos Fechas
-      fecha = nota.search(".views-field-created span")
-      fecha = fecha[0] if fecha.count > 1
+      fecha = nota.search(".timestamp")
       fecha = fecha.text if fecha
         
       # Buscamos imagenes
       imagen = nota.search "img"
       # imagen = nota.search ".thumb img" if imagen.blank?
       imagen = imagen.attr "src" unless imagen.blank?
-      imagen = imagen.text
+      imagen = "#{website.url}#{imagen}" if imagen
+      # imagen = imagen.text
       
-      puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-      unless titulo.blank?
-        puts "Titulo: #{titulo}\n"
-        puts "Url: #{url}\n"
-        puts "Fecha: #{fecha}\n"
-        puts "Contenido: #{contenido}\n"
-        puts "Imágen: #{imagen}\n"
-      else
-        puts nota
-      end
+      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+      # unless titulo.blank?
+      #   puts "Titulo: #{titulo}\n"
+      #   puts "Url: #{url}\n"
+      #   puts "Fecha: #{fecha}\n"
+      #   puts "Contenido: #{contenido}\n"
+      #   puts "Imágen: #{imagen}\n"
+      # else
+      #   puts nota
+      # end
 
       # Se guarda la nota_local
       nota_local = Nota.new
@@ -632,6 +754,89 @@ module Importer
   end
 
 
+  def self.import_notas_rnv
+    website = Website.find_by_nombre "rnv"
+    puts website.nombre
+    # Eliminando las notas no asociadas a algun resumen
+    # website.eliminar_notas_irrelevantes
+
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website
+    
+    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+    
+    # Se Buscan las Todas las Notas de la Web
+    notas = index.search ".gk_is_slide"
+    notas += index.search ".thumbsup-image"
+    
+    notas.each do |nota|
+      # Se buscan titulos (<a></a>) y contenidos
+      titulo = nota.search ".thumbsup-title a"
+      
+      if titulo.blank?
+        
+        titulo = nota.attr "title"
+        imagen = nota.children[0].text
+        titulo.slice! "(+AUDIO)" unless titulo.blank?
+        href = nota.children[1].attr "href"
+        url = "#{website.url}#{href}" if href
+      else
+        
+        contenido = nota.search ".thumbsup-intro"
+        contenido = contenido.text
+
+        # Buscamos imagenes
+        imagen = nota.search "img"
+        imagen = imagen.attr "src" unless imagen.blank?
+        imagen = imagen.text unless imagen.blank?
+        
+        # Buscamos titulos y urls
+        href = titulo.attr "href" unless titulo.blank?
+        url = "#{website.url}#{(href).value}" if href
+        titulo = titulo.text
+      end
+      
+      # buscamos Fechas # Nohay Fechas
+      # fecha = nota.search(".timestamp")
+      # fecha = fecha.text if fecha
+        
+
+      # imagen = imagen.text
+ 
+        # Se guarda la nota_local
+        nota_local = Nota.new
+        nota_local.titulo = titulo
+        # nota_local.fecha_publicacion = fecha unless fecha.blank?
+        nota_local.contenido = contenido if contenido
+        nota_local.url = url
+        nota_local.website_id = website.id
+        nota_local.tipo_nota_id = tipo_nota.id
+        nota_local.imagen = imagen
+        nota_local.save
+ 
+      
+      # PROPUESTA DE VALIDAR URL
+      # nota_local = website.notas.find_by_url url
+      # if nota_local.nil?
+      #   # Se guarda la nota_local
+      #   nota_local = Nota.new
+      #   nota_local.titulo = titulo
+      #   nota_local.fecha_publicacion = fecha
+      #   nota_local.contenido = contenido
+      #   nota_local.url = url
+      #   nota_local.website_id = website.id
+      #   nota_local.tipo_nota_id = tipo_nota.id
+      #   nota_local.imagen = imagen
+      #   nota_local.save
+      # # else
+      # #   nota_local.destroy if nota_local.resumen_id.nil?
+      # end
+    end
+  end
+
+
+
+
 # page2 = page.link_with(:href => cunas_fichas_url).click
 
   
@@ -642,18 +847,20 @@ module Importer
   end
 
 #   POSIBLE FUNCIÓN PARA INCLUIR EN ERROR DE CARGA
-  # def self.cargar_website website
-  #   begin
-  #     timeout(10) do
-  #       url = URI.parse website.url
-  #       agente = Mechanize.new
-  #     end
-  #   rescue Timeout::Error
-  #     puts "Time out connection request"
-  #   end  
-  #   return agente.get(url) if agente
-  # end
-  # 
+  def self.cargar_website_low website
+    begin
+      url = URI.parse website.url
+      agente = Mechanize.new
+    rescue Exception => ex
+      puts "Time out connection request#{ex}"
+      agente = nil
+    end 
+    
+    return agente if agente.nil?
+    return agente.get(url)
+
+  end
+  
   
   
   

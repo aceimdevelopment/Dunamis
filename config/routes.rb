@@ -1,5 +1,9 @@
 Dunamis::Application.routes.draw do
 
+  resources :tipos_webnotas
+
+  resources :posts
+
   resources :notas
 
   resources :tipos_notas

@@ -1,0 +1,49 @@
+<%= form_for @tipo_webnota, :html => { :class => 'form-horizontal' } do |f| %>
+	<% if @tipo_webnota.errors.any? %>
+    <% @tipo_webnota.errors.full_messages.each do |msg| %>
+      <%= msg %>
+    <% end %>
+	<% end %>
+  <div class="control-group">
+    <%= f.label :div_nota, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :div_nota, :class => 'input', :autofocus => "autofocus", :placeholder => "div de la nota…", :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :div_titulo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :div_titulo, :class => 'input', :placeholder => "div del titulo…", :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :div_fecha, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :div_fecha, :class => 'input', :placeholder => "div de la fecha…", :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :div_contenido, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :div_contenido, :class => 'input', :placeholder => "div del contenido o resumen…", :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :div_imagen, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :div_imagen, :class => 'input', :placeholder => "div de la imagen…", :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :website_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select :website_id, Website.all, :id, :nombre, {:prompt => true}, {:required => true, :class => "selectpicker input-medium"} %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                tipos_webnotas_path, :class => 'btn' %>
+  </div>
+<% end %>

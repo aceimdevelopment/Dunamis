@@ -135,6 +135,7 @@ es:
       destroy: Eliminar %{model}
       cancel: Cancelar
     actions: "Acciones"
+    created_at: "Creado"
     links:
       back: "Atras"
       cancel: "Cancelar"
@@ -145,7 +146,7 @@ es:
     titles:
       edit: "Editar"
       save: "Guardar"
-      new: "Nuevo"
+      new: "Nuevo %{model}"
       delete: "Eliminar"
       
   number:
