@@ -766,35 +766,26 @@ module Importer
     tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
-    notas = index.search ".gk_is_slide"
-    notas += index.search ".thumbsup-image"
+    notas = index.search ".categorypanel"
+    # notas += index.search ".thumbsup-image"
     
     notas.each do |nota|
       # Se buscan titulos (<a></a>) y contenidos
-      titulo = nota.search ".thumbsup-title a"
-      
-      if titulo.blank?
+      titulo = nota.search "h2 a"
         
-        titulo = nota.attr "title"
-        imagen = nota.children[0].text
-        titulo.slice! "(+AUDIO)" unless titulo.blank?
-        href = nota.children[1].attr "href"
-        url = "#{website.url}#{href}" if href
-      else
-        
-        contenido = nota.search ".thumbsup-intro"
-        contenido = contenido.text
+      contenido = nota.search ".excerpt"
+      contenido = contenido.text
 
-        # Buscamos imagenes
-        imagen = nota.search "img"
-        imagen = imagen.attr "src" unless imagen.blank?
-        imagen = imagen.text unless imagen.blank?
-        
-        # Buscamos titulos y urls
-        href = titulo.attr "href" unless titulo.blank?
-        url = "#{website.url}#{(href).value}" if href
-        titulo = titulo.text
-      end
+      # Buscamos imagenes
+      imagen = nota.search "img"
+      imagen = imagen.attr "src" unless imagen.blank?
+      imagen = imagen.text unless imagen.blank?
+      
+      # Buscamos titulos y urls
+      href = titulo.attr "href" unless titulo.blank?
+      url = "#{(href).value}" if href
+      titulo = titulo.text
+      
       
       # buscamos Fechas # Nohay Fechas
       # fecha = nota.search(".timestamp")
@@ -802,18 +793,17 @@ module Importer
         
 
       # imagen = imagen.text
- 
-        # Se guarda la nota_local
-        nota_local = Nota.new
-        nota_local.titulo = titulo
-        # nota_local.fecha_publicacion = fecha unless fecha.blank?
-        nota_local.contenido = contenido if contenido
-        nota_local.url = url
-        nota_local.website_id = website.id
-        nota_local.tipo_nota_id = tipo_nota.id
-        nota_local.imagen = imagen
-        nota_local.save
- 
+
+      # Se guarda la nota_local
+      nota_local = Nota.new
+      nota_local.titulo = titulo
+      # nota_local.fecha_publicacion = fecha unless fecha.blank?
+      nota_local.contenido = contenido if contenido
+      nota_local.url = url
+      nota_local.website_id = website.id
+      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.imagen = imagen
+      nota_local.save
       
       # PROPUESTA DE VALIDAR URL
       # nota_local = website.notas.find_by_url url
@@ -834,6 +824,87 @@ module Importer
     end
   end
 
+  # 
+  # def self.import_notas_rnv
+  #   website = Website.find_by_nombre "rnv"
+  #   puts website.nombre
+  #   # Eliminando las notas no asociadas a algun resumen
+  #   # website.eliminar_notas_irrelevantes
+  # 
+  #   # Se Carga la Pagina Principal del WebSite
+  #   index = cargar_website website
+  #   
+  #   tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
+  #   
+  #   # Se Buscan las Todas las Notas de la Web
+  #   notas = index.search ".gk_is_slide"
+  #   notas += index.search ".thumbsup-image"
+  #   
+  #   notas.each do |nota|
+  #     # Se buscan titulos (<a></a>) y contenidos
+  #     titulo = nota.search ".thumbsup-title a"
+  #     
+  #     if titulo.blank?
+  #       
+  #       titulo = nota.attr "title"
+  #       imagen = nota.children[0].text
+  #       titulo.slice! "(+AUDIO)" unless titulo.blank?
+  #       href = nota.children[1].attr "href"
+  #       url = "#{website.url}#{href}" if href
+  #     else
+  #       
+  #       contenido = nota.search ".thumbsup-intro"
+  #       contenido = contenido.text
+  # 
+  #       # Buscamos imagenes
+  #       imagen = nota.search "img"
+  #       imagen = imagen.attr "src" unless imagen.blank?
+  #       imagen = imagen.text unless imagen.blank?
+  #       
+  #       # Buscamos titulos y urls
+  #       href = titulo.attr "href" unless titulo.blank?
+  #       url = "#{website.url}#{(href).value}" if href
+  #       titulo = titulo.text
+  #     end
+  #     
+  #     # buscamos Fechas # Nohay Fechas
+  #     # fecha = nota.search(".timestamp")
+  #     # fecha = fecha.text if fecha
+  #       
+  # 
+  #     # imagen = imagen.text
+  #  
+  #       # Se guarda la nota_local
+  #       nota_local = Nota.new
+  #       nota_local.titulo = titulo
+  #       # nota_local.fecha_publicacion = fecha unless fecha.blank?
+  #       nota_local.contenido = contenido if contenido
+  #       nota_local.url = url
+  #       nota_local.website_id = website.id
+  #       nota_local.tipo_nota_id = tipo_nota.id
+  #       nota_local.imagen = imagen
+  #       nota_local.save
+  #  
+  #     
+  #     # PROPUESTA DE VALIDAR URL
+  #     # nota_local = website.notas.find_by_url url
+  #     # if nota_local.nil?
+  #     #   # Se guarda la nota_local
+  #     #   nota_local = Nota.new
+  #     #   nota_local.titulo = titulo
+  #     #   nota_local.fecha_publicacion = fecha
+  #     #   nota_local.contenido = contenido
+  #     #   nota_local.url = url
+  #     #   nota_local.website_id = website.id
+  #     #   nota_local.tipo_nota_id = tipo_nota.id
+  #     #   nota_local.imagen = imagen
+  #     #   nota_local.save
+  #     # # else
+  #     # #   nota_local.destroy if nota_local.resumen_id.nil?
+  #     # end
+  #   end
+  # end
+  # 
 
 
 

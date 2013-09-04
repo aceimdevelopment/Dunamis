@@ -1,0 +1,20 @@
+<%= form_for @partido, :html => { :class => 'form-horizontal' } do |f| %>
+	<div class="control-group">
+	  <%= f.label :organizacion_id, :class => 'control-label' %>
+	  <div class="controls">
+	  <%= f.collection_select :organizacion_id, @organizaciones, :id, :nombre, :prompt => true, :required => true %>
+	  </div>
+	</div>
+  <div class="control-group">
+    <%= f.label :tolda_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :tolda_id, @toldas, :id, :nombre, :prompt => true, :required => true %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                partidos_path, :class => 'btn' %>
+  </div>
+<% end %>

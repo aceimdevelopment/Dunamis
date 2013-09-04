@@ -11,11 +11,11 @@
   <dt><strong><%= model_class.human_attribute_name(:nombre_corto) %>:</strong></dt>
   <dd><%= @organizacion.nombre_corto %></dd>
   <dt><strong><%= model_class.human_attribute_name(:rif) %>:</strong></dt>
-  <dd><%= @organizacion.rif %></dd>
+  <dd>#<%= @organizacion.rif %></dd>
   <dt><strong><%= model_class.human_attribute_name(:tolda_id) %>:</strong></dt>
-  <dd><%= @organizacion.tolda_id %></dd>
+  <dd><%= @organizacion.tolda.nombre %></dd>
   <dt><strong><%= model_class.human_attribute_name(:tipo_id) %>:</strong></dt>
-  <dd><%= @organizacion.tipo_id %></dd>
+  <dd><%= @organizacion.tipo.nombre %></dd>
 </dl>
 
 <div class="form-actions">

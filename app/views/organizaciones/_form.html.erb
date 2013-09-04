@@ -29,15 +29,17 @@
 	  <%= f.collection_select :tolda_id, @toldas, :id, :nombre, :prompt => true, :required => true %>
     </div>
 
-	<div class="btn-group" data-toggle="buttons-radio">
-	  <%= @toldas.each do |tolda| %>
-		<%= f.button "#{tolda.nombre}", :type => 'button', :class=> "btn btn-primary", :value => "#{tolda.id}", :id => "organizacion_tolda_id_#{tolda.id}", :name => "organizacion[#{tolda.id}]" %>
-	  <% end %>
-	</div>
+		<div class="btn-group" data-toggle="buttons-radio">
+			<%# @toldas.each do |tolda| %>
+			<%# f.radio_button "organizacion", "tolda", "#{tolda.nombre}" %>
+			<%# f.button "#{tolda.nombre}", :type => 'button', :class=> "btn btn-primary", :value => "#{tolda.id}", :id => "organizacion_tolda_id", :name => "organizacion[tolda_id]" %>
+		  <%# end %>
+		</div>
 
   </div>
   <div class="control-group">
-    <%= f.label :tipo_id, :class => 'control-label' %>
+		
+    <%= f.label "Tipo de Organizacion", :class => 'control-label' %>
     <div class="controls">
 	  <%= f.collection_select :tipo_id, @tipos, :id, :nombre, :prompt => true, :required => true %>
     </div>

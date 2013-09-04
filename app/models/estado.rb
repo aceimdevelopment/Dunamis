@@ -5,4 +5,8 @@ class Estado < ActiveRecord::Base
   has_many :candidates
   accepts_nested_attributes_for :candidates
   
+  has_many :municipios
+  accepts_nested_attributes_for :municipios
+  
+  
 end

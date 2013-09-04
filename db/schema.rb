@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130802170054) do
+ActiveRecord::Schema.define(:version => 20130822220541) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -156,6 +156,16 @@ ActiveRecord::Schema.define(:version => 20130802170054) do
 
   add_index "organizaciones", ["tipo_id"], :name => "FK tipo_idx"
   add_index "organizaciones", ["tolda_id"], :name => "FK tolda_idx"
+
+  create_table "partidos", :id => false, :force => true do |t|
+    t.integer  "organizacion_id", :default => 0, :null => false
+    t.integer  "tolda_id",        :default => 0, :null => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  add_index "partidos", ["organizacion_id"], :name => "index_partidos_on_organizacion_id"
+  add_index "partidos", ["tolda_id"], :name => "index_partidos_on_tolda_id"
 
   create_table "posts", :force => true do |t|
     t.string   "nombre"

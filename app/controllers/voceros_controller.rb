@@ -25,6 +25,7 @@ class VocerosController < ApplicationController
   # GET /voceros/new.json
   def new
     @vocero = Vocero.new
+    @organizacion = Organizacion.
 
     respond_to do |format|
       format.html # new.html.erb

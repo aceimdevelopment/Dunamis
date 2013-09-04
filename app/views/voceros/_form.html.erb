@@ -2,7 +2,7 @@
   <div class="control-group">
     <%= f.label :organizacion_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :organizacion_id, :class => 'number_field' %>
+      <%= f.collection_select :organizacion_id, Organizacion.all, :id, :nombre, :prompt => true, :required => true %>
     </div>
   </div>
   <div class="control-group">

@@ -7,5 +7,6 @@ class Candidato < ActiveRecord::Base
   belongs_to :eleccion
   belongs_to :municipio
   belongs_to :tipo_cargo
+  belongs_to :partido
 
 end

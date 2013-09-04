@@ -42,7 +42,7 @@ class OrganizacionesController < ApplicationController
   # POST /organizaciones.json
   def create
     @organizacion = Organizacion.new(params[:organizacion])
-
+    
     respond_to do |format|
       if @organizacion.save
         format.html { redirect_to @organizacion, notice: 'Organizacion was successfully created.' }
