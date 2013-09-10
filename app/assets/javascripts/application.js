@@ -19,8 +19,8 @@
 function myfun(estado_id){
 	municipios = document.getElementById('organizacion_municipio_id')
 	
-	<%# municipios_estado = Municipio.where(:estado_id => estado_id) %>
-	alert("valor2:"+estado_id+municipios.options+municipios_estado);
+	//<%# municipios_estado = Municipio.where(:estado_id => estado_id) %>
+	alert("valor2:"+estado_id+municipios.options);
 	var sel = document.createElement("select");
 	var opt1 = document.createElement("option");
 	var opt2 = document.createElement("option");
@@ -53,4 +53,4 @@ function myfun(estado_id){
   //     url: 'select-chain.php',
   //     data: { ajax: true }
   // }).trigger('change');
-});
+//});
