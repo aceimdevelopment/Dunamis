@@ -27,6 +27,7 @@ class OrganizacionesController < ApplicationController
     @organizacion = Organizacion.new
     @tipos = Tipo.all
     @toldas = Tolda.all
+    @municipios =  params[:estado_id] ? Municipio.where(:estado_id => params[:estado_id]) : Municipio.all
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @organizacion }

@@ -2,7 +2,7 @@ class AlterCandidatosAddColumPartidoId < ActiveRecord::Migration
   def change
     
     change_table :candidatos do |t|
-      t.references :partidos
+      t.references :partido
     end
     add_index :candidatos, :partido_id
   end

@@ -38,12 +38,27 @@
 
   </div>
   <div class="control-group">
-		
     <%= f.label "Tipo de Organizacion", :class => 'control-label' %>
     <div class="controls">
-	  <%= f.collection_select :tipo_id, @tipos, :id, :nombre, :prompt => true, :required => true %>
+	  <%= f.collection_select :tipo_id, @tipos, :id, :nombre, :prompt => true %>
     </div>
   </div>
+
+  <div class="control-group">
+    <%= f.label :estado_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :estado_id, Estado.all, :id, :nombre, {:prompt => "todos"}, {:required => true } %> 
+	<!-- #, :onchange => 'myfun(this.value)'}  -->
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :municipio_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :municipio_id, @municipios, :id, :nombre, :prompt => "todos", :required => true %>
+    </div>
+  </div>
+
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

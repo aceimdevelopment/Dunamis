@@ -1,29 +1,26 @@
-<%= form_for(@estado) do |f| %>
-  <% if @estado.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@estado.errors.count, "error") %> prohibited this estado from being saved:</h2>
-
-      <ul>
-      <% @estado.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+<%= form_for @estado, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :nombre, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :nombre, :class => 'text_field' %>
     </div>
-  <% end %>
+  </div>
+  <div class="control-group">
+    <%= f.label :descripcion, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :descripcion, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :nombre_corto, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :nombre_corto, :class => 'text_field' %>
+    </div>
+  </div>
 
-  <div class="field">
-    <%= f.label :nombre %><br />
-    <%= f.text_field :nombre %>
-  </div>
-  <div class="field">
-    <%= f.label :descripcion %><br />
-    <%= f.text_field :descripcion %>
-  </div>
-  <div class="field">
-    <%= f.label :nombre_corto %><br />
-    <%= f.text_field :nombre_corto %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                estados_path, :class => 'btn' %>
   </div>
 <% end %>

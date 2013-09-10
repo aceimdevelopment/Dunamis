@@ -1,32 +1,33 @@
 <%= form_for @vocero, :html => { :class => 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :organizacion_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.collection_select :organizacion_id, Organizacion.all, :id, :nombre, :prompt => true, :required => true %>
-    </div>
-  </div>
+
   <div class="control-group">
     <%= f.label :nombre, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :nombre, :class => 'text_area' %>
+      <%= f.text_field :nombre, :class => 'input-medium', :autofocus => "autofocus", :placeholder => "nombre…", :required => true %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :foto, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :foto, :class => 'text_area' %>
+      <%= f.text_field :foto, :class => 'input-medium', :placeholder => "url…", :required => true %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :descripcion, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :descripcion, :class => 'text_area' %>
+      <%= f.text_field :descripcion, :class => 'input-medium', :placeholder => "Descripcion…", :required => true %>
     </div>
   </div>
-
+	<div class="control-group">
+    <%= f.label :organizacion_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select :organizacion_id, @organizacion, :id, :nombre, :prompt => true, :required => true %>
+    </div>
+  </div>
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 voceros_path, :class => 'btn' %>
   </div>
+
 <% end %>

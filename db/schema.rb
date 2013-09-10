@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130822220541) do
+ActiveRecord::Schema.define(:version => 20130904202156) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -69,10 +69,13 @@ ActiveRecord::Schema.define(:version => 20130822220541) do
     t.integer  "tipo_cargo_id"
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
+    t.integer  "partidos_id"
+    t.integer  "partido_id"
   end
 
   add_index "candidatos", ["eleccion_id"], :name => "index_candidatos_on_eleccion_id"
   add_index "candidatos", ["municipio_id"], :name => "index_candidatos_on_municipio_id"
+  add_index "candidatos", ["partido_id"], :name => "index_candidatos_on_partido_id"
   add_index "candidatos", ["tipo_cargo_id"], :name => "index_candidatos_on_tipo_cargo_id"
   add_index "candidatos", ["vocero_id"], :name => "index_candidatos_on_vocero_id"
 
@@ -152,8 +155,12 @@ ActiveRecord::Schema.define(:version => 20130822220541) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.integer  "tipo_id"
+    t.integer  "estado_id"
+    t.integer  "municipio_id"
   end
 
+  add_index "organizaciones", ["estado_id"], :name => "index_organizaciones_on_estado_id"
+  add_index "organizaciones", ["municipio_id"], :name => "index_organizaciones_on_municipio_id"
   add_index "organizaciones", ["tipo_id"], :name => "FK tipo_idx"
   add_index "organizaciones", ["tolda_id"], :name => "FK tolda_idx"
 
