@@ -12,31 +12,69 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require twitter/bootstrap
 //= require bootstrap
+//= require twitter/bootstrap
+//= require select2
+//= require select2_locale_es
+//= require_self
 //= require_tree .
 
-function myfun(estado_id){
-	municipios = document.getElementById('organizacion_municipio_id')
-	
-	//<%# municipios_estado = Municipio.where(:estado_id => estado_id) %>
-	alert("valor2:"+estado_id+municipios.options);
-	var sel = document.createElement("select");
-	var opt1 = document.createElement("option");
-	var opt2 = document.createElement("option");
-	
-	opt1.value = "1";
-	opt1.text = "Option: Value 1";
+// $(document).ready(function() {
+//   $("select").select2();
+// 
+//   $(".get_desencientes").change(function(){
+//           var aux = $(this);
+//           var next_select = aux.next("select");
+//           var value = $("option:selected", aux).attr("value");
+//           if(value && next_select){
+//                   next_select = next_select.first();
+//                   $.get("/estados" + "?" + aux.attr("estado_id") + "=" + value, function(data){
+//                           var municipios = eval(data);
+//                           next_select.html("");
+//                           var options = ""
+//                           for(i=0;i<municipios.length;i++){
+//                                   options += "<option value='" + municipios[i].id +"'>" + municipios[i].nombrerai + "</option>";
+//                           }
+//                           next_select.append(options);
+//                   });
+//           }
+//   });
+// 
+// });
 
-	opt2.value = "2";
-	opt2.text = "Option: Value 2";
+$(function(){
+  $("select").select2();
+});
 
-	sel.add(opt1, null);
-	sel.add(opt2, null);
-	
-	municipios = sel
-	// $("#organizacion_municipio_id").html('<%# options_from_collection_for_select(@municipios, "id", "nombre") %>');
-}
+
+$(function() {
+  return $("#organizacion_estado_id").change(function() {
+    return alert("Casas");
+  });
+});
+
+// 
+// function myfun(estado_id){
+// 	municipios = document.getElementById('organizacion_municipio_id')
+// 	
+// 	//<%# municipios_estado = Municipio.where(:estado_id => estado_id) %>
+// 	alert("valor2:"+estado_id+municipios.options);
+// 	var sel = document.createElement("select");
+// 	var opt1 = document.createElement("option");
+// 	var opt2 = document.createElement("option");
+// 	
+// 	opt1.value = "1";
+// 	opt1.text = "Option: Value 1";
+// 
+// 	opt2.value = "2";
+// 	opt2.text = "Option: Value 2";
+// 
+// 	sel.add(opt1, null);
+// 	sel.add(opt2, null);
+// 	
+// 	municipios = sel
+// 	// $("#organizacion_municipio_id").html('<%# options_from_collection_for_select(@municipios, "id", "nombre") %>');
+// }
 
 
 
