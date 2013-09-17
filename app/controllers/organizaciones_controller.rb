@@ -27,7 +27,11 @@ class OrganizacionesController < ApplicationController
     @organizacion = Organizacion.new
     @tipos = Tipo.all
     @toldas = Tolda.all
-    @municipios =  params[:estado_id] ? Municipio.where(:estado_id => params[:estado_id]) : Municipio.all
+    @municipios = params[:estado_id] ? Municipio.where(:estado_id => params[:estado_id]) : Municipio.all
+    
+    # if params[:estado_id]
+    #   @municipios = Municipio.where(:estado_id => params[:id])
+    # end
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @organizacion }
@@ -82,4 +86,10 @@ class OrganizacionesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def actualizar_select_municipios
+    @municipios = Municipio.where(:estado_id => params[:id])
+    render :partial => "municipios", :municipios => @municipios
+  end
+  
 end

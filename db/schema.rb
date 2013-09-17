@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130904202156) do
+ActiveRecord::Schema.define(:version => 20130916222511) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -255,9 +255,11 @@ ActiveRecord::Schema.define(:version => 20130904202156) do
     t.text     "descripcion"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.integer  "tipo_cargo_id"
   end
 
   add_index "voceros", ["organizacion_id"], :name => "index_voceros_on_organizacion_id"
+  add_index "voceros", ["tipo_cargo_id"], :name => "index_voceros_on_tipo_cargo_id"
 
   create_table "websites", :force => true do |t|
     t.text     "url"

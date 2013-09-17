@@ -25,7 +25,6 @@ class MunicipiosController < ApplicationController
   # GET /municipios/new.json
   def new
     @municipio = Municipio.new
-    @estados = Estado.all
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @municipio }

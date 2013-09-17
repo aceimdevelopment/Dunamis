@@ -80,4 +80,10 @@ class EstadosController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def actualizar_select_municipios
+      @municipios = Municipio.where(:estado_id => params[:id])
+      render :partial => "municipios", :municipios => @municipios
+  end
+  
 end

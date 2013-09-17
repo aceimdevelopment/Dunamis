@@ -14,12 +14,13 @@
         <ul class="nav">
 
             <li><%= link_to 'Informes', new_informe_path %></li>
-						<li><%= link_to 'Candidatos', candidates_path %></li>
+						<li><%= link_to 'Websites', websites_path %></li>
+						<li><%= link_to 'Notas', notas_path %></li>	
+						<li><%= link_to 'Candidatos', candidatos_path %></li>
 						<li><%= link_to 'Organizaciones', organizaciones_path %></li>
-						<li><%= link_to 'Estados', estados_path %></li>
+						<li><%# link_to 'Estados', estados_path %></li>
 						<li><%= link_to 'Cuñas', cunas_path %></li>
-						<li><%= link_to 'Apariciones', apariciones_path %></li>
-						<li><%= link_to 'websites', websites_path %></li>
+						<li><%# link_to 'Apariciones', apariciones_path %></li>
 
 					<li class="dropdown">
 				    <a class="dropdown-toggle"
@@ -27,8 +28,7 @@
 				       href="#">
 				        Complementos 
 				        <b class="caret"></b>
-								<i class="icon-fire icon-white"></i>
-				      </a>
+				    </a>
 				    <ul class="dropdown-menu">
 				      <li><%= link_to 'Candidatos', candidates_path %></li>
 							<li><%= link_to 'Organizaciones', organizaciones_path %></li>

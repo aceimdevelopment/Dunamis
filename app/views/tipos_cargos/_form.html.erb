@@ -1,18 +1,9 @@
 <%= form_for @tipo_cargo, :html => { :class => 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :nombre, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :nombre, :class => 'text_area' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :nombre_corto, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_area :nombre_corto, :class => 'text_area' %>
-    </div>
-  </div>
 
   <div class="form-actions">
+		<%= f.text_field :nombre, :class => 'input-medium', :autofocus => "autofocus", :placeholder => "Nombre…", :required => true %>
+		<%= f.text_field :nombre_corto, :class => 'input-medium', :placeholder => "Nombre Corto…", :required => true %>
+	
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 tipos_cargos_path, :class => 'btn' %>

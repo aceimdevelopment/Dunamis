@@ -1,11 +1,4 @@
 
-
-  <select id="e1">
-      <option value="AL">Alabama</option>
-      <option value="WY">Wyoming</option>
-  </select>
-
-
 <%= form_for @organizacion, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :nombre, :class => 'control-label' %>
@@ -55,17 +48,32 @@
   <div class="control-group">
     <%= f.label :estado_id, :class => 'control-label' %>
     <div class="controls">
-	  <%= f.collection_select :estado_id, Estado.all, :id, :nombre, {:prompt => "todos"}, {:required => true } %> 
+	  <%= f.collection_select :estado_id, Estado.all, :id, :nombre, {:prompt => "todos"}, {:required => true, :class => "selects2" } %> 
 	<!-- #, :onchange => 'myfun(this.value)'}  -->
     </div>
   </div>
 
-  <div class="control-group">
-    <%= f.label :municipio_id, :class => 'control-label' %>
-    <div class="controls">
-	  <%= f.collection_select :municipio_id, @municipios, :id, :nombre, :prompt => "todos", :required => true %>
-    </div>
+<!-- <script>
+$(document).ready(function() {
+  return $("#organizacion_estado_id").change(function() {
+    var estado_id = $(this).val()
+		$.get("/organizaciones_actualizar_select_municipios?estado_id="+estado_id, 
+		        function(data){ $("#municipioSelectDiv").html(data); } );
+		
+  });
+});
+</script> -->
+
+  <div id="municipioSelectDiv">
   </div>
+
+
+  <!-- <div id="municipioSelectDiv" class="control-group">
+    <%# f.label :municipio_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%# f.collection_select :municipio_id, @municipios, :id, :nombre, :prompt => "todos", :required => true %>
+    </div>
+  </div> -->
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>

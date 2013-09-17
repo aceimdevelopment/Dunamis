@@ -43,13 +43,16 @@
 // });
 
 $(function(){
-  $("select").select2();
+  $(".selects2").select2();
 });
 
 
-$(function() {
+$(document).ready(function() {
   return $("#organizacion_estado_id").change(function() {
-    return alert("Casas");
+    var estado_id = $(this).val()
+		$.get("update_municipios_select.html?estado_id="+estado_id, 
+		        function(data){ $("#municipioSelectDiv").html(data); } );
+		
   });
 });
 

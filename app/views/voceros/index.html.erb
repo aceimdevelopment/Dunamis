@@ -10,6 +10,7 @@
       <th><%= model_class.human_attribute_name(:nombre) %></th>
       <th><%= model_class.human_attribute_name(:foto) %></th>
       <th><%= model_class.human_attribute_name(:descripcion) %></th>
+			<th>Cargo_Actual</th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -18,10 +19,11 @@
     <% @voceros.each do |vocero| %>
       <tr>
         <td><%= link_to vocero.id, vocero_path(vocero) %></td>
-        <td><%= vocero.organizacion_id %></td>
+        <td><%= vocero.organizacion.nombre %></td>
         <td><%= vocero.nombre %></td>
-        <td><%= vocero.foto %></td>
+				<td><%= image_tag vocero.foto, :title => "foto", :class => "img-rounded", :style => 'width: 50px; height:50px;'%></td>
         <td><%= vocero.descripcion %></td>
+				<td><%= vocero.tipo_cargo.nombre %></td>
         <td><%=l vocero.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

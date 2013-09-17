@@ -1,5 +1,15 @@
 <%= form_for @vocero, :html => { :class => 'form-horizontal' } do |f| %>
+<% if @vocero.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@vocero.errors.count, "error") %> impiden el registro:</h2>
 
+    <ul>
+    <% @vocero.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
   <div class="control-group">
     <%= f.label :nombre, :class => 'control-label' %>
     <div class="controls">
@@ -19,9 +29,16 @@
     </div>
   </div>
 	<div class="control-group">
+    <%= f.label :tipo_cargo_id, "Cargo Actual", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select :tipo_cargo_id, TipoCargo.all, :id, :nombre, {:prompt => true}, {:required => true} %>
+    </div>
+  </div>
+
+	<div class="control-group">
     <%= f.label :organizacion_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.collection_select :organizacion_id, @organizacion, :id, :nombre, :prompt => true, :required => true %>
+      <%= f.collection_select :organizacion_id, Organizacion.all, :id, :nombre, {:prompt => true}, {:required => true} %>
     </div>
   </div>
   <div class="form-actions">

@@ -4,5 +4,11 @@ class Municipio < ActiveRecord::Base
   
   has_many :candidatos
   accepts_nested_attributes_for :candidatos
+  
+  validates :nombre, uniqueness: { scope: :estado_id, case_sensitive: false}
+  
+  def descripcion
+    "#{estado.nombre} - #{nombre}"
+  end
 
 end

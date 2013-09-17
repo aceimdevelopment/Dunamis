@@ -62,6 +62,8 @@ Dunamis::Application.routes.draw do
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   match 'generar_reporte' => 'candidates#generar_reporte', :as => :generar_reporte
+  
+  match 'organizaciones/actualizar_select_municipios', :controller => 'organizaciones', :action => 'actualizar_select_municipios'
   # Sample resource route with options:
   #   resources :products do
   #     member do
