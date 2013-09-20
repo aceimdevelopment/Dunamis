@@ -39,15 +39,21 @@ class MunicipiosController < ApplicationController
   # POST /municipios
   # POST /municipios.json
   def create
-    @municipio = Municipio.new(params[:municipio])
+    if params[:estado_id]
+      @estado = Estado.find(params[:estado_id])
+      @municipio = @estado.municipios.create(params[:municipio])
+      redirect_to estado_path(@estado)
+    else
+      @municipio = Municipio.new(params[:municipio])
 
-    respond_to do |format|
-      if @municipio.save
-        format.html { redirect_to @municipio, notice: 'Municipio was successfully created.' }
-        format.json { render json: @municipio, status: :created, location: @municipio }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @municipio.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @municipio.save
+          format.html { redirect_to @municipio, notice: 'Municipio was successfully created.' }
+          format.json { render json: @municipio, status: :created, location: @municipio }
+        else
+          format.html { render action: "new" }
+          format.json { render json: @municipio.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

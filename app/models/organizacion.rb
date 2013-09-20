@@ -1,7 +1,8 @@
 class Organizacion < ActiveRecord::Base
-  attr_accessible :descripcion, :nombre, :nombre_corto, :rif, :tolda_id, :tipo_id
+  attr_accessible :descripcion, :nombre, :nombre_corto, :rif, :tolda_id, :tipo_id, :estado_id, :municipio_id
   belongs_to :tolda
   belongs_to :tipo
+  belongs_to :estado
   
   has_many :candidates
   accepts_nested_attributes_for :candidates

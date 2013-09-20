@@ -1,8 +1,11 @@
-<%- unless @municipios.blank? %>
- <div class="control-group">
-   <%= f.label :municipio_id, :class => 'control-label' %>
-   <div class="controls">
-  		<%= f.collection_select :municipio_id, :municipios, :id, :nombre, :prompt => "todos", :required => true %>
-   </div>
- </div>
-<% end %>
+<div id="municipioSelectDiv">
+	<%- unless @municipios.blank? %>
+	 <div class="control-group">
+	   <%= f.label :municipio_id, :class => 'control-label' %>
+	   <div class="controls">
+	  		<%# f.collection_select :municipio_id, :municipios, :id, :nombre, :prompt => "todos", :required => true %>
+				<%= f.collection_select :estado, :municipio, @municipios, :id, :municipios %>
+	   </div>
+	 </div>
+	<% end %>
+</div>

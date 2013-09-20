@@ -53,27 +53,17 @@
     </div>
   </div>
 
-<!-- <script>
-$(document).ready(function() {
-  return $("#organizacion_estado_id").change(function() {
-    var estado_id = $(this).val()
-		$.get("/organizaciones_actualizar_select_municipios?estado_id="+estado_id, 
+	<script type="text/javascript" charset="utf-8">
+		$("#organizacion_estado_id").change(function(){
+			var estado_id = $(this).val()
+		  $.get("/estados/actualizar_select_municipios/"+estado_id, 
 		        function(data){ $("#municipioSelectDiv").html(data); } );
-		
-  });
-});
-</script> -->
+		});
+	</script>
 
   <div id="municipioSelectDiv">
   </div>
 
-
-  <!-- <div id="municipioSelectDiv" class="control-group">
-    <%# f.label :municipio_id, :class => 'control-label' %>
-    <div class="controls">
-	  <%# f.collection_select :municipio_id, @municipios, :id, :nombre, :prompt => "todos", :required => true %>
-    </div>
-  </div> -->
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>

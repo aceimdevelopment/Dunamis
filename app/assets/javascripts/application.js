@@ -50,11 +50,18 @@ $(function(){
 $(document).ready(function() {
   return $("#organizacion_estado_id").change(function() {
     var estado_id = $(this).val()
-		$.get("update_municipios_select.html?estado_id="+estado_id, 
+		$.get("controller/update_municipios_select.html?estado_id="+estado_id, 
 		        function(data){ $("#municipioSelectDiv").html(data); } );
 		
   });
 });
+
+// Dropdown display menu bar
+$(document).ready(function() {
+	$('.dropdown-toggle').dropdown()
+});
+	
+
 
 // 
 // function myfun(estado_id){

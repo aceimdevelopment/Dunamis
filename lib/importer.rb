@@ -662,16 +662,16 @@ module Importer
         imagen = imagen.attr "src" unless imagen.blank?
         imagen = imagen.text
       
-        puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
-        unless titulo.blank?
-          puts "Titulo: #{titulo}\n"
-          puts "Url: #{url}\n"
-          puts "Fecha: #{fecha}\n"
-          puts "Contenido: #{contenido}\n"
-          puts "Imágen: #{imagen}\n"
-        else
-          puts nota
-        end
+        # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
+        # unless titulo.blank?
+        #   puts "Titulo: #{titulo}\n"
+        #   puts "Url: #{url}\n"
+        #   puts "Fecha: #{fecha}\n"
+        #   puts "Contenido: #{contenido}\n"
+        #   puts "Imágen: #{imagen}\n"
+        # else
+        #   puts nota
+        # end
 
         # Se guarda la nota_local
         nota_local = Nota.new

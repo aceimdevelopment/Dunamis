@@ -82,8 +82,8 @@ class EstadosController < ApplicationController
   end
   
   def actualizar_select_municipios
-      @municipios = Municipio.where(:estado_id => params[:id])
-      render :partial => "municipios", :municipios => @municipios
+    @municipios = Municipio.where(:estado_id => params[:id])
+    render :partial => "municipios", :municipios => @municipios
   end
   
 end

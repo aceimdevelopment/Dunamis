@@ -12,6 +12,24 @@
   <dd><%= @estado.nombre_corto %></dd>
 </dl>
 
+<h3 id="municipios">Municipios</h3>
+<% if @estado.municipios %>
+	<% @estado.municipios.each do |municipio| -%>
+		<h6><%= municipio.nombre -%></h6>
+	<%- end -%>
+
+	<%= form_for([@estado, @estado.municipios.build]) do |f| %>
+
+  	<div class="control-group">
+    	<div class="controls">
+				<h6>Agregar municipio:
+				<%= f.text_field :nombre, :class => 'input-medium', :placeholder => "Nombre…", :required => true %>
+    		<%= f.submit nil, :class => 'btn btn-primary' %>
+				</h6>
+			</div>
+  	</div>
+	<% end %>
+<% end %>
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               estados_path, :class => 'btn'  %>

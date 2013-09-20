@@ -10,7 +10,9 @@ Dunamis::Application.routes.draw do
 
   resources :tipos_notas
 
-  resources :resumenes
+  resources :resumenes do
+    resources :notas
+  end
 
   resources :candidatos
 
@@ -22,7 +24,11 @@ Dunamis::Application.routes.draw do
 
   resources :elecciones
 
-  resources :informes
+  resources :informes do
+    resources :resumenes do
+      resources :notas
+    end
+  end
 
   resources :asuntos
 
@@ -37,9 +43,13 @@ Dunamis::Application.routes.draw do
   #   resources :candidates
   # end
 
-  resources :organizaciones
+  resources :organizaciones do
+    match 'actualizar_select_municipios', :action => 'actualizar_select_municipios'
+  end
 
-  resources :estados
+  resources :estados do
+    resources :municipios
+  end
 
   resources :candidates
   # resources :candidates do

@@ -1,0 +1,8 @@
+<%- unless @municipios.blank? %>
+ <div class="control-group">
+   <div class="controls">
+			<%= label :municipio_id, "municipio" %>
+			<%= collection_select :estado, :municipios, @municipios, :id, :nombre %>
+   </div>
+ </div>
+<% end %>

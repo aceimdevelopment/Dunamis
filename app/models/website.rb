@@ -7,10 +7,15 @@ class Website < ActiveRecord::Base
 
   has_many :tipos_webnotas
   accepts_nested_attributes_for :tipos_webnotas
-
+  
   def eliminar_notas_irrelevantes
     notas.each { |nota| nota.destroy unless nota.resumen_id }
   end
+  
+  def eliminar_notas_irrelevantes_antiguas
+    notas.creadas_antes.each { |nota| nota.destroy unless nota.resumen_id }
+  end
+  
   
   def buscar_titulo nota
     web_titulo = Nokogiri::XML::NodeSet.new nota.document

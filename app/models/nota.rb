@@ -7,4 +7,9 @@ class Nota < ActiveRecord::Base
   validates_presence_of :titulo, :url, :website_id, :tipo_nota_id
   validates_uniqueness_of :url
     # validates_associated :tolda, :tipo, :cunas
+    
+  scope :creadas_hoy, -> {where("created_at >= ?", Date.today)}
+  
+  scope :creadas_antes, -> {where("created_at <= ?", Date.today)}
+  
 end

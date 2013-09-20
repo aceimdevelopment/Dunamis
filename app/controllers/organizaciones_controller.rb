@@ -27,11 +27,11 @@ class OrganizacionesController < ApplicationController
     @organizacion = Organizacion.new
     @tipos = Tipo.all
     @toldas = Tolda.all
-    @municipios = params[:estado_id] ? Municipio.where(:estado_id => params[:estado_id]) : Municipio.all
     
-    # if params[:estado_id]
-    #   @municipios = Municipio.where(:estado_id => params[:id])
-    # end
+    if params[:estado_id]
+      @municipios = Municipio.where(:estado_id => params[:id])
+      render :partial => "municipios", :locals => {:municipios => @municipios}
+    end
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @organizacion }
@@ -41,13 +41,16 @@ class OrganizacionesController < ApplicationController
   # GET /organizaciones/1/edit
   def edit
     @organizacion = Organizacion.find(params[:id])
+    @tipos = Tipo.all
+    @toldas = Tolda.all
   end
 
   # POST /organizaciones
   # POST /organizaciones.json
   def create
-    @organizacion = Organizacion.new(params[:organizacion])
     
+    @organizacion = Organizacion.new(params[:organizacion])
+    @organizacion.municipio_id = params[:estado][:municipios] if params[:estado]
     respond_to do |format|
       if @organizacion.save
         format.html { redirect_to @organizacion, notice: 'Organizacion was successfully created.' }
@@ -89,7 +92,7 @@ class OrganizacionesController < ApplicationController
   
   def actualizar_select_municipios
     @municipios = Municipio.where(:estado_id => params[:id])
-    render :partial => "municipios", :municipios => @municipios
+    render :partial => "municipios", :locals => {:municipios => @municipios}
   end
   
 end
