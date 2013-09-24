@@ -37,24 +37,31 @@ class ResumenesController < ApplicationController
 
     if Nota.creadas_hoy.count == 0 #provisional para cargar notas de hoy si no existen
       Importer.import_notas_noticias24
-      Importer.import_notas_globovision
-      Importer.import_notas_union_radio
-      Importer.import_notas_noticierodigital
-      Importer.import_notas_noticierovenevision
-      Importer.import_notas_vtv
-      Importer.import_notas_laverdad
-      Importer.import_notas_informe21
-      Importer.import_notas_eluniversal
-      Importer.import_notas_avn
-      @error = Importer.import_notas_radiomundial
-      @error = @error.nil? ? "Demasiado tiempo esperando respuesta de las Página " : ""
-      Importer.import_notas_elnacional
-      Importer.import_notas_rnv
+      # Importer.import_notas_globovision
+      # Importer.import_notas_union_radio
+      # Importer.import_notas_noticierodigital
+      # Importer.import_notas_noticierovenevision
+      # Importer.import_notas_vtv
+      # Importer.import_notas_laverdad
+      # Importer.import_notas_informe21
+      # Importer.import_notas_eluniversal
+      # Importer.import_notas_avn
+      # @error = Importer.import_notas_radiomundial
+      # @error = @error.nil? ? "Demasiado tiempo esperando respuesta de las Página " : ""
+      # Importer.import_notas_elnacional
+      # Importer.import_notas_rnv
     end
     @websites = Website.all
         
     @resumenes = Resumen.where(:created_at => Date.today)
+    # unless params(:resumen_id)
+    #   @resumen = Resumen.new
+    #   @resumen.save! :validate => false
+    # else
+    #   @resumen = Resumen.find(params[:resumen_id])
+    # end
     @resumen = Resumen.new
+    # @resumen.save! :validate => false
 
     respond_to do |format|
       format.html # new.html.erb
@@ -71,7 +78,7 @@ class ResumenesController < ApplicationController
   # POST /resumenes.json
   def create
     @resumen = Resumen.new(params[:resumen])
-
+    @resumen.save! :validate => false
     respond_to do |format|
       if @resumen.save
         format.html { redirect_to @resumen, notice: 'Resumen was successfully created.' }

@@ -1,7 +1,6 @@
 <%- model_class = Resumen -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
-</div>
+  <h3><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h3>
+
 <%= render :partial => 'lista' if @resumenes.count > 0 %>
 <%= render :partial => 'form' %>
 
@@ -45,8 +44,9 @@
 											</br>
 											<%= nota.contenido %>
 										</td>
-				            <td><%= link_to website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %></td>
+				            <td><% link_to website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %></td>
 										<%- @agregar = "agregar("+nota.id.to_s+")" %>
+										<%# @agregar = "agregar("+nota.id.to_s+","+@resumen.id+")" %>
 				            <td><%= link_to ("#"), {:class => 'agregar btn btn-success btn-mini', :onclick => @agregar} do %>
 													<i class="icon-plus icon-white"></i>
 													Resumen
@@ -68,3 +68,16 @@
   	$.get("/notas/"+id, function(data){ $("#resumen_contenido").val(data); });
 	}	
 </script>
+
+
+
+<!-- <script type="text/javascript" charset="utf-8">
+	function agregar(id, resumen_id){
+		$("#"+id).hide()
+		$.post("/notas/update/"+id+"?resumen_id="+resumen_id)
+  	$.get("/notas/"+id, function(data){
+			
+			$("#resumen_contenido").html(data);
+		});
+	}	
+</script> -->
