@@ -1,0 +1,37 @@
+<%- model_class = Resumen -%>
+<h4 id="paso_2">Paso 2</h4>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:vocero_id) %>:</strong></dt>
+  <dd><%= @resumen.vocero.nombre %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:tema_id) %>:</strong></dt>
+  <dd><%= @resumen.tema.full_descripcion %></dd>
+</dl>
+
+<%= form_for @resumen, :url=>{:action => "paso2_guardar"}, :html => { :class => 'form-horizontal' } do |f| %>
+
+  <div class="control-group">
+    <%= f.label :contenido, "Contenido:", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :contenido, :class => 'text_area', :style => "width: 480px; height: 120px;" %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :compiladas, "Notas Compiladas:", :class => 'control-label' %>
+    <div class="controls">
+      <%- @notas = @resumen.notas.order "updated_at DESC" -%>
+			<%- @notas.each do |nota| %>
+				<%= link_to nota.website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %>
+				<p></p>
+			<% end %>
+    </div>
+  </div>
+
+	<div class="form-actions">
+	  <%= link_to t('.back', :default => t("helpers.links.back")),
+	              :action => "paso1", :id => @resumen.id  %>
+		<%= f.submit nil, :class => 'btn btn-primary' %>
+	</div>
+<% end %>
+
+<%= render :partial => 'notas' %>

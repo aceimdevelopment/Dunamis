@@ -12,6 +12,10 @@ Dunamis::Application.routes.draw do
 
   resources :resumenes do
     resources :notas
+    collection do
+      get 'paso1'
+      post 'paso1_guardar'
+    end
   end
 
   resources :candidatos

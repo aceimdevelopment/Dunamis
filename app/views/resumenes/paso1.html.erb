@@ -1,0 +1,21 @@
+<h4 id="paso_1">Paso 1</h4>
+<%= form_for @resumen, :url=>{:action => "paso1_guardar"},  :html => { :class => 'form' } do |f| %>
+
+	<div class="control-group">
+	  <%= f.label "Seleccione:", :class => 'control-label' %>
+	  <div class="controls">
+			<%= hidden_field_tag :id, @resumen.id %>
+	    <%= f.collection_select :vocero_id, Vocero.all, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2'} %>
+			<%= f.collection_select :tema_id, Tema.all, :id, :full_descripcion, {:prompt => "Tema"}, {:required => true, :class => 'selects2'} %>
+	  </div>
+	</div>
+	
+	<div class="form-actions">
+		<%= f.submit "Siguiente", :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                resumenes_path, :class => 'btn' %>
+	</div>
+	
+<% end %>
+
+<%= render :partial => 'notas' %>

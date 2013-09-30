@@ -16,6 +16,27 @@
   <dd><%= @resumen.tema_id %></dd>
 </dl>
 
+
+<h3 id="resumenes">Resumenes</h3>
+<%- if @resumen.notas %>
+	<%= @resumen.notas.each do |notas| -%>
+		<h6><%= notas.titulo -%></h6>
+	<% end %>
+<% end %>
+<!-- 
+	<%# form_for([@resumen, @resumen.notas.build]) do |f| %>
+
+  	<div class="control-group">
+    	<div class="controls">
+				<h6>Agregar nota:
+				<%# f.text_field :titulo, :class => 'input-medium', :placeholder => "Nombre…", :required => true %>
+    		<%# f.submit nil, :class => 'btn btn-primary' %>
+				</h6>
+			</div>
+  	</div>
+	<%# end %>
+<%# end %> -->
+
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               resumenes_path, :class => 'btn'  %>

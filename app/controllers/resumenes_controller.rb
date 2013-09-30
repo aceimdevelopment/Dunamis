@@ -26,14 +26,8 @@ class ResumenesController < ApplicationController
   # GET /resumenes/new.json
   def new
     require "Importer"
-    encabezado = " Dirección de Seguimiento de la Información Electoral \n AGENDA TEMÁTICA DE MEDIOS"
-    encabezado += "#{Date.today}"
-    encabezado += "MONITOREO DE MEDIOS (de 10:00am a 05:00pm)
-    El presiente Nicolás Maduro continúa visita oficial en Rusia. Se firmaron cinco acuerdos de cooperación mixta, luego ofreció una entrevista al canal Actualidad Russia Today y después encabezó acto cultural en homenaje a la memoria del presidente Chávez. El vicepresidente Arreaza estuvo en el estado Apure como parte del gobierno de calle. El ministro Haiman El Troudi presentó el plan rector 2013- 2019 en materia de movilidad terrestre; y el presidente de Indepabis, Eduardo Samán, fue entrevistado en Venevisión. Por la oposición, el gobernador Henrique Capriles, durante su programa en Capriles.TV, informó que el Comando “Simón Bolívar” recusó a todos los magistrados de la Sala Constitucional avocados a la impugnación del 14-A. En cuanto al sector universitario, el ministro Héctor Rodríguez se reunió con estudiantes en el Teatro Teresa Carreño. Huelguistas y dirigentes de oposición insisten en mantener la lucha."
-
-    # Borra Todas las notas antiguas e inservibles
-    # SELETE FROM `notas` WHERE (resumen_id IS NULL AND created_at <= 'Hoy')
-    Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
+    # Borra Todas las notas antiguas e inservibles #SQL: SELETE FROM `notas` WHERE (resumen_id IS NULL AND created_at <= 'Hoy')
+    # Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
 
     if Nota.creadas_hoy.count == 0 #provisional para cargar notas de hoy si no existen
       Importer.import_notas_noticias24
@@ -54,6 +48,7 @@ class ResumenesController < ApplicationController
     @websites = Website.all
         
     @resumenes = Resumen.where(:created_at => Date.today)
+    
     # unless params(:resumen_id)
     #   @resumen = Resumen.new
     #   @resumen.save! :validate => false
@@ -61,6 +56,7 @@ class ResumenesController < ApplicationController
     #   @resumen = Resumen.find(params[:resumen_id])
     # end
     @resumen = Resumen.new
+    # @resumen.tema_id = -1
     # @resumen.save! :validate => false
 
     respond_to do |format|
@@ -77,8 +73,9 @@ class ResumenesController < ApplicationController
   # POST /resumenes
   # POST /resumenes.json
   def create
+
     @resumen = Resumen.new(params[:resumen])
-    @resumen.save! :validate => false
+    # @resumen.save! :validate => false
     respond_to do |format|
       if @resumen.save
         format.html { redirect_to @resumen, notice: 'Resumen was successfully created.' }
@@ -94,7 +91,12 @@ class ResumenesController < ApplicationController
   # PUT /resumenes/1.json
   def update
     @resumen = Resumen.find(params[:id])
-
+    # @resumen.contenido = params[:contenido] if params[:contenido]
+    if params[:nota_id]
+      nota = Nota.find(params[:nota_id])
+      @resumen.contenido = "#{@resumen.contenido} | #{nota.titulo}"  #if nota
+    end
+    
     respond_to do |format|
       if @resumen.update_attributes(params[:resumen])
         format.html { redirect_to @resumen, notice: 'Resumen was successfully updated.' }
@@ -105,11 +107,49 @@ class ResumenesController < ApplicationController
       end
     end
   end
+  
+  def paso1
+    
+    # @resumen = params[:id].blank? ? Resumen.new : Resumen.find(params[:id])
+    if params[:id].blank?
+      @resumen = Resumen.new
+    else
+      @resumen = Resumen.find(params[:id])
+    end
+    
+    Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
+    @websites = Website.all
+  end
+  
+  def paso1_guardar
+
+    unless params[:id].blank?
+      @resumen = Resumen.find(params[:id])
+      @resumen.vocero_id = params[:resumen][:vocero_id]
+      @resumen.tema_id = params[:resumen][:tema_id]
+      # saved = @resumen.update_attributes(params[:resumen])
+      
+    else
+      @resumen = Resumen.new(params[:resumen])
+    end
+
+    if @resumen.save
+      redirect_to :action => "paso2", :id => @resumen.id #, notice: 'Resumen was successfully created.'
+    else
+      render :action => "paso1"
+    end
+  end
+  
+  def paso2
+    @resumen = Resumen.find(params[:id])
+    @websites = Website.all    
+  end
 
   # DELETE /resumenes/1
   # DELETE /resumenes/1.json
   def destroy
     @resumen = Resumen.find(params[:id])
+    @resumen.notas.delete_all
     @resumen.destroy
 
     respond_to do |format|

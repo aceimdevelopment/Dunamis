@@ -58,6 +58,8 @@ class NotasController < ApplicationController
   # PUT /notas/1.json
   def update
     @nota = Nota.find(params[:id])
+    
+    @nota.resumen_id = params[:resumen_id] if params[:resumen_id]
 
     respond_to do |format|
       if @nota.update_attributes(params[:nota])

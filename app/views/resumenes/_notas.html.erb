@@ -1,0 +1,68 @@
+<%= @error %>
+<div class="bs-docs-example">
+	<ul id="myTab" class="nav nav-tabs">
+	<%- @websites.each_with_index do |website,i| -%>
+  	<li class= "<%= "active" if i.eql? 0 %>" style="font-size: 10px;">
+			<%= link_to "#{website.descripcion}", "##{website.nombre}", :data => {:toggle => "tab"} %>
+	 	</li>
+	<% end %>
+ </ul>
+	<div data-spy="scroll" data-target="#myTab" data-offset="0" class="scrollspy-example">
+		<div id="myTabContent" class="tab-content">
+			<%- @websites.each_with_index do |website,i| -%>
+				<%- @notas = website.notas.where("resumen_id != ? OR resumen_id IS ?", @resumen.id, nil).order("created_at DESC") -%>
+				<div class="tab-pane fade<%=" active in" if (i.eql? 0) %>" id="<%= website.nombre %>">
+					<table class="table table-hover">
+	        	<thead>
+	          	<tr>
+		            <th># <%= @notas.count %></th>
+								<th>Publicación</th>
+		            <th width="450px;"><%= Resumen.human_attribute_name(:titulo) %></th>
+		            <th>Enlace</th>
+								<th>Opciones</th>
+		          </tr>
+		        </thead>
+		        <tbody>
+							<%- @notas.each_with_index do |nota,j| -%>
+			          <div>
+									<tr id="<%=nota.id%>">
+				            <td><%= j+1 %></td>
+										<td>
+											<%= nota.fecha_publicacion %>
+											<%- unless nota.imagen.blank? -%>
+												<%= image_tag nota.imagen, :title => "imagen", :class => "img-rounded", :style => 'max-width: 120px; max-height:120px;'%>
+											<% end %>
+										</td>
+				            <td>
+											<strong><%= nota.titulo %></strong>
+											</br>
+											<%= nota.contenido %>
+										</td>
+				            <td><% link_to website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %></td>
+										<%# @agregar = "agregar("+nota.id.to_s+")" %>
+										<%- @agregar = "agregar("+nota.id.to_s+","+@resumen.id.to_s+")" %>
+				            <td><%= link_to ("#"), {:class => 'agregar btn btn-success btn-mini', :onclick => @agregar} do %>
+													<i class="icon-plus icon-white"></i>
+													Resumen
+												<% end %>
+										</td>
+				          </tr>
+								</div>
+							<% end %>
+	        	</tbody>
+	      	</table>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+	function agregar(id, resumen_id){
+		var datos = "contenidos: <";
+		$("#"+id).hide();
+		$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
+		$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
+		location.reload();
+	}		
+</script>
