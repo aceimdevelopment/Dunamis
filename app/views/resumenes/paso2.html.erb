@@ -22,7 +22,6 @@
       <%- @notas = @resumen.notas.order "updated_at DESC" -%>
 			<%- @notas.each do |nota| %>
 				<%= link_to nota.website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %>
-				<p></p>
 			<% end %>
     </div>
   </div>
@@ -30,7 +29,7 @@
 	<div class="form-actions">
 	  <%= link_to t('.back', :default => t("helpers.links.back")),
 	              :action => "paso1", :id => @resumen.id  %>
-		<%= f.submit nil, :class => 'btn btn-primary' %>
+		<%= f.submit "Guardar Resumen", :class => 'btn btn-primary' %>
 	</div>
 <% end %>
 

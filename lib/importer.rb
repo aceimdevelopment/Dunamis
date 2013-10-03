@@ -1,11 +1,14 @@
 # coding: utf-8
 module Importer
+  
   require 'uri'
   require 'mechanize'
   
   def self.import_notas_noticias24
     website = Website.find_by_nombre("noticias24")
     puts website.nombre
+    
+
     # Eliminando las notas no asociadas a algun resumen
     # website.eliminar_notas_irrelevantes
     
@@ -35,12 +38,12 @@ module Importer
       fecha = fecha.text
       
       url = (titulo.attr "href").value unless titulo.blank?
-      titulo = titulo.text   
+      titulo = titulo.text
       
       nota = Nota.new
-      nota.titulo = titulo
+      nota.titulo = titulo.gsub(/[\t\n\r]/, '')
       nota.fecha_publicacion = fecha
-      nota.contenido = contenido
+      nota.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota.url = url
       nota.website_id = website.id
       nota.tipo_nota_id = tipo_nota.id
@@ -104,9 +107,9 @@ module Importer
       # puts "Imágen: #{imagen}\n"
       
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido.text
+      nota_local.contenido = contenido.text.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -168,9 +171,9 @@ module Importer
 
         # Se guarda la nota_local
         nota = Nota.new
-        nota.titulo = titulo
+        nota.titulo = titulo.gsub(/[\t\n\r]/, '')
         nota.fecha_publicacion = fecha
-        nota.contenido = contenido.text
+        nota.contenido = contenido.text.gsub(/[\t\n\r]/, '')
         nota.url = url
         nota.website_id = website.id
         nota.tipo_nota_id = tipo_nota.id
@@ -250,9 +253,9 @@ module Importer
 
       # Se guarda la nota_local
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido
+      nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -307,9 +310,9 @@ module Importer
 
       # Se guarda la nota_local      
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido.text
+      nota_local.contenido = contenido.text.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -367,9 +370,9 @@ module Importer
       
       # Se guarda la nota_local
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       # nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido.text
+      nota_local.contenido = contenido.text.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -426,9 +429,9 @@ module Importer
 
       # Se guarda la nota_local
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido
+      nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -483,9 +486,9 @@ module Importer
 
       # Se guarda la nota_local
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido
+      nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -546,9 +549,9 @@ module Importer
 
       # Se guarda la nota_local
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido
+      nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -611,9 +614,9 @@ module Importer
 
       # Se guarda la nota_local
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       # nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido
+      nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -675,9 +678,9 @@ module Importer
 
         # Se guarda la nota_local
         nota_local = Nota.new
-        nota_local.titulo = titulo
+        nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
         nota_local.fecha_publicacion = fecha
-        nota_local.contenido = contenido
+        nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
         nota_local.url = url
         nota_local.website_id = website.id
         nota_local.tipo_nota_id = tipo_nota.id
@@ -741,9 +744,9 @@ module Importer
 
       # Se guarda la nota_local
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       nota_local.fecha_publicacion = fecha
-      nota_local.contenido = contenido
+      nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id
@@ -796,9 +799,9 @@ module Importer
 
       # Se guarda la nota_local
       nota_local = Nota.new
-      nota_local.titulo = titulo
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       # nota_local.fecha_publicacion = fecha unless fecha.blank?
-      nota_local.contenido = contenido if contenido
+      nota_local.contenido = contenido.gsub(/[\t\n\r]/, '') if contenido
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id

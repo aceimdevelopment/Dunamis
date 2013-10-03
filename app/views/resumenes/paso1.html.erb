@@ -15,7 +15,10 @@
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 resumenes_path, :class => 'btn' %>
 	</div>
-	
+
+<%- limpiar_notas_antiguas_inservibles %>
+<%# importar_notas_websites %>
+
 <% end %>
 
 <%= render :partial => 'notas' %>

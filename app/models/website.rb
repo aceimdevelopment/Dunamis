@@ -16,6 +16,40 @@ class Website < ActiveRecord::Base
     notas.creadas_antes.each { |nota| nota.destroy unless nota.resumen_id }
   end
   
+  def importar_notas_desactualizadas
+    importar_notas_website if not fueron_cargadas_reciente?
+  end
+  
+  def fueron_cargadas_reciente?
+    tiempo_retardo = 10 #minutos
+    nota = notas.last
+    if nota.nil?
+      return false
+    else
+      tiempo_ultima_carga = (nota.updated_at - DateTime.now) / 60
+      tiempo_ultima_carga = tiempo_ultima_carga*-1 if tiempo_ultima_carga < 0
+      return tiempo_ultima_carga < tiempo_retardo
+    end
+  end
+
+  def importar_notas_website 
+    Importer.import_notas_noticias24 if nombre.eql? "noticias24"
+    Importer.import_notas_globovision if nombre.eql? "globovision"
+    Importer.import_notas_union_radio if nombre.eql? "unionradio"
+    Importer.import_notas_noticierodigital if nombre.eql? "noticierodigital"
+    Importer.import_notas_noticierovenevision if nombre.eql? "noticierovenevision"
+    Importer.import_notas_vtv if nombre.eql? "vtv"
+    Importer.import_notas_laverdad if nombre.eql? "laverdad"
+    Importer.import_notas_informe21 if nombre.eql? "informe21"
+    Importer.import_notas_eluniversal if nombre.eql? "eluniversal"
+    Importer.import_notas_avn if nombre.eql? "avn"
+    Importer.import_notas_elnacional if nombre.eql? "elnacional"
+    Importer.import_notas_rnv if nombre.eql? "rnv"
+    Importer.import_notas_radiomundial if nombre.eql? "radiomundial"
+    
+  end
+  
+  # ================ PRUEBAS ======================
   
   def buscar_titulo nota
     web_titulo = Nokogiri::XML::NodeSet.new nota.document

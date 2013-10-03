@@ -1,21 +1,23 @@
 <%= @error %>
+<%= "Última Actualización: #{@websites.first.notas.last.updated_at}" %>
 <div class="bs-docs-example">
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
-  	<li class= "<%= "active" if i.eql? 0 %>" style="font-size: 10px;">
-			<%= link_to "#{website.descripcion}", "##{website.nombre}", :data => {:toggle => "tab"} %>
+	 	<li class= "<%= "active" if i.eql? 0 %>" style="font-size: 10px;">
+			<%= link_to "#{website.descripcion}-#{website.notas.count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
 	 	</li>
-	<% end %>
- </ul>
+	<%- end -%>
+	</ul>
 	<div data-spy="scroll" data-target="#myTab" data-offset="0" class="scrollspy-example">
 		<div id="myTabContent" class="tab-content">
 			<%- @websites.each_with_index do |website,i| -%>
+				<%# website.importar_notas_website unless website.carga_reciente? %>
 				<%- @notas = website.notas.where("resumen_id != ? OR resumen_id IS ?", @resumen.id, nil).order("created_at DESC") -%>
 				<div class="tab-pane fade<%=" active in" if (i.eql? 0) %>" id="<%= website.nombre %>">
 					<table class="table table-hover">
 	        	<thead>
 	          	<tr>
-		            <th># <%= @notas.count %></th>
+		            <th>#</th>
 								<th>Publicación</th>
 		            <th width="450px;"><%= Resumen.human_attribute_name(:titulo) %></th>
 		            <th>Enlace</th>
@@ -35,27 +37,31 @@
 										</td>
 				            <td>
 											<strong><%= nota.titulo %></strong>
-											</br>
-											<%= nota.contenido %>
+											<%= link_to "detalle", "##{nota.id}", {:class => 'btn btn-success btn-mini', :onclick => "detalle('#{nota.id}')"} %>
+											<div id="contenido_nota<%=nota.id%>", style = "display: none;">
+												<%= nota.contenido %>
+											</div>
+											
 										</td>
 				            <td><% link_to website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %></td>
 										<%# @agregar = "agregar("+nota.id.to_s+")" %>
 										<%- @agregar = "agregar("+nota.id.to_s+","+@resumen.id.to_s+")" %>
-				            <td><%= link_to ("#"), {:class => 'agregar btn btn-success btn-mini', :onclick => @agregar} do %>
-													<i class="icon-plus icon-white"></i>
-													Resumen
-												<% end %>
+				            <td>
+											<%= link_to ("#"), {:class => 'agregar btn btn-success btn-mini', :onclick => @agregar} do %>
+												<i class="icon-plus icon-white"></i>
+												Resumen
+											<% end %>
 										</td>
 				          </tr>
 								</div>
 							<% end %>
 	        	</tbody>
 	      	</table>
-				</div>
-			<% end %>
-		</div>
-	</div>
-</div>
+				</div> <!-- class="tab-pane fade -->
+			<%- end -%>
+		</div> <!-- id="myTabContent" -->
+	</div> <!-- data-spy="scroll" -->
+</div>  <!-- class="bs-docs-example" -->
 
 <script type="text/javascript" charset="utf-8">
 	function agregar(id, resumen_id){
@@ -64,5 +70,10 @@
 		$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
 		$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
 		location.reload();
-	}		
+	}
+	
+	function detalle(nota_id){
+		if ($('#contenido_nota'+nota_id).css("display") == "none") { $('#contenido_nota'+nota_id).show();}
+		else{$('#contenido_nota'+nota_id).hide();}
+	}
 </script>

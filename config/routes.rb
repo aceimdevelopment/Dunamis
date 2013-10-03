@@ -15,6 +15,8 @@ Dunamis::Application.routes.draw do
     collection do
       get 'paso1'
       post 'paso1_guardar'
+      get 'paso2'
+      post 'paso2_guardar'
     end
   end
 

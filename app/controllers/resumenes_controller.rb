@@ -29,22 +29,22 @@ class ResumenesController < ApplicationController
     # Borra Todas las notas antiguas e inservibles #SQL: SELETE FROM `notas` WHERE (resumen_id IS NULL AND created_at <= 'Hoy')
     # Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
 
-    if Nota.creadas_hoy.count == 0 #provisional para cargar notas de hoy si no existen
-      Importer.import_notas_noticias24
-      # Importer.import_notas_globovision
-      # Importer.import_notas_union_radio
-      # Importer.import_notas_noticierodigital
-      # Importer.import_notas_noticierovenevision
-      # Importer.import_notas_vtv
-      # Importer.import_notas_laverdad
-      # Importer.import_notas_informe21
-      # Importer.import_notas_eluniversal
-      # Importer.import_notas_avn
-      # @error = Importer.import_notas_radiomundial
-      # @error = @error.nil? ? "Demasiado tiempo esperando respuesta de las Página " : ""
-      # Importer.import_notas_elnacional
-      # Importer.import_notas_rnv
-    end
+    # if Nota.creadas_hoy.count == 0 #provisional para cargar notas de hoy si no existen
+    #   Importer.import_notas_noticias24
+    #   # Importer.import_notas_globovision
+    #   # Importer.import_notas_union_radio
+    #   # Importer.import_notas_noticierodigital
+    #   # Importer.import_notas_noticierovenevision
+    #   # Importer.import_notas_vtv
+    #   # Importer.import_notas_laverdad
+    #   # Importer.import_notas_informe21
+    #   # Importer.import_notas_eluniversal
+    #   # Importer.import_notas_avn
+    #   # @error = Importer.import_notas_radiomundial
+    #   # @error = @error.nil? ? "Demasiado tiempo esperando respuesta de las Página " : ""
+    #   # Importer.import_notas_elnacional
+    #   # Importer.import_notas_rnv
+    # end
     @websites = Website.all
         
     @resumenes = Resumen.where(:created_at => Date.today)
@@ -109,7 +109,7 @@ class ResumenesController < ApplicationController
   end
   
   def paso1
-    
+
     # @resumen = params[:id].blank? ? Resumen.new : Resumen.find(params[:id])
     if params[:id].blank?
       @resumen = Resumen.new
@@ -119,6 +119,7 @@ class ResumenesController < ApplicationController
     
     Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
     @websites = Website.all
+    @websites.each { |website| website.importar_notas_desactualizadas}
   end
   
   def paso1_guardar
@@ -144,7 +145,11 @@ class ResumenesController < ApplicationController
     @resumen = Resumen.find(params[:id])
     @websites = Website.all    
   end
-
+  
+  def paso2_guardar
+    1/0
+  end
+  
   # DELETE /resumenes/1
   # DELETE /resumenes/1.json
   def destroy
