@@ -1,38 +1,35 @@
-<%= form_for @resumen, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for @resumen, :url=>{:action => "update"}, :html => { :class => 'form-horizontal' } do |f| %>
 
 	<div class="control-group">
-	  <%= f.label "Caracteristicas:", :class => 'control-label' %>
 	  <div class="controls">
 	    <%= f.collection_select :vocero_id, Vocero.all, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2'} %>
 			<%= f.collection_select :tema_id, Tema.all, :id, :full_descripcion, {:prompt => "Tema"}, {:required => true, :class => 'selects2'} %>
-			<%= f.submit nil, :class => 'btn btn-primary' %>
-	    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-	                resumenes_path, :class => 'btn' %>
-			
 	  </div>
 	</div>
+
   <div class="control-group">
     <%= f.label :contenido, "Contenido:", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :contenido, :class => 'text_area', :style => "width: 480px; height: 120px;" %>
     </div>
   </div>
-  <!-- <div class="control-group">
-    <%# f.label :informe_id, :class => 'control-label' %>
+  <div class="control-group">
+    <%= f.label :compiladas, "Notas Compiladas:", :class => 'control-label' %>
     <div class="controls">
-      <%# f.number_field :informe_id, :class => 'number_field' %>
+      <%- @notas = @resumen.notas.order "updated_at DESC" -%>
+			<%- @notas.each do |nota| %>
+				<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+				<%= link_to "#", {:class => 'btn btn-mini', :onclick => "return eliminar_nota (#{nota.id})"} do %>
+					<i class="icon-trash icon-black"></i>
+				<% end %>
+				|
+			<% end %>
     </div>
-  </div> -->
-  <!-- <div class="control-group">
-    <%# f.label :tema_id, :class => 'control-label' %>
-    <div class="controls">
-      <%# f.number_field :tema_id, :class => 'number_field' %>
-    </di>
-  </div> -->
+  </div>
 
-  <!-- <div class="form-actions">
-    <%# f.submit nil, :class => 'btn btn-primary' %>
-    <%# link_to t('.cancel', :default => t("helpers.links.cancel")),
-                resumenes_path, :class => 'btn' %>
-  </div> -->
+	<div class="form-actions">
+	  <%= link_to t('.back', :default => t("helpers.links.back")),
+	              :action => "paso1", :id => @resumen.id  %>
+		<%= f.submit "Guardar Resumen", :class => 'btn btn-primary' %>
+	</div>
 <% end %>

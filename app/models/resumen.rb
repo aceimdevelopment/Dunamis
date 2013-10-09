@@ -7,4 +7,10 @@ class Resumen < ActiveRecord::Base
   accepts_nested_attributes_for :notas
   
   attr_accessible :contenido, :titulo, :vocero_id, :tema_id, :informe_id
+  
+  scope :creados_hoy, -> {where("created_at >= ?", Date.today)}
+  
+  def descripcion
+    "#{contenido}. Notas: #{notas.count} creado: #{created_at}."
+  end
 end

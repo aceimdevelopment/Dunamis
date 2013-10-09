@@ -10,6 +10,26 @@
   <dd><%= @asunto.descripcion %></dd>
 </dl>
 
+<h3 id="Temas">Temas</h3>
+<% if @asunto.temas %>
+	<% @asunto.temas.each do |tema| -%>
+		<h6><%= tema.nombre -%></h6>
+	<%- end -%>
+
+	<%= form_for([@asunto, @asunto.temas.build]) do |f| %>
+
+  	<div class="control-group">
+    	<div class="controls">
+				<h6>Agregar tema:
+				<%= f.text_field :nombre, :class => 'input-medium', :placeholder => "Nombre…", :required => true %>
+    		<%= f.submit nil, :class => 'btn btn-primary' %>
+				</h6>
+			</div>
+  	</div>
+	<% end %>
+<% end %>
+
+
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               asuntos_path, :class => 'btn'  %>

@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: utf-8
 module Importer
   
   require 'uri'
@@ -801,7 +801,7 @@ module Importer
       nota_local = Nota.new
       nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
       # nota_local.fecha_publicacion = fecha unless fecha.blank?
-      nota_local.contenido = contenido.gsub(/[\t\n\r]/, '') if contenido
+      nota_local.contenido = contenido if contenido
       nota_local.url = url
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = tipo_nota.id

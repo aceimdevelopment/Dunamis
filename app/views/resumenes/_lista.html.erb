@@ -1,37 +1,84 @@
 <%- model_class = Resumen -%>
+Resumenes de Hoy
 <table class="table table-striped">
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:titulo) %></th>
-      <th><%= model_class.human_attribute_name(:contenido) %></th>
-      <th><%= model_class.human_attribute_name(:vocero_id) %></th>
-      <th><%= model_class.human_attribute_name(:informe_id) %></th>
-      <th><%= model_class.human_attribute_name(:tema_id) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <th>Descripción</th>
     </tr>
   </thead>
   <tbody>
-    <% @resumenes.each do |resumen| %>
+    <% @resumenes_hoy.each do |resumen| %>
       <tr>
         <td><%= link_to resumen.id, resumen_path(resumen) %></td>
-        <td><%= resumen.titulo %></td>
-        <td><%= resumen.contenido %></td>
-        <td><%= resumen.vocero_id %></td>
-        <td><%= resumen.informe_id %></td>
-        <td><%= resumen.tema_id %></td>
-        <td><%=l resumen.created_at %></td>
+
         <td>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+					<strong><%= resumen.vocero.nombre %>:</strong>
+					<%= "#{resumen.contenido} Fecha: #{resumen.created_at}" %>
+					
+				  <div class="control-group">
+				    <%= f.label :compiladas, "Notas Compiladas:", :class => 'control-label' %>
+				    <div class="controls">
+				      <%- @notas = @resumen.notas.order "updated_at DESC" -%>
+							<%- @notas.each do |nota| %>
+								<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+								<%= link_to "#", {:class => 'btn btn-mini', :onclick => "return eliminar_nota (#{nota.id})"} do %>
+									<i class="icon-trash icon-black"></i>
+								<% end %>
+								|
+							<% end %>
+				    </div>
+				  </div>
+				
+				</td>
+        <!-- <td>
+          <%# link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_resumen_path(resumen), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          <%# link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      resumen_path(resumen),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+        </td> -->
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<!-- <table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%# model_class.human_attribute_name(:id) %></th>
+      <th><%# model_class.human_attribute_name(:titulo) %></th>
+      <th><%# model_class.human_attribute_name(:contenido) %></th>
+      <th><%# model_class.human_attribute_name(:vocero_id) %></th>
+      <th><%# model_class.human_attribute_name(:informe_id) %></th>
+      <th><%# model_class.human_attribute_name(:tema_id) %></th>
+      <th><%# model_class.human_attribute_name(:created_at) %></th>
+      <th><%#t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%# @resumenes_hoy.each do |resumen| %>
+      <tr>
+        <td><%# link_to resumen.id, resumen_path(resumen) %></td>
+        <td><%# resumen.titulo %></td>
+        <td><%# resumen.contenido %></td>
+        <td><%# resumen.vocero_id %></td>
+        <td><%# resumen.informe_id %></td>
+        <td><%# resumen.tema_id %></td>
+        <td><%#l resumen.created_at %></td>
+        <td>
+          <%# link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_resumen_path(resumen), :class => 'btn btn-mini' %>
+          <%# link_to t('.destroy', :default => t("helpers.links.destroy")),
                       resumen_path(resumen),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                       :class => 'btn btn-mini btn-danger' %>
         </td>
       </tr>
-    <% end %>
+    <%# end %>
   </tbody>
-</table>
+</table> -->

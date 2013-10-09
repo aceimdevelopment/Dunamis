@@ -1,29 +1,9 @@
 <%- model_class = Resumen -%>
   <h3><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h3>
 
-<%= render :partial => 'lista' if @resumenes.count > 0 %>
+<%= render :partial => 'lista' if @resumenes_hoy.count > 0 %>
 <%= render :partial => 'form' %>
 Resumen: <%= @resumen.id %>
 Notas agregadas: <%= @resumen.notas.count %>
 
-<%# render :partial => 'notas' %>
-
-<!-- <script type="text/javascript" charset="utf-8">
-	function agregar(id){
-		$("#"+id).hide()
-  	$.get("/notas/"+id, function(data){ $("#resumen_contenido").val(data); });
-	}	
-</script> -->
-
-
-
-<script type="text/javascript" charset="utf-8">
-	function agregar(id, resumen_id){
-		$("#"+id).hide()
-		$.post("/notas/update/"+id+"?resumen_id="+resumen_id)
-  	$.get("/notas/"+id, function(data){
-			
-			$("#resumen_contenido").html(data);
-		});
-	}	
-</script>
+<%= render :partial => 'notas' %>

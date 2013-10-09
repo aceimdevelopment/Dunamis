@@ -4,4 +4,8 @@ class Eleccion < ActiveRecord::Base
   has_many :candidatos
   accepts_nested_attributes_for :candidatos
   
+  def descripcion
+    "#{nombre} - #{ano}"
+  end
+  
 end

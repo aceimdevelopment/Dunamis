@@ -1,14 +1,31 @@
+<script type="text/javascript" charset="utf-8">
+	function eliminar_nota (nota_id) {
+		$.post('/notas/update/'+nota_id+'?resumen_id=nil');
+		location.reload();
+		return false;
+	}
+	
+	
+</script>
+
 <%- model_class = Resumen -%>
 <h4 id="paso_2">Paso 2</h4>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:vocero_id) %>:</strong></dt>
-  <dd><%= @resumen.vocero.nombre %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:tema_id) %>:</strong></dt>
-  <dd><%= @resumen.tema.full_descripcion %></dd>
-</dl>
+<!-- <dl class="dl-horizontal">
+  <dt><strong><%# model_class.human_attribute_name(:vocero_id) %>:</strong></dt>
+  <dd><%# @resumen.vocero.nombre %></dd>
+  <dt><strong><%# model_class.human_attribute_name(:tema_id) %>:</strong></dt>
+  <dd><%# @resumen.tema.full_descripcion %></dd>
+</dl> -->
 
-<%= form_for @resumen, :url=>{:action => "paso2_guardar"}, :html => { :class => 'form-horizontal' } do |f| %>
+<%= form_for @resumen, :url=>{:action => "update", :id => @resumen.id}, :html => { :class => 'form-horizontal' } do |f| %>
+
+	<div class="control-group">
+	  <div class="controls">
+	    <%= f.collection_select :vocero_id, Vocero.all, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2'} %>
+			<%= f.collection_select :tema_id, Tema.all, :id, :full_descripcion, {:prompt => "Tema"}, {:required => true, :class => 'selects2'} %>
+	  </div>
+	</div>
 
   <div class="control-group">
     <%= f.label :contenido, "Contenido:", :class => 'control-label' %>
@@ -21,7 +38,11 @@
     <div class="controls">
       <%- @notas = @resumen.notas.order "updated_at DESC" -%>
 			<%- @notas.each do |nota| %>
-				<%= link_to nota.website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %>
+				<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+				<%= link_to "#", {:class => 'btn btn-mini', :onclick => "return eliminar_nota (#{nota.id})"} do %>
+					<i class="icon-trash icon-black"></i>
+				<% end %>
+				|
 			<% end %>
     </div>
   </div>
@@ -33,4 +54,6 @@
 	</div>
 <% end %>
 
+
 <%= render :partial => 'notas' %>
+

@@ -4,25 +4,18 @@
 </div>
 
 <dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:titulo) %>:</strong></dt>
-  <dd><%= @resumen.titulo %></dd>
   <dt><strong><%= model_class.human_attribute_name(:contenido) %>:</strong></dt>
-  <dd><%= @resumen.contenido %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:vocero_id) %>:</strong></dt>
-  <dd><%= @resumen.vocero_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:informe_id) %>:</strong></dt>
-  <dd><%= @resumen.informe_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:tema_id) %>:</strong></dt>
-  <dd><%= @resumen.tema_id %></dd>
-</dl>
-
-
-<h3 id="resumenes">Resumenes</h3>
-<%- if @resumen.notas %>
-	<%= @resumen.notas.each do |notas| -%>
-		<h6><%= notas.titulo -%></h6>
+	<dd> <em><strong><%= @resumen.tema.full_descripcion %>:</strong></em></dd>
+  <dd><strong><%= @resumen.vocero.nombre %>: </strong>
+	<%= @resumen.contenido %></dd>
+	<dd>
+	<%- if @resumen.notas %>
+		<%- @resumen.notas.each do |nota| -%>
+			<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+		<% end %>
 	<% end %>
-<% end %>
+	</dd>
+</dl>
 <!-- 
 	<%# form_for([@resumen, @resumen.notas.build]) do |f| %>
 
@@ -38,10 +31,10 @@
 <%# end %> -->
 
 <div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              resumenes_path, :class => 'btn'  %>
+  <%= link_to t('Agregar Otro Resumen'),
+              {:action => 'paso1'}, :class => 'btn'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_resumen_path(@resumen), :class => 'btn' %>
+              {:action => 'paso2', :id => @resumen.id}, :class => 'btn' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               resumen_path(@resumen),
               :method => 'delete',

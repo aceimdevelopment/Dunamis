@@ -1,12 +1,19 @@
 <h4 id="paso_1">Paso 1</h4>
+<h5>Resumenes de Hoy</h5>
+<%- @resumenes_hoy.each do |resumen_hoy| -%>
+	<strong><%= resumen_hoy.vocero.nombre if resumen_hoy.vocero %></strong>
+	<%= resumen_hoy.descripcion %>
+	</br>
+	
+<% end %>
 <%= form_for @resumen, :url=>{:action => "paso1_guardar"},  :html => { :class => 'form' } do |f| %>
 
 	<div class="control-group">
 	  <%= f.label "Seleccione:", :class => 'control-label' %>
 	  <div class="controls">
-			<%= hidden_field_tag :id, @resumen.id %>
-	    <%= f.collection_select :vocero_id, Vocero.all, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2'} %>
-			<%= f.collection_select :tema_id, Tema.all, :id, :full_descripcion, {:prompt => "Tema"}, {:required => true, :class => 'selects2'} %>
+			<%# hidden_field_tag :id, @resumen.id %>
+	    <%= f.collection_select :vocero_id, Vocero.all, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 150px;'} %>
+			<%= f.collection_select :tema_id, Tema.all, :id, :full_descripcion, {:prompt => "Tema"}, {:required => true, :class => 'selects2', :style => 'width: 600px;'} %>
 	  </div>
 	</div>
 	
@@ -21,4 +28,4 @@
 
 <% end %>
 
-<%= render :partial => 'notas' %>
+<%= render :partial => 'notas' if @resumen.notas.count > 0 %>

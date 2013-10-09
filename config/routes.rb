@@ -31,12 +31,12 @@ Dunamis::Application.routes.draw do
   resources :elecciones
 
   resources :informes do
-    resources :resumenes do
-      resources :notas
-    end
+    resources :resumenes
   end
 
-  resources :asuntos
+  resources :asuntos do
+    resources :temas
+  end
 
   resources :temas
 

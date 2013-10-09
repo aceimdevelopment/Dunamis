@@ -40,15 +40,21 @@ class TemasController < ApplicationController
   # POST /temas
   # POST /temas.json
   def create
-    @tema = Tema.new(params[:tema])
+    if params[:asunto_id]
+      @asunto = Asunto.find(params[:asunto_id])
+      @tema = @asunto.temas.create(params[:tema])
+      redirect_to asunto_path(@asunto)
+    else
+      @tema = Tema.new(params[:tema])
 
-    respond_to do |format|
-      if @tema.save
-        format.html { redirect_to @tema, notice: 'Tema was successfully created.' }
-        format.json { render json: @tema, status: :created, location: @tema }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @tema.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @tema.save
+          format.html { redirect_to @tema, notice: 'Tema was successfully created.' }
+          format.json { render json: @tema, status: :created, location: @tema }
+        else
+          format.html { render action: "new" }
+          format.json { render json: @tema.errors, status: :unprocessable_entity }
+        end
       end
     end
   end

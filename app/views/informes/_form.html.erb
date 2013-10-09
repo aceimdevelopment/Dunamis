@@ -7,10 +7,49 @@
   </div>
 		
 	<div class ="well">
-      <%= f.text_area :resumen, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}%>
+			<div id="encabezado" style = "text-align:center;">
+				<strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong>
+				<strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong>
+				<strong><h6><%= Date.today.strftime('%A, %d de %B de %Y')%></h6></strong>
+				<strong><h6 style = "background-color: black; color: white;">MONITOREO DE MEDIOS (de 10:00am a 04:00pm)</h6></strong>				
+			</div>
+			
+      <%= f.text_area :resumen, :cols => 12,:class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :style => "height:100px;"%>
 
-			<%= link_to "Agregar Nota", new_resumen_path, :id => "nota", :class => 'btn btn-mini btn-info right' %>
-	</div>	
+			<table border="0" cellspacing="5" cellpadding="5">
+				<tr><td>
+					
+					<% @asuntos.each do |asunto| %>
+						<%- temas = asunto.temas -%>
+						<% if temas.count > 0 %> 
+							<dd><em><strong><%= asunto.nombre %> :</strong></em></dd>
+							</br>
+							<% temas.each do |tema| %>
+								<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
+								<% if resumenes_final.count > 0 %> 
+								<dd><u><%= tema.nombre %> :</u></dd>
+									<% resumenes_final.each do |resumen| %>
+										<p>
+											<dd><strong><%= resumen.vocero.nombre %>: </strong>
+											<%= resumen.contenido %>
+											<%- if resumen.notas %>
+												<%- resumen.notas.each do |nota| -%>
+													<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+												<% end %>
+											<% end %>
+											</dd>
+											<%= link_to t('.edit', :default => t("helpers.links.edit")),
+						                      edit_resumen_path(resumen), {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
+										</p>	
+									<% end %>
+								<% end %>	
+							<% end %>
+						<% end %>
+					<% end %>
+					
+				</td></tr>
+			</table>
+	</div>
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
