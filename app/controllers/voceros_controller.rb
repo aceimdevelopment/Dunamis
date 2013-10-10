@@ -45,8 +45,12 @@ class VocerosController < ApplicationController
 
     respond_to do |format|
       if @vocero.save
-        format.html { redirect_to @vocero, notice: 'Vocero was successfully created.' }
-        format.json { render json: @vocero, status: :created, location: @vocero }
+        if params[:controlador]
+          format.html { redirect_to :controller => params[:controlador], :action => params[:accion] }
+        else
+          format.html { redirect_to @vocero, notice: 'Vocero was successfully created.' }
+          format.json { render json: @vocero, status: :created, location: @vocero }
+        end
       else
         format.html { render action: "new" }
         format.json { render json: @vocero.errors, status: :unprocessable_entity }

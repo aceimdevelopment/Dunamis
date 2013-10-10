@@ -12,8 +12,14 @@
 	  <%= f.label "Seleccione:", :class => 'control-label' %>
 	  <div class="controls">
 			<%# hidden_field_tag :id, @resumen.id %>
-	    <%= f.collection_select :vocero_id, Vocero.all, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 150px;'} %>
-			<%= f.collection_select :tema_id, Tema.all, :id, :full_descripcion, {:prompt => "Tema"}, {:required => true, :class => 'selects2', :style => 'width: 600px;'} %>
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 150px;'} %>
+			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_new').modal();"} do %>
+				<i class="icon-plus icon-white"></i>
+				<i class="icon-user icon-white"></i>
+			<% end %>
+
+			<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:required => true, :class => 'selects2', :style => 'width: 600px;'} %>
+			<%# f.grouped_collection_select (:city, :country_id, @continents, :countries, :name, :id, :name) %>
 	  </div>
 	</div>
 	
@@ -29,3 +35,17 @@
 <% end %>
 
 <%= render :partial => 'notas' if @resumen.notas.count > 0 %>
+
+
+
+
+<div id="vocero_new" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Nuevo Vocero</h3>
+  </div>
+  <div class="modal-body">
+		<%= render 'voceros/form' %>
+		
+  </div>
+</div>
