@@ -94,7 +94,7 @@ class ResumenesController < ApplicationController
     Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
     @websites = Website.all
     @vocero = Vocero.new
-    # @websites.each { |website| website.importar_notas_desactualizadas}
+    @websites.each { |website| website.importar_notas_desactualizadas}
   end
   
   def paso1_guardar
