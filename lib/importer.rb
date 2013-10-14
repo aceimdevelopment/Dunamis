@@ -917,7 +917,13 @@ module Importer
   def self.cargar_website website
     url = URI.parse website.url
     agente = Mechanize.new
-    return agente.get(url)
+    agente.open_timeout = 1
+    agente.read_timeout = 1
+    begin
+      return agente.get(url)
+    rescue Exception => ex
+      return nil
+    end
   end
 
 #   POSIBLE FUNCIÓN PARA INCLUIR EN ERROR DE CARGA

@@ -20,9 +20,9 @@
 				<tr><td>
 					
 					<% @asuntos.each do |asunto| %>
-						<%- temas = asunto.temas -%>
+						<% temas = asunto.temas %>
 						<% if temas.count > 0 %> 
-							<dd><em><strong><%= asunto.nombre %> :</strong></em></dd>
+							<dd><em><strong><%= asunto.nombre %>:</strong></em></dd>
 							</br>
 							<% temas.each do |tema| %>
 								<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>

@@ -21,7 +21,16 @@
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                temas_path, :class => 'btn' %>
+
+		<% unless params[:controller].eql? 'voceros' %>
+			<%= hidden_field_tag 'controlador', params[:controller] %>
+			<%= hidden_field_tag  'accion', params[:action] %>
+    	<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                "", :class => 'btn', :data => {:dismiss => 'modal'} %>
+		<% else %>
+    	<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+	                temas_path, :class => 'btn' %>
+	  <% end %>
+
   </div>
 <% end %>

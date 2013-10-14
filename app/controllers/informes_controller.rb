@@ -34,28 +34,11 @@ class InformesController < ApplicationController
     # Borra Todas las notas antiguas e inservibles
     # SELETE FROM `notas` WHERE (resumen_id IS NULL AND created_at <= 'Hoy')
     Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
-
-    # if Nota.creadas_hoy.count == 0 #provisional para cargar notas de hoy si no existen
-    #   Importer.import_notas_noticias24
-    #   Importer.import_notas_globovision
-    #   Importer.import_notas_union_radio
-    #   Importer.import_notas_noticierodigital
-    #   Importer.import_notas_noticierovenevision
-    #   Importer.import_notas_vtv
-    #   Importer.import_notas_laverdad
-    #   Importer.import_notas_informe21
-    #   Importer.import_notas_eluniversal
-    #   Importer.import_notas_avn
-    #   @error = Importer.import_notas_radiomundial
-    #   @error = @error.nil? ? "Demasiado tiempo esperando respuesta de las Página " : ""
-    #   Importer.import_notas_elnacional
-    #   Importer.import_notas_rnv
-    # end
-    
     
     @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
     # @websites = Website.all
     @asuntos = Asunto.all
+    
     @informe = Informe.new
     if @resumenes
       @resumenes.each do |resumen|

@@ -21,9 +21,9 @@
         <td><%= link_to resumen.id, resumen_path(resumen) %></td>
         <td><%= resumen.titulo %></td>
         <td><%= resumen.contenido %></td>
-        <td><%= resumen.vocero_id %></td>
+        <td><%= resumen.vocero.nombre if resumen.vocero%></td>
         <td><%= resumen.informe_id %></td>
-        <td><%= resumen.tema_id %></td>
+        <td><%= resumen.tema.full_descripcion if resumen.tema %></td>
         <td><%=l resumen.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

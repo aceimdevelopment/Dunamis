@@ -11,6 +11,7 @@ class Resumen < ActiveRecord::Base
   scope :creados_hoy, -> {where("created_at >= ?", Date.today)}
   
   def descripcion
-    "#{contenido}. Notas: #{notas.count} creado: #{created_at}."
+    contenido_parcial = contenido.blank? ? "" : "#{contenido[0..40]}..."
+    "#{id}.- #{contenido_parcial}. Notas: #{notas.count} creado: #{created_at}."
   end
 end

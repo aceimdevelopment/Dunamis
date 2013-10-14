@@ -39,7 +39,7 @@
       <%- @notas = @resumen.notas.order "updated_at DESC" -%>
 			<%- @notas.each do |nota| %>
 				<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-				<%= link_to "#", {:class => 'btn btn-mini', :onclick => "return eliminar_nota (#{nota.id})"} do %>
+				<%= link_to "#", {:class => 'btn btn-mini btn-danger', :onclick => "return eliminar_nota (#{nota.id})"} do %>
 					<i class="icon-trash icon-black"></i>
 				<% end %>
 				|

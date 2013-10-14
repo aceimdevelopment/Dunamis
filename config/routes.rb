@@ -11,6 +11,10 @@ Dunamis::Application.routes.draw do
   resources :tipos_notas
 
   resources :resumenes do
+    collection do
+      get 'paso1'
+      get 'paso2'
+    end
     resources :notas
     collection do
       get 'paso1'

@@ -94,6 +94,7 @@ class ResumenesController < ApplicationController
     Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
     @websites = Website.all
     @vocero = Vocero.new
+    @tema = Tema.new
     @websites.each { |website| website.importar_notas_desactualizadas}
   end
   
@@ -110,7 +111,7 @@ class ResumenesController < ApplicationController
     end
 
     if @resumen.save
-      redirect_to :action => "paso2", :id => @resumen.id #, notice: 'Resumen was successfully created.'
+      redirect_to :action => "paso2/#{@resumen.id}" #, notice: 'Resumen was successfully created.'
     else
       render :action => "paso1"
     end
@@ -133,7 +134,7 @@ class ResumenesController < ApplicationController
     @resumen.destroy
 
     respond_to do |format|
-      format.html { redirect_to resumenes_url }
+      format.html { redirect_to paso1_resumenes_path }
       format.json { head :no_content }
     end
   end

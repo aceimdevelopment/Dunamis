@@ -17,7 +17,10 @@ class Website < ActiveRecord::Base
   end
   
   def importar_notas_desactualizadas
-    importar_notas_website if not fueron_cargadas_reciente?
+    begin
+      importar_notas_website if not fueron_cargadas_reciente?
+    rescue Exception => ex
+    end  
   end
   
   def fueron_cargadas_reciente?
