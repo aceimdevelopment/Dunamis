@@ -918,7 +918,7 @@ module Importer
     url = URI.parse website.url
     agente = Mechanize.new
     agente.open_timeout = 1
-    agente.read_timeout = 1
+    agente.read_timeout = 5
     begin
       return agente.get(url)
     rescue Exception => ex
