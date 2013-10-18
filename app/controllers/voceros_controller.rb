@@ -44,16 +44,23 @@ class VocerosController < ApplicationController
     @vocero = Vocero.new(params[:vocero])
 
     respond_to do |format|
-      if @vocero.save
-        if params[:controlador]
-          format.html { redirect_to :controller => params[:controlador], :action => params[:accion] }
+      if params[:controlador]
+        if @vocero.save
+          @mensaje = "Vocero Creado Satisfactoriamente"
+          @tipo = "correcto"
         else
+          @mensaje = @vocero.errors.full_messages.join(" | ")
+          @tipo = "error"
+        end
+        format.html { redirect_to :controller => params[:controlador], :action => params[:accion], :mensaje => @mensaje, :tipo => @tipo }
+      else
+        if @vocero.save
           format.html { redirect_to @vocero, notice: 'Vocero was successfully created.' }
           format.json { render json: @vocero, status: :created, location: @vocero }
+        else
+          format.html { render action: "new" }
+          format.json { render json: @vocero.errors, status: :unprocessable_entity }
         end
-      else
-        format.html { render action: "new" }
-        format.json { render json: @vocero.errors, status: :unprocessable_entity }
       end
     end
   end

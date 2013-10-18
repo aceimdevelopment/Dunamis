@@ -44,7 +44,7 @@
   </div>
 
   <div class="form-actions">
-		<%= f.submit nil, :class => 'btn btn-primary', :onclick => 'this.disabled=true;doSection(loading);return true;' %>
+		<%= f.submit nil, :class => 'btn btn-primary', data: { :disable_with => "Por favor espere..." } %>
 
 		<% unless params[:controller].eql? 'voceros' %>
 			<%= hidden_field_tag 'controlador', params[:controller] %>

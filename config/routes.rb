@@ -34,15 +34,22 @@ Dunamis::Application.routes.draw do
 
   resources :elecciones
 
+  
+
   resources :informes do
     resources :resumenes
+    collection do
+      get 'enviar_por_correo'
+    end
   end
 
   resources :asuntos do
     resources :temas
   end
 
-  resources :temas
+  resources :temas do
+    resources :resumenes
+  end
 
   resources :websites
 

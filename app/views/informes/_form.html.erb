@@ -7,7 +7,7 @@
   </div>
 		
 	<div class ="well">
-			<div id="encabezado" style = "text-align:center;">
+			<div style = "text-align:center;">
 				<strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong>
 				<strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong>
 				<strong><h6><%= Date.today.strftime('%A, %d de %B de %Y')%></h6></strong>
@@ -20,30 +20,37 @@
 				<tr><td>
 					
 					<% @asuntos.each do |asunto| %>
+
 						<% temas = asunto.temas %>
 						<% if temas.count > 0 %> 
-							<dd><em><strong><%= asunto.nombre %>:</strong></em></dd>
 							</br>
-							<% temas.each do |tema| %>
-								<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
-								<% if resumenes_final.count > 0 %> 
-								<dd><u><%= tema.nombre %> :</u></dd>
-									<% resumenes_final.each do |resumen| %>
-										<p>
-											<dd><strong><%= resumen.vocero.nombre %>: </strong>
-											<%= resumen.contenido %>
-											<%- if resumen.notas %>
-												<%- resumen.notas.each do |nota| -%>
-													<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
-												<% end %>
+							<dd><em><strong><%= asunto.nombre %></strong></em></dd>
+							</br>
+							<ul>
+								<% temas.each do |tema| %>
+									<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
+									<% if resumenes_final.count > 0 %> 
+									<li style = 'display:block;'>
+										<dd><u><%= tema.nombre %>:</u></dd>
+											<% resumenes_final.each do |resumen| %>
+												<p>
+													<%# hidden_field_tag :resumen, :id, resumen.id %>
+													<dd><strong><%= resumen.vocero.nombre %>: </strong>
+													<%= resumen.contenido %>
+													<%- if resumen.notas %>
+														<%- resumen.notas.each do |nota| -%>
+															<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+														<% end %>
+													<% end %>
+													</dd>
+													<%= link_to t('.edit', :default => t("helpers.links.edit")),
+								                      edit_resumen_path(resumen), {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
+												</p>	
 											<% end %>
-											</dd>
-											<%= link_to t('.edit', :default => t("helpers.links.edit")),
-						                      edit_resumen_path(resumen), {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
-										</p>	
-									<% end %>
-								<% end %>	
-							<% end %>
+										</li>
+									<% end %>	
+								<% end %>
+							</ul>
 						<% end %>
 					<% end %>
 					

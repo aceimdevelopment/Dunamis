@@ -25,7 +25,6 @@ class TemasController < ApplicationController
   # GET /temas/new.json
   def new
     @tema = Tema.new
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @tema }
@@ -48,19 +47,26 @@ class TemasController < ApplicationController
       @tema = Tema.new(params[:tema])
 
       respond_to do |format|
-        if @tema.save
-          if params[:controlador]
-            format.html { redirect_to :controller => params[:controlador], :action => params[:accion] }
+        if params[:controlador]
+          if @tema.save
+            @mensaje = "Tema Creado Satisfactoriamente"
+            @tipo = "correcto"
           else
-            format.html { redirect_to @tema, notice: 'Tema was successfully created.' }
-            format.json { render json: @tema, status: :created, location: @tema }
+            @mensaje = @tema.errors.full_messages.join(" | ")
+            @tipo = "error"
           end
+          format.html { redirect_to :controller => params[:controlador], :action => params[:accion], :mensaje => @mensaje, :tipo => @tipo }
         else
-          format.html { render action: "new" }
-          format.json { render json: @tema.errors, status: :unprocessable_entity }
-        end
-      end
-    end
+          if @@tema.save
+            format.html { redirect_to @tema, notice: 'Vocero was successfully created.' }
+            format.json { render json: @tema, status: :created, location: @tema }
+          else
+            format.html { render action: "new" }
+            format.json { render json: @tema.errors, status: :unprocessable_entity }
+          end
+        end # params[:controlador]
+      end # response_to
+    end # params[:asunto_id]
   end
 
   # PUT /temas/1

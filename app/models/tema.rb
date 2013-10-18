@@ -3,10 +3,12 @@ class Tema < ActiveRecord::Base
   attr_accessible :descripcion, :nombre, :asunto_id
   belongs_to :asunto
   
-  def full_descripcion
-    
-    "#{asunto.nombre} - "+"#{nombre}"
-    
+  has_many :resumenes
+  accepts_nested_attributes_for :resumenes
+  validates :nombre, uniqueness: { scope: :asunto_id, case_sensitive: false}
+  
+  def full_descripcion    
+    "#{asunto.nombre} - "+"#{nombre}"    
   end
   
 end

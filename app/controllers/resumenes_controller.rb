@@ -84,6 +84,15 @@ class ResumenesController < ApplicationController
   
   def paso1
     @resumenes_hoy = Resumen.where("updated_at >= ?", Date.today)
+    
+    if params[:mensaje] 
+      @mensaje = params[:mensaje]
+      if params[:tipo].eql? "error"
+        @tipo_alerta = 'alert-error'
+      else
+        @tipo_alerta = 'alert-success'
+      end
+    end
     # @resumen = params[:id].blank? ? Resumen.new : Resumen.find(params[:id])
     if params[:id].blank?
       @resumen = Resumen.new

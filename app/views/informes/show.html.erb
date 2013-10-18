@@ -1,14 +1,69 @@
 <%- model_class = Informe -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+	<h6><%= @informe.fecha.strftime('%A, %d de %B de %Y')%></h6>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_informe_path(@informe), :class => 'btn' %>	
+  <%= link_to t('enviar por correo'),
+              {:controller => 'informes', :action => 'enviar_por_correo', :id => @informe.id }, :class => 'btn btn-success'  %>	
 </div>
 
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:fecha) %>:</strong></dt>
-  <dd><%= @informe.fecha %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:resumen) %>:</strong></dt>
-  <dd><%= @informe.resumen %></dd>
-</dl>
+<div class ="well">
+		<div id="encabezado" style = "text-align:center;">
+			<strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong>
+			<strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong>
+			<strong><h6><%= @informe.fecha.strftime('%A, %d de %B de %Y')%></h6></strong>
+			<strong><h6 style = "background-color: black; color: white;">MONITOREO DE MEDIOS (de 10:00am a 04:00pm)</h6></strong>		
+			<h6>
+				<%= @informe.resumen %>
+			</h6>
+					
+		</div>
+
+		<table border="0" cellspacing="5" cellpadding="5">
+			<tr><td>
+				
+				<% @asuntos.each do |asunto| %>
+
+					<% temas = asunto.temas %>
+					<% if temas.count > 0 %> 
+						</br>
+						<dd><em><strong><%= asunto.nombre %></strong></em></dd>
+						</br>
+						<ul>
+							<% temas.each do |tema| %>
+								<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
+								<% if resumenes_final.count > 0 %> 
+								<li style = 'display:block;'>
+									<dd><u><%= tema.nombre %>:</u></dd>
+										<% resumenes_final.each do |resumen| %>
+											<p>
+												<%# hidden_field_tag :resumen, :id, resumen.id %>
+												<dd><strong><%= resumen.vocero.nombre %>: </strong>
+												<%= resumen.contenido %>
+												<%- if resumen.notas %>
+													<%- resumen.notas.each do |nota| -%>
+														<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+													<% end %>
+												<% end %>
+												</dd>
+											</p>	
+										<% end %>
+									</li>
+								<% end %>	
+							<% end %>
+						</ul>
+					<% end %>
+				<% end %>
+				
+			</td></tr>
+		</table>
+</div>
+
+
+
+
+
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),

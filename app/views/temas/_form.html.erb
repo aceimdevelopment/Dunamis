@@ -1,5 +1,17 @@
 <%= form_for @tema, :html => { :class => 'form-horizontal' } do |f| %>
-  <div class="control-group warning">
+<% if @tema.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@tema.errors.count, "error") %> impiden el registro:</h2>
+
+    <ul>
+    <% @tema.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+  <div class="control-group">
     <%= f.label :nombre, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :nombre, :class => 'text_field', :required => true %>
@@ -20,9 +32,9 @@
   </div>
 
   <div class="form-actions">
-    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit nil, :class => 'btn btn-primary', data: { :disable_with => "Por favor espere..." } %>
 
-		<% unless params[:controller].eql? 'voceros' %>
+		<% unless params[:controller].eql? 'temas' %>
 			<%= hidden_field_tag 'controlador', params[:controller] %>
 			<%= hidden_field_tag  'accion', params[:action] %>
     	<%= link_to t('.cancel', :default => t("helpers.links.cancel")),

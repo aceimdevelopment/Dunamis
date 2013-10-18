@@ -48,7 +48,7 @@
   <div class="control-group">
     <%= f.label :estado_id, :class => 'control-label' %>
     <div class="controls">
-	  <%= f.collection_select :estado_id, Estado.all, :id, :nombre, {:prompt => "todos"}, {:required => true, :class => "selects2" } %> 
+	  <%= f.collection_select :estado_id, Estado.all, :id, :nombre, {:prompt => true}, {:required => true, :class => "selects2" } %> 
 	<!-- #, :onchange => 'myfun(this.value)'}  -->
     </div>
   </div>
