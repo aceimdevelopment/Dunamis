@@ -50,9 +50,9 @@ class InformesController < ApplicationController
   def new
 
     require "Importer"
-    @encabezado = " Dirección de Seguimiento de la Información Electoral \n AGENDA TEMÁTICA DE MEDIOS"
-    @encabezado += " #{Date.today.strftime('%d de %B de %Y')} "
-    @encabezado += "MONITOREO DE MEDIOS (de 10:00am a 05:00pm)"
+    # @encabezado = " Dirección de Seguimiento de la Información Electoral \n AGENDA TEMÁTICA DE MEDIOS"
+    # @encabezado += " #{Date.today.strftime('%d de %B de %Y')} "
+    # @encabezado += "MONITOREO DE MEDIOS (de 10:00am a 05:00pm)"
 
     # Borra Todas las notas antiguas e inservibles
     # SELETE FROM `notas` WHERE (resumen_id IS NULL AND created_at <= 'Hoy')
@@ -88,14 +88,19 @@ class InformesController < ApplicationController
   # POST /informes
   # POST /informes.json
   def create
-    @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
+    # @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
+    
+    resumenes_ids = params[:resumenes_ids]
     @informe = Informe.new(params[:informe])
 
     respond_to do |format|
       if @informe.save
-        @resumenes.each do |resumen|
-          resumen.informe_id = @informe.id
-          resumen.save
+        resumenes_ids.each do |id|
+          resumen = Resumen.find id
+          if resumen
+            resumen.informe_id = @informe.id
+            resumen.save
+          end
         end
         format.html { redirect_to @informe, notice: 'Informe was successfully created.' }
         format.json { render json: @informe, status: :created, location: @informe }
@@ -109,18 +114,60 @@ class InformesController < ApplicationController
   # PUT /informes/1
   # PUT /informes/1.json
   def update
-    @informe = Informe.find(params[:id])
 
-    respond_to do |format|
-      if @informe.update_attributes(params[:informe])
-        format.html { redirect_to @informe, notice: 'Informe was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @informe.errors, status: :unprocessable_entity }
+    # if params[:commit].eql? 'Fusionar'
+    #   fusionar_resumenes params[:fusionar_resumenes_ids], params[:id]
+    # else
+      resumenes_ids = params[:resumenes_ids]
+      @informe = Informe.find(params[:id])      
+      respond_to do |format|
+        if @informe.update_attributes(params[:informe])
+          resumenes_ids.each do |id|
+            resumen = Resumen.find id
+            if resumen
+              resumen.informe_id = @informe.id
+              resumen.save
+            end
+          end
+          format.html { redirect_to @informe, notice: 'Informe was successfully updated.' }
+          format.json { head :no_content }
+        else
+          format.html { render action: "edit" }
+          format.json { render json: @informe.errors, status: :unprocessable_entity }
+        end
       end
-    end
+    # end
   end
+
+  # def fusionar_resumenes # (fusionar_resumenes_ids, informe_id)
+  #   primer_id = fusionar_resumenes_ids.first
+  #   
+  #   r1 = Resumen.find(primer_id)
+  #   fusionar_resumenes_ids.shift
+  #   resumenes_fusionar_ids.each do |id| 
+  #     r2 = Resumen.find id
+  #     
+  #     r1.titulo += r2.titulo
+  #     r1.contenido += r2.contenido
+  #     
+  #     r2.notas.each do |nota| 
+  #       nota.resumen_id = r1.id
+  #       unless nota.save
+  #         @mensaje = "Error al Intentar Fusionar" 
+  #         @tipo_alerta = 'alert-error'
+  #         break
+  #       end
+  #     end
+  #   end # each_resumenes_fusionar_ids
+  #   
+  #   if r1.save
+  #     @mensaje = "Fusión Completada Satisfactoriamente" 
+  #     @tipo_alerta = 'alert-success'
+  #   else
+  #     @mensaje = "Error al Intentar Fusionar" 
+  #     @tipo_alerta = 'alert-error'
+  #   end
+  # end
 
   # DELETE /informes/1
   # DELETE /informes/1.json

@@ -1,5 +1,8 @@
+<div id="cargando"></div>
+
 <%= @error %>
 <%= "Última Actualización: #{@websites.first.notas.last.updated_at}" if @websites.first.notas %>
+
 <div class="bs-docs-example">
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
@@ -79,6 +82,33 @@
 		else{$('#contenido_nota'+nota_id).hide();}
 		return false;
 	}
+
+	setTimeout(function(){
+
+	    $('.progress .bar').each(function() {
+	        var me = $(this);
+	        var perc = me.attr("data-percentage");
+
+	        var current_perc = 0;
+
+	        var progress = setInterval(function() {
+	            if (current_perc>=perc) {
+	                clearInterval(progress);
+	            } else {
+	                current_perc +=1;
+	                me.css('width', (current_perc)+'%');
+	            }
+
+	            me.text((current_perc)+'%');
+
+	        }, 50);
+
+	    });
+	
+
+	},0);
+	
+	
 </script>
 
 

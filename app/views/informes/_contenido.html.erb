@@ -1,0 +1,52 @@
+<div style = "text-align:center;">
+	<strong>Dirección de Seguimiento de la Información Electoral</strong>
+	<div style="padding: 10px 0 0 0;"><strong>AGENDA TEMÁTICA DE MEDIOS</strong></div>
+	<div style="padding: 10px 0 10px 0;"><strong><%= @informe.fecha.strftime('%A, %d de %B de %Y')%></strong></div>
+	<div style="background-color: black; color: white;"><strong>MONITOREO DE MEDIOS (de 10:00am a 04:00pm)</strong></div>		
+	<div style="text-align:justify;padding: 10px 0 10px 0;">
+		<%= @informe.resumen %>
+	</div>
+	</br>
+	</br>
+	<strong>Panorama Informativo</strong>
+	</br>
+</div>
+
+<table border="0" cellspacing="5" cellpadding="5">
+	<tr><td>
+	
+		<% @asuntos.each do |asunto| %>
+
+			<% temas = asunto.temas %>
+			<% if temas.count > 0 %> 
+				</br>
+				<dd><em><strong><%= asunto.nombre %></strong></em></dd>
+				</br>
+				<ul>
+					<% temas.each do |tema| %>
+						<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
+						<% if resumenes_final.count > 0 %> 
+						<li style = 'display:block;'>
+							<dd><u><%= tema.nombre %>:</u></dd>
+								<% resumenes_final.each do |resumen| %>
+									<p>
+										<%# hidden_field_tag :resumen, :id, resumen.id %>
+										<dd style="text-align:justify;"><strong><%= resumen.vocero.nombre %>: </strong>
+										<%= resumen.contenido %>
+										<%- if resumen.notas %>
+											<%- resumen.notas.each do |nota| -%>
+												<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+											<% end %>
+										<% end %>
+										</dd>
+									</p>	
+								<% end %>
+							</li>
+						<% end %>	
+					<% end %>
+				</ul>
+			<% end %>
+		<% end %>
+	
+	</td></tr>
+</table>

@@ -1,3 +1,12 @@
+<%= @mensaje %>
+<% if @mensaje %>
+	<div class="alert <%= @tipo_alerta %>">
+	  <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  <h4>Mensaje:</h4>
+	  <%= @mensaje %>
+	</div>
+<% end %>
+
 <%= form_for @informe, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
     <%= f.label :fecha, :class => 'control-label' %>
@@ -10,50 +19,65 @@
 			<div style = "text-align:center;">
 				<strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong>
 				<strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong>
-				<strong><h6><%= Date.today.strftime('%A, %d de %B de %Y')%></h6></strong>
+				<% fecha = @informe.fecha ? @informe.fecha : Date.today %>
+				<strong><h6><%= fecha.strftime('%A, %d de %B de %Y')%></h6></strong>
 				<strong><h6 style = "background-color: black; color: white;">MONITOREO DE MEDIOS (de 10:00am a 04:00pm)</h6></strong>				
 			</div>
 			
-      <%= f.text_area :resumen, :cols => 12,:class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :style => "height:100px;"%>
+      <%= f.text_area :resumen, :cols => 12, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :style => "height:100px;"%>
+			
 
 			<table border="0" cellspacing="5" cellpadding="5">
 				<tr><td>
-					
-					<% @asuntos.each do |asunto| %>
+					<%# form_tag url_for(:controller => 'resumenes', :action => 'fusionar'), :method => 'get' do %>
+						<div style='text-align:right;'>
+							<%= submit_tag "Fusionar", :class => "btn btn-success", :onclick => "return fusionar(#{@informe.id.to_s})" %>
+						</div>
+						<% @asuntos.each do |asunto| %>
 
-						<% temas = asunto.temas %>
-						<% if temas.count > 0 %> 
-							</br>
-							<dd><em><strong><%= asunto.nombre %></strong></em></dd>
-							</br>
-							<ul>
-								<% temas.each do |tema| %>
-									<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
-									<% if resumenes_final.count > 0 %> 
-									<li style = 'display:block;'>
-										<dd><u><%= tema.nombre %>:</u></dd>
-											<% resumenes_final.each do |resumen| %>
-												<p>
-													<%# hidden_field_tag :resumen, :id, resumen.id %>
-													<dd><strong><%= resumen.vocero.nombre %>: </strong>
-													<%= resumen.contenido %>
-													<%- if resumen.notas %>
-														<%- resumen.notas.each do |nota| -%>
-															<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+							<% temas = asunto.temas %>
+							<% if temas.count > 0 %> 
+								</br>
+								<dd><em><strong><%= asunto.nombre %></strong></em></dd>
+								</br>
+								<ul>
+									<% temas.each do |tema| %>
+										<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
+										<% if resumenes_final.count > 0 %> 
+										<li style = 'display:block;'>
+											<dd><u><%= tema.nombre %>:</u></dd>
+												<% resumenes_final.each do |resumen| %>
+													<p>
+														<%= hidden_field_tag "resumenes_ids[]", resumen.id %> 
+														<%# hidden_field_tag :resumen, :id, resumen.id %>
+														<!-- <input type="checkbox" id="inlineCheckbox1" value="option1" > fusionar -->														
+
+														<dd><strong><%= resumen.vocero.nombre %>: </strong>
+														<%= resumen.contenido %>
+														<%- if resumen.notas %>
+															<%- resumen.notas.each do |nota| -%>
+																<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+															<% end %>
 														<% end %>
-													<% end %>
-													</dd>
-													<%= link_to t('.edit', :default => t("helpers.links.edit")),
-								                      edit_resumen_path(resumen), {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
-												</p>	
-											<% end %>
-										</li>
-									<% end %>	
-								<% end %>
-							</ul>
+														</dd>
+														<div style = "text-align: right;background-color: #ddd; padding: 5px;">	
+															<%= link_to t('.edit', :default => t("helpers.links.edit")),
+										                      {:controller => 'resumenes', :action => 'paso2', :id => resumen.id}, {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
+															<span class="label label-success">
+																<%= check_box_tag 'fusionar_resumenes_ids[]', resumen.id %>
+																Fusionar
+															</span>
+															<!-- <button type="button" class="btn btn-primary" data-toggle="button" value="option1">Fusionar</button>	 -->
+														</div>
+													</p>	
+												<% end %>
+											</li>
+										<% end %>	
+									<% end %>
+								</ul>
+							<% end %>
 						<% end %>
-					<% end %>
-					
+					<%# end %>
 				</td></tr>
 			</table>
 	</div>
@@ -64,4 +88,16 @@
                 informes_path, :class => 'btn' %>
   </div>
 <% end %>
+
+<script type="text/javascript" charset="utf-8">
+	function fusionar(id){
+		// $("#"+id).hide();
+		fusionar_resumenes_ids = $('.fusionar_resumenes_ids_').text
+		$.post("/resumenes/fusionar?fusionar_resumenes_ids="+fusionar_resumenes_ids);
+		// $.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
+		location.reload();
+		return false;
+	}
+	$().button('toggle')
+</script>
 

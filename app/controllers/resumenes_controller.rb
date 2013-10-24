@@ -42,6 +42,11 @@ class ResumenesController < ApplicationController
   # GET /resumenes/1/edit
   def edit
     @resumen = Resumen.find(params[:id])
+    @websites = Website.all
+    @vocero = Vocero.new
+    @tema = Tema.new
+    @websites.each { |website| website.importar_notas_desactualizadas}
+
   end
 
   # POST /resumenes
@@ -105,6 +110,9 @@ class ResumenesController < ApplicationController
     @vocero = Vocero.new
     @tema = Tema.new
     @websites.each { |website| website.importar_notas_desactualizadas}
+    render :paso1 do |page|
+         page.replace_html "cargando", :partial => 'barra'
+    end
   end
   
   def paso1_guardar
@@ -134,6 +142,44 @@ class ResumenesController < ApplicationController
   def paso2_guardar
     1/0
   end
+  
+  
+  
+  
+  def fusionar # (fusionar_resumenes_ids, informe_id)
+    
+    fusionar_resumenes_ids = params[:fusionar_resumenes_ids]
+    @mensaje = "--------------fusionar_resumenes_ids:<#{fusionar_resumenes_ids}>"
+    puts @mensaje
+    primer_id = fusionar_resumenes_ids.first
+    
+    r1 = Resumen.find(primer_id)
+    fusionar_resumenes_ids.shift
+    resumenes_fusionar_ids.each do |id| 
+      r2 = Resumen.find id
+      
+      r1.titulo += r2.titulo
+      r1.contenido += r2.contenido
+      
+      r2.notas.each do |nota| 
+        nota.resumen_id = r1.id
+        unless nota.save
+          @mensaje = "Error al Intentar Fusionar" 
+          @tipo_alerta = 'alert-error'
+          break
+        end
+      end
+    end # each_resumenes_fusionar_ids
+    
+    if r1.save
+      @mensaje = "Fusión Completada Satisfactoriamente" 
+      @tipo_alerta = 'alert-success'
+    else
+      @mensaje = "Error al Intentar Fusionar" 
+      @tipo_alerta = 'alert-error'
+    end
+  end
+  
   
   # DELETE /resumenes/1
   # DELETE /resumenes/1.json

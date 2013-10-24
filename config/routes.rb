@@ -37,6 +37,7 @@ Dunamis::Application.routes.draw do
   
 
   resources :informes do
+    
     resources :resumenes
     collection do
       get 'enviar_por_correo'
