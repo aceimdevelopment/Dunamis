@@ -89,8 +89,9 @@ class InformesController < ApplicationController
   # POST /informes.json
   def create
     # @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
-    
     resumenes_ids = params[:resumenes_ids]
+    
+    puts "RESUMEN: #{resumenes_ids}"
     @informe = Informe.new(params[:informe])
 
     respond_to do |format|
@@ -115,28 +116,24 @@ class InformesController < ApplicationController
   # PUT /informes/1.json
   def update
 
-    # if params[:commit].eql? 'Fusionar'
-    #   fusionar_resumenes params[:fusionar_resumenes_ids], params[:id]
-    # else
-      resumenes_ids = params[:resumenes_ids]
-      @informe = Informe.find(params[:id])      
-      respond_to do |format|
-        if @informe.update_attributes(params[:informe])
-          resumenes_ids.each do |id|
-            resumen = Resumen.find id
-            if resumen
-              resumen.informe_id = @informe.id
-              resumen.save
-            end
+    resumenes_ids = params[:resumenes_ids].split if params[:resumenes_ids]
+    @informe = Informe.find(params[:id])      
+    respond_to do |format|
+      if @informe.update_attributes(params[:informe])
+        resumenes_ids.each do |id|
+          resumen = Resumen.find id
+          if resumen
+            resumen.informe_id = @informe.id
+            resumen.save
           end
-          format.html { redirect_to @informe, notice: 'Informe was successfully updated.' }
-          format.json { head :no_content }
-        else
-          format.html { render action: "edit" }
-          format.json { render json: @informe.errors, status: :unprocessable_entity }
         end
+        format.html { redirect_to @informe, notice: 'Informe was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @informe.errors, status: :unprocessable_entity }
       end
-    # end
+    end
   end
 
   # def fusionar_resumenes # (fusionar_resumenes_ids, informe_id)

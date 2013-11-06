@@ -19,6 +19,16 @@
       <%= f.collection_select :municipio_id, Municipio.all, :id, :descripcion, {:prompt => true}, {:required => true, :class => 'selects2'} %>
     </div>
   </div>
+
+  <div class="control-group">
+    <%= f.label :municipio_id, :class => 'control-label' %>
+    <div class="controls">
+			<%= f.grouped_collection_select :municipio_id, Estado.all, :municipios, :nombre, :id, :nombre, {:prompt => "Tema"}, {:required => true, :class => 'selects2', :style => 'width: 600px;'} %>
+      
+    </div>
+  </div>
+
+
   <div class="control-group">
     <%= f.label :tipo_cargo_id, 'Cargo a optar', :class => 'control-label' %>
     <div class="controls">

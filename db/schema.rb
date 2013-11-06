@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131004213004) do
+ActiveRecord::Schema.define(:version => 20131024151014) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -191,9 +191,11 @@ ActiveRecord::Schema.define(:version => 20131004213004) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "tema_id"
+    t.integer  "resumen_id"
   end
 
   add_index "resumenes", ["informe_id"], :name => "index_resumenes_on_informe_id"
+  add_index "resumenes", ["resumen_id"], :name => "index_resumenes_on_resumen_id"
   add_index "resumenes", ["tema_id"], :name => "index_resumenes_on_tema_id"
   add_index "resumenes", ["vocero_id"], :name => "index_resumenes_on_vocero_id"
 

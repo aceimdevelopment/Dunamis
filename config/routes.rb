@@ -14,6 +14,8 @@ Dunamis::Application.routes.draw do
     collection do
       get 'paso1'
       get 'paso2'
+      get 'fusionar'
+      get 'separar'
     end
     resources :notas
     collection do

@@ -23,7 +23,7 @@
 	<div class="control-group">
 	  <div class="controls">
 	    <%= f.collection_select :vocero_id, Vocero.all, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2'} %>
-			<%= f.collection_select :tema_id, Tema.all, :id, :full_descripcion, {:prompt => "Tema"}, {:required => true, :class => 'selects2'} %>
+			<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:required => true, :class => 'selects2', :style => 'width: 350px;'} %>
 	  </div>
 	</div>
 

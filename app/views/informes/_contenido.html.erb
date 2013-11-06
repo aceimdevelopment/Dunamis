@@ -32,12 +32,24 @@
 									<p>
 										<%# hidden_field_tag :resumen, :id, resumen.id %>
 										<dd style="text-align:justify;"><strong><%= resumen.vocero.nombre %>: </strong>
-										<%= resumen.contenido %>
-										<%- if resumen.notas %>
-											<%- resumen.notas.each do |nota| -%>
-												<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+											<%= resumen.contenido %>
+											<%- if resumen.notas %>
+												<%- resumen.notas.each do |nota| -%>
+													|<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+												<% end %>
 											<% end %>
-										<% end %>
+											<% if sub_resumenes = resumen.resumenes %>
+												<%- sub_resumenes.each do |sub_resumen| -%>
+													<strong><%= "/ #{sub_resumen.vocero.nombre}:" if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </strong>
+													<%= resumen.contenido %>
+													<%- if resumen.notas %>
+														<%- resumen.notas.each do |nota| -%>
+															<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+														<% end %>
+													<% end %>
+												<% end %>
+											<% end %>
+										
 										</dd>
 									</p>	
 								<% end %>

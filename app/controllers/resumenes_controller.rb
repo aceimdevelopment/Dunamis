@@ -88,7 +88,7 @@ class ResumenesController < ApplicationController
   end
   
   def paso1
-    @resumenes_hoy = Resumen.where("updated_at >= ?", Date.today)
+    @resumenes_hoy = Resumen.where("created_at >= ?", Date.today)
     
     if params[:mensaje] 
       @mensaje = params[:mensaje]
@@ -105,11 +105,11 @@ class ResumenesController < ApplicationController
       @resumen = Resumen.find(params[:id])
     end
     
-    Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
+    # Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
     @websites = Website.all
     @vocero = Vocero.new
     @tema = Tema.new
-    @websites.each { |website| website.importar_notas_desactualizadas}
+    # @websites.each { |website| website.importar_notas_desactualizadas}
     render :paso1 do |page|
          page.replace_html "cargando", :partial => 'barra'
     end
@@ -139,47 +139,38 @@ class ResumenesController < ApplicationController
     @websites = Website.all    
   end
   
-  def paso2_guardar
-    1/0
+  def separar
+    informe = Informe.find params[:informe_id]
+    resumen = Resumen.find params[:id]
+    if resumen
+      resumen.resumen_id = nil
+      resumen.informe_id = informe.id
+      resumen.save
+    end
+    redirect_to edit_informe_path(informe)
   end
   
-  
-  
-  
-  def fusionar # (fusionar_resumenes_ids, informe_id)
-    
-    fusionar_resumenes_ids = params[:fusionar_resumenes_ids]
-    @mensaje = "--------------fusionar_resumenes_ids:<#{fusionar_resumenes_ids}>"
-    puts @mensaje
-    primer_id = fusionar_resumenes_ids.first
-    
-    r1 = Resumen.find(primer_id)
-    fusionar_resumenes_ids.shift
-    resumenes_fusionar_ids.each do |id| 
-      r2 = Resumen.find id
-      
-      r1.titulo += r2.titulo
-      r1.contenido += r2.contenido
-      
-      r2.notas.each do |nota| 
-        nota.resumen_id = r1.id
-        unless nota.save
+  def fusionar
+    informe = Informe.find params[:informe_id] 
+    if fusionar_resumenes_ids = params[:fusionar_resumenes_ids]
+      primer_id = fusionar_resumenes_ids.first
+      r1 = Resumen.find(primer_id)
+      fusionar_resumenes_ids.shift
+      fusionar_resumenes_ids.each do |id|
+        r2 = Resumen.find id
+        r2.informe_id = nil
+        r2.resumen_id = r1.id
+        if r2.save 
+          @mensaje = "Fusión Completada Satisfactoriamente" 
+          @tipo_alerta = 'alert-success'
+        else
           @mensaje = "Error al Intentar Fusionar" 
           @tipo_alerta = 'alert-error'
-          break
         end
       end
-    end # each_resumenes_fusionar_ids
-    
-    if r1.save
-      @mensaje = "Fusión Completada Satisfactoriamente" 
-      @tipo_alerta = 'alert-success'
-    else
-      @mensaje = "Error al Intentar Fusionar" 
-      @tipo_alerta = 'alert-error'
     end
-  end
-  
+    redirect_to edit_informe_path(informe)
+  end  
   
   # DELETE /resumenes/1
   # DELETE /resumenes/1.json

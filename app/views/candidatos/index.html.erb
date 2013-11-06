@@ -18,10 +18,10 @@
     <% @candidatos.each do |candidato| %>
       <tr>
         <td><%= link_to candidato.id, candidato_path(candidato) %></td>
-        <td><%= candidato.vocero_id %></td>
-        <td><%= candidato.eleccion_id %></td>
-        <td><%= candidato.municipio_id %></td>
-        <td><%= candidato.tipo_cargo_id %></td>
+        <td><%= candidato.vocero.nombre %></td>
+        <td><%= candidato.eleccion.descripcion %></td>
+        <td><%= candidato.municipio.nombre %></td>
+        <td><%= candidato.tipo_cargo.nombre %></td>
         <td><%=l candidato.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

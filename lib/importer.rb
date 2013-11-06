@@ -917,8 +917,9 @@ module Importer
   def self.cargar_website website
     url = URI.parse website.url
     agente = Mechanize.new
-    agente.open_timeout = 1
-    agente.read_timeout = 5
+    # Importante para los tiempos
+    # agente.open_timeout = 1
+    # agente.read_timeout = 5
     begin
       return agente.get(url)
     rescue Exception => ex
