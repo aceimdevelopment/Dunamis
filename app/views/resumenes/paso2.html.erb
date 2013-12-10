@@ -54,6 +54,13 @@
 	</div>
 <% end %>
 
+<%= form_tag :action => 'paso2' do  -%>
+	<%= text_field_tag 'filtro' %>  
+	<%= submit_tag 'filtrar', :class => 'btn btn-success' do %>
+		<i class="icon-filter icon-white"></i>
+	<% end %>	
+<% end %>
+
 
 <%= render :partial => 'notas' %>
 

@@ -41,8 +41,10 @@
 			<table border="0" cellspacing="5" cellpadding="5">
 				<tr><td>
 					<%= form_tag url_for(:controller => 'resumenes', :action => 'fusionar'), :method => 'get' do %>
+						<% disabled = (action_name == 'edit') ? "disabled" : "enabled"%>
+						
 						<div style='text-align:right;'>
-							<%= submit_tag "Fusionar", :class => "btn btn-success" %>
+							<%= submit_tag "fusionar", {:class => "btn btn-success", :disabled => disabled} %>
 						</div>
 						<% @asuntos.each do |asunto| %>
 

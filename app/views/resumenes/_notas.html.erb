@@ -7,7 +7,7 @@
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
 	 	<li class= "<%= "active" if i.eql? 0 %>" style="font-size: 10px;">
-			<%= link_to "#{website.descripcion}-#{website.notas.count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
+			<%= link_to "#{website.descripcion}-#{website.notas_creados_hoy.count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
 	 	</li>
 	<%- end -%>
 	</ul>
@@ -15,8 +15,11 @@
 		<div id="myTabContent" class="tab-content">
 			<%- @websites.each_with_index do |website,i| -%>
 				<%# website.importar_notas_website unless website.carga_reciente? %>
-				<%- @notas = website.notas.where("resumen_id != ? OR resumen_id IS ?", @resumen.id, nil).order("created_at DESC") -%>
+				<%- @notas = website.notas.where("resumen_id != ? OR resumen_id IS ?", @resumen.id, nil) -%>
+				<%- @notas = @notas.where('titulo LIKE ? OR contenido LIKE ?', "%#{@filtro}%", "%#{@filtro}%") unless @filtro.blank? -%>
+				<%- @notas.order("created_at DESC")  %>
 				<div class="tab-pane fade<%=" active in" if (i.eql? 0) %>" id="<%= website.nombre %>">
+				<!-- <div class="tab-pane fade active in" id="<%# website.nombre %>"> -->
 					<table class="table table-hover">
 	        	<thead>
 	          	<tr>
@@ -52,7 +55,7 @@
 										<%# @agregar = "agregar("+nota.id.to_s+")" %>
 				            <td>
 											<%- unless (params[:controller].eql? 'resumenes') and (params[:action].eql? 'paso1') -%>
-												<%= link_to (""), {:class => 'btn btn-success btn-mini', :onclick => "return agregar(#{nota.id.to_s},#{@resumen.id.to_s})"} do %>
+												<%= link_to (""), {:class => 'btn btn-success btn-mini', :onclick => "return agregar(#{website.nombre},#{nota.id.to_s},#{@resumen.id.to_s})"} do %>
 													<i class="icon-plus icon-white"></i>
 												<% end %>
 											<% end %>
@@ -69,11 +72,12 @@
 </div>  <!-- class="bs-docs-example" -->
 
 <script type="text/javascript" charset="utf-8">
-	function agregar(id, resumen_id){
+	function agregar(website_nombre, id, resumen_id){
 		$("#"+id).hide();
 		$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
 		$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
-		location.reload();
+		// this = this+"#"+website_nombre;
+		location.form.reload();
 		return false;
 	}
 	

@@ -49,14 +49,9 @@ class InformesController < ApplicationController
   # GET /informes/new.json
   def new
 
-    require "Importer"
-    # @encabezado = " Dirección de Seguimiento de la Información Electoral \n AGENDA TEMÁTICA DE MEDIOS"
-    # @encabezado += " #{Date.today.strftime('%d de %B de %Y')} "
-    # @encabezado += "MONITOREO DE MEDIOS (de 10:00am a 05:00pm)"
-
     # Borra Todas las notas antiguas e inservibles
     # SELETE FROM `notas` WHERE (resumen_id IS NULL AND created_at <= 'Hoy')
-    Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
+    # Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
     
     @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
     temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)

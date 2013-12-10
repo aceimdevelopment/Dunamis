@@ -89,7 +89,7 @@ class ResumenesController < ApplicationController
   
   def paso1
     @resumenes_hoy = Resumen.where("created_at >= ?", Date.today)
-    
+    @filtro = params[:filtro] if params[:filtro]
     if params[:mensaje] 
       @mensaje = params[:mensaje]
       if params[:tipo].eql? "error"
@@ -136,7 +136,8 @@ class ResumenesController < ApplicationController
   
   def paso2
     @resumen = Resumen.find(params[:id])
-    @websites = Website.all    
+    @websites = Website.all
+    @filtro = params[:filtro] if params[:filtro]  
   end
   
   def separar
