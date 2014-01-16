@@ -15,7 +15,18 @@ module Dunamis
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    
+    config.after_initialize do
+      puts "Barriendo..."
 
+      # begin
+        `rake importar_website:importar_notas_website`
+      # rescue 
+        puts "** Oops! No se pudo importar! **"
+      # end
+      puts "fin de barrido"
+    end
+    
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
     config.autoload_paths += %W(#{config.root}/lib)

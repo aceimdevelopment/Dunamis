@@ -1,0 +1,42 @@
+<%# form_tag do -%>
+	<div class="input-append">
+		<%= text_field_tag 'filtro' %>
+		<%# link_to "",  {:class => 'btn btn-success', :onclick => "return filtrar()"} do %>
+		<a class="btn btn-success" onclick="return filtrar()">
+			<i class="icon-filter icon-white"></i>
+		</a>
+		<%# end %>	
+	</div>
+<%# end -%>
+<p id="text"></p>
+
+
+<script type="text/javascript" charset="utf-8">
+	function filtrar() {
+		var filtro = document.getElementById("filtro").value.toLowerCase();
+		// filtro = filtro.value.toLowerCase();
+		var trs = document.getElementsByTagName("tr");
+		var contenido = "";
+		for (var i=1;i<trs.length;i++)
+		  {
+				contenido = trs[i].cells[0].innerHTML.toLowerCase();
+				if (contenido != "#") 
+				{ 
+					contenido = contenido + trs[i].cells[1].innerHTML.toLowerCase();				
+					contenido = contenido + trs[i].cells[2].innerHTML.toLowerCase();
+					contenido = contenido + trs[i].cells[3].innerHTML.toLowerCase();
+					contenido = contenido + trs[i].cells[4].innerHTML.toLowerCase();
+					if (contenido != null && filtro != null) {
+						var match = contenido.match(filtro);					
+						if (match == null) {
+							trs[i].style.display="none";
+							document.getElementById("text").innerHTML = filtro;
+						}else {
+							trs[i].style.display="";
+						}
+					}
+				}
+			}
+		}
+	return false;
+</script>

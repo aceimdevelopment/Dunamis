@@ -1,0 +1,42 @@
+<%= form_for @resumen, :url=>{:action => @accion},  :html => { :class => 'form-actions' } do |f| %>
+
+	<div class="control-group">
+	  <%= f.label "Seleccione:", :class => 'control-label' %>
+	  <div class="controls">
+			<%# hidden_field_tag :id, @resumen.id %>
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 15%;'} %>
+			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
+				<i class="icon-plus icon-white"></i>
+				<i class="icon-user icon-white"></i>
+			<% end %>
+
+			<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:required => true, :class => 'selects2', :style => 'width: 70%;'} %>
+			<%# f.grouped_collection_select (:city, :country_id, @continents, :countries, :name, :id, :name) %>
+			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
+				<i class="icon-plus icon-white"></i>
+				<i class="icon-th-list icon-white"></i>
+			<% end %>
+			
+	  </div>
+		<% if @accion.eql? "update" %>
+			</br>
+	    <div class="controls">
+		    <%= f.label :contenido, "Contenido:", :class => 'control-label' %>
+	      <%= f.text_area :contenido, :class => 'text_area', :style => "width: 95%; height: 120px;", :prompt => "Tema" %>
+	    </div>
+		<% end %>
+	</div>
+	
+	<div class="form-actions">
+		<% if @accion.eql? "update" %>
+			<%= link_to t('.back', :default => t("helpers.links.back")),
+	              {:action => "paso1"}, :class => 'btn'  %>
+	  <% else %>
+  
+    	<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                resumenes_path, :class => 'btn' %>
+		<% end %>
+		<%= f.submit "Siguiente", :class => 'btn btn-primary' %>
+	</div>
+
+<% end %>

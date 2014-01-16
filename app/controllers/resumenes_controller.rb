@@ -88,8 +88,9 @@ class ResumenesController < ApplicationController
   end
   
   def paso1
+    @accion = "paso1_guardar"
     @resumenes_hoy = Resumen.where("created_at >= ?", Date.today)
-    @filtro = params[:filtro] if params[:filtro]
+    # @filtro = params[:filtro] if params[:filtro]
     if params[:mensaje] 
       @mensaje = params[:mensaje]
       if params[:tipo].eql? "error"
@@ -109,14 +110,13 @@ class ResumenesController < ApplicationController
     @websites = Website.all
     @vocero = Vocero.new
     @tema = Tema.new
-    # @websites.each { |website| website.importar_notas_desactualizadas}
-    render :paso1 do |page|
-         page.replace_html "cargando", :partial => 'barra'
-    end
+    # # @websites.each { |website| website.importar_notas_desactualizadas}
+    # render :paso1 do |page|
+    #      page.replace_html "cargando", :partial => 'barra'
+    # end
   end
   
   def paso1_guardar
-
     unless params[:id].blank?
       @resumen = Resumen.find(params[:id])
       @resumen.vocero_id = params[:resumen][:vocero_id]
@@ -135,9 +135,10 @@ class ResumenesController < ApplicationController
   end
   
   def paso2
+    @accion = "update"
     @resumen = Resumen.find(params[:id])
     @websites = Website.all
-    @filtro = params[:filtro] if params[:filtro]  
+    # @filtro = params[:filtro] if params[:filtro]  
   end
   
   def separar

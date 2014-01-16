@@ -36,7 +36,7 @@
   <%= link_to t('Agregar Otro Resumen'),
               {:action => 'paso1'}, :class => 'btn', data: { :disable_with => "Por favor espere..." } %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              {:action => 'paso2', :id => @resumen.id}, :class => 'btn' %>
+              {:action => "paso2/#{@resumen.id}"}, :class => 'btn' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               resumen_path(@resumen),
               :method => 'delete',

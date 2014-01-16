@@ -1,10 +1,22 @@
 desc "Importa las notas de las Websites"
 task :importar_notas_website => :environment do
-  Nota.delete_all (["resumen_id IS ? AND created_at < ?", nil, Date.today])
-  for i in(1..100)
-    puts "Vuelta: <#{i}>"
-    websites = Website.all
-    websites.each { |website| website.importar_notas_website}
-    sleep(10.minutes)
+  puts 'Iniciando Barrido...'
+  # Nota.delete_all (["resumen_id IS ? AND created_at < ?", nil, Date.today])
+  puts 'Borrando notas anteriores a hoy...'
+  for i in (1..10000)
+    puts "Inicio Vuelta: <#{i}>"
+    Website.all.each do |website|
+      begin
+        
+        puts "\tIntentando cargar paginas de:" 
+        website.importar_notas_website
+        puts "\tCarga exitosa de paginas de #{website.nombre}" 
+      rescue
+        puts "\tError al intenter importar notas de #{website.nombre}"
+        puts "Se continua la carga ..."
+      end
+    end
+    puts "Fin de vuelta <#{i}>"
+    sleep(5.minutes)
   end
 end
