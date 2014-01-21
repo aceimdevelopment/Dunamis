@@ -3,14 +3,19 @@
 	<div class="control-group">
 	  <%= f.label "Seleccione:", :class => 'control-label' %>
 	  <div class="controls">
+
 			<%# hidden_field_tag :id, @resumen.id %>
-	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 15%;'} %>
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 30%;'} %>
+	    <%# f.collection_select :vocero_id, Vocero.all.map{|v| [v.nombre, :title => image_path(v.foto)]}, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 30%;'} %>
+			<%# f.collection_select(:vocero_id, Vocero.all.map{|v| [v.nombre, :title => v.image_url(:foto)]}, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 30%;'} } %>
 			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
 				<i class="icon-plus icon-white"></i>
 				<i class="icon-user icon-white"></i>
 			<% end %>
-
-			<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:required => true, :class => 'selects2', :style => 'width: 70%;'} %>
+			
+			<%# "<img class='flag' src='http://img1.noticias24.com/1110/logo_edglobal_wmatte.gif/>" %>
+			
+			<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:required => true, :class => 'selects2', :style => 'width: 50%;'} %>
 			<%# f.grouped_collection_select (:city, :country_id, @continents, :countries, :name, :id, :name) %>
 			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
 				<i class="icon-plus icon-white"></i>
@@ -40,3 +45,15 @@
 	</div>
 
 <% end %>
+
+<script type="text/javascript" charset="utf-8">
+	function format(vocero) {
+	    //if (!vocero.id) return state.text; // optgroup
+	    return vocero.text;
+	}
+	$(".selects2").select2({
+	    formatResult: format,
+	    formatSelection: format,
+	    escapeMarkup: function(m) { return m; }
+	});
+</script>

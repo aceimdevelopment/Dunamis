@@ -22,10 +22,9 @@
 				contenido = trs[i].cells[0].innerHTML.toLowerCase();
 				if (contenido != "#") 
 				{ 
-					contenido = contenido + trs[i].cells[1].innerHTML.toLowerCase();				
-					contenido = contenido + trs[i].cells[2].innerHTML.toLowerCase();
-					contenido = contenido + trs[i].cells[3].innerHTML.toLowerCase();
-					contenido = contenido + trs[i].cells[4].innerHTML.toLowerCase();
+					for (var j=1;j<5;j++){
+						contenido = contenido + trs[i].cells[j].innerHTML.toLowerCase();	
+					}
 					if (contenido != null && filtro != null) {
 						var match = contenido.match(filtro);					
 						if (match == null) {
