@@ -12,4 +12,8 @@ class Nota < ActiveRecord::Base
   
   scope :creadas_antes, -> {where("created_at <= ?", Date.today)}
   
+  def descripcion
+    "#{website.descripcion} / #{titulo[0..20]}..."
+  end
+  
 end

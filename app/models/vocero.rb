@@ -15,7 +15,7 @@ class Vocero < ActiveRecord::Base
   def descripcion_completa
     
     # foto = asset_path 'sin_foto.png' if foto.blank?
-    "<img class='flag' src='#{foto}' style='max-width: 50px; max-height:50px;'/> #{nombre}"
+    "<img class='flag' src='#{foto}' style='max-width: 50px; max-height:50px;' alt='Imagen No Disponible'/> <span>#{nombre}</span>"
   end   
   
   

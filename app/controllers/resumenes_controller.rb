@@ -106,7 +106,7 @@ class ResumenesController < ApplicationController
       @resumen = Resumen.find(params[:id])
     end
     
-    # Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
+    Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
     @websites = Website.all
     @vocero = Vocero.new
     @tema = Tema.new

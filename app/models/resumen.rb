@@ -21,9 +21,8 @@ class Resumen < ActiveRecord::Base
       return false
     end
   end
-  
-  def descripcion
-    contenido_parcial = contenido.blank? ? "" : "#{contenido[0..40]}..."
-    "#{id}.- #{contenido_parcial}. Notas: #{notas.count} creado: #{created_at}."
+
+  def descripcion    
+    "#{vocero.nombre}: #{tema.nombre} #{"/ " + contenido[0..20] + "..." if contenido}"
   end
 end

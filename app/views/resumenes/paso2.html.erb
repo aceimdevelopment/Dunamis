@@ -1,40 +1,40 @@
 <script type="text/javascript" charset="utf-8">
 	function eliminar_nota (nota_id) {
 		$.post('/notas/update/'+nota_id+'?resumen_id=nil');
-		location.reload();
+		location.form.reload();
 		return false;
 	}
 	
+	function agregar(website_nombre, id, resumen_id){
+		$("#"+id).hide();
+		$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
+		$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
+		// this = this+"#"+website_nombre;
+		// location.form.reload();
+		$("#main").reload();
+		
+		return false;
+	}
 	
 </script>
 
 <%- model_class = Resumen -%>
+<div id="main">
+	
+	<% if @mensaje %>
+		<div class="alert <%= @tipo_alerta %>">
+		  <button type="button" class="close" data-dismiss="alert">&times;</button>
+		  <h4>Alerta:</h4>
+		  <%= @mensaje %>
+		</div>
+	<% end %>
 
-<% if @mensaje %>
-	<div class="alert <%= @tipo_alerta %>">
-	  <button type="button" class="close" data-dismiss="alert">&times;</button>
-	  <h4>Alerta:</h4>
-	  <%= @mensaje %>
-	</div>
-<% end %>
-<h4>Paso 2</h4>
+	<h4>Paso 2</h4>
 
-<div class="control-group">
-  <%= label :compiladas, "Notas Compiladas:", :class => 'control-label' %>
-  <div class="controls">
-    <%- @notas = @resumen.notas.order "updated_at DESC" -%>
-		<%- @notas.each do |nota| %>
-			<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-			<%= link_to "#", {:class => 'btn btn-mini btn-danger', :onclick => "return eliminar_nota (#{nota.id})"} do %>
-				<i class="icon-trash icon-black"></i>
-			<% end %>
-			|
-		<% end %>
-  </div>
+
+	<%= render :partial => 'form2' %>
 </div>
 
-
-<%= render :partial => 'form2' %>
 
 <%= render :partial => 'filtro' %>
 

@@ -16,12 +16,10 @@
 	</div>
 <% end %>
 <h4>Paso 1</h4>
-<h5><%= "#{@resumenes_hoy.count} Resumenes de Hoy" if @resumenes_hoy.count > 0 %></h5>
+<h5><%= "Agregados hoy: #{ pluralize(@resumenes_hoy.count, "resumen")}" if @resumenes_hoy.count > 0 %></h5>
 <%- @resumenes_hoy.each do |resumen_hoy| -%>
 	
-	<strong><%= resumen_hoy.vocero.nombre if resumen_hoy.vocero %></strong>
-	<%= resumen_hoy.descripcion %>
-
+	<%= link_to resumen_hoy.descripcion, {:action => "paso2/#{resumen_hoy.id}"}, :class => 'btn btn-link' %>
 	<%= link_to resumen_path(resumen_hoy), { :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => '¿Estas Seguro de eliminar este resumen?')) }, :class => 'btn btn-mini btn-danger', :rel => "nofollow"} do %>
 		<i class="icon-trash icon-black"></i>
 	<% end %>

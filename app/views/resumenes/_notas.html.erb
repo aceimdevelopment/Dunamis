@@ -70,14 +70,15 @@
 </div>  <!-- class="bs-docs-example" -->
 
 <script type="text/javascript" charset="utf-8">
-	function agregar(website_nombre, id, resumen_id){
-		$("#"+id).hide();
-		$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
-		$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
-		// this = this+"#"+website_nombre;
-		location.form.reload();
-		return false;
-	}
+	// function agregar(website_nombre, id, resumen_id){
+	// 	$("#"+id).hide();
+	// 	$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
+	// 	$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
+	// 	// this = this+"#"+website_nombre;
+	// 	// location.form.reload();
+	// 	$(".edit_resumen_"+resumen_id).reload();
+	// 	return false;
+	// }
 	
 	function detalle(nota_id){
 		if ($('#contenido_nota'+nota_id).css("display") == "none") { $('#contenido_nota'+nota_id).show();}
