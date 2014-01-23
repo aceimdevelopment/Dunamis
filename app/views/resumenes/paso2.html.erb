@@ -5,16 +5,27 @@
 		return false;
 	}
 	
+	// function agregar(website_nombre, id, resumen_id){
+	// 	$("#"+id).hide();
+	// 	$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
+	// 	$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
+	// 	// this = this+"#"+website_nombre;
+	// 	// location.form.reload();
+	//  $(".edit_resumen_"+resumen_id).reload();
+	// 	$("#main").load();
+	// 	
+	// 	return false;
+	// }
+
 	function agregar(website_nombre, id, resumen_id){
 		$("#"+id).hide();
 		$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
 		$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
-		// this = this+"#"+website_nombre;
-		// location.form.reload();
-		$("#main").reload();
-		
+		document.getElementById("edit_resumen_"+resumen_id).reload();
 		return false;
 	}
+
+
 	
 </script>
 
@@ -30,8 +41,6 @@
 	<% end %>
 
 	<h4>Paso 2</h4>
-
-
 	<%= render :partial => 'form2' %>
 </div>
 

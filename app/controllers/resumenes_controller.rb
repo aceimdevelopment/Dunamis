@@ -138,6 +138,8 @@ class ResumenesController < ApplicationController
     @accion = "update"
     @resumen = Resumen.find(params[:id])
     @websites = Website.all
+    @vocero = Vocero.new
+    @tema = Tema.new    
     # @filtro = params[:filtro] if params[:filtro]  
   end
   
