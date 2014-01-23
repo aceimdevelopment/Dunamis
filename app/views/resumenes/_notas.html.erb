@@ -5,7 +5,7 @@
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
 	 	<li class= "<%= "active" if i.eql? 0 %>" style="font-size: 10px;">
-			<%= link_to "#{website.descripcion}-#{website.notas_creados_hoy.count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
+			<%= link_to "#{website.descripcion}-#{website.notas.creadas_hoy.count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
 	 	</li>
 	<%- end -%>
 	</ul>
@@ -13,7 +13,7 @@
 		<div id="myTabContent" class="tab-content">
 			<%- @websites.each_with_index do |website,i| -%>
 				<%# website.importar_notas_website unless website.carga_reciente? %>
-				<%- @notas = website.notas.where("resumen_id != ? OR resumen_id IS ?", @resumen.id, nil) -%>
+				<%- @notas = website.notas.creadas_hoy_no_incluidas_en_resumen @resumen.id -%>
 				<%- @notas = @notas.where('titulo LIKE ? OR contenido LIKE ?', "%#{@filtro}%", "%#{@filtro}%") unless @filtro.blank? -%>
 				<%- @notas.order("created_at DESC")  %>
 				<div class="tab-pane fade<%=" active in" if (i.eql? 0) %>" id="<%= website.nombre %>">

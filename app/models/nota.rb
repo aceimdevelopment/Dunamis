@@ -10,7 +10,13 @@ class Nota < ActiveRecord::Base
     
   scope :creadas_hoy, -> {where("created_at >= ?", Date.today)}
   
-  scope :creadas_antes, -> {where("created_at <= ?", Date.today)}
+  scope :creadas_antes, -> {where("created_at < ?", Date.today)}
+  
+  scope :creadas_hoy_no_incluidas_en_resumen, -> resumen_id {creadas_hoy.where("resumen_id != ? OR resumen_id IS ?", resumen_id, nil)}
+  
+  def self.creadas_hoy_no_incluidas (resumen_id)
+    creadas_hoy.where("resumen_id != ? OR resumen_id IS ?", resumen_id, nil)    
+  end
   
   def descripcion
     "#{website.descripcion} / #{titulo[0..20]}..."

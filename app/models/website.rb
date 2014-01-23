@@ -8,10 +8,6 @@ class Website < ActiveRecord::Base
   has_many :tipos_webnotas
   accepts_nested_attributes_for :tipos_webnotas
   
-  def notas_creados_hoy
-    notas.where("created_at >= ?", Date.today)
-  end
-  
   def eliminar_notas_irrelevantes
     notas.each { |nota| nota.destroy unless nota.resumen_id }
   end
