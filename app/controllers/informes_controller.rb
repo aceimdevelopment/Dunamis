@@ -115,11 +115,13 @@ class InformesController < ApplicationController
     @informe = Informe.find(params[:id])      
     respond_to do |format|
       if @informe.update_attributes(params[:informe])
-        resumenes_ids.each do |id|
-          resumen = Resumen.find id
-          if resumen
-            resumen.informe_id = @informe.id
-            resumen.save
+        if resumenes_ids
+          resumenes_ids.each do |id|
+            resumen = Resumen.where(:id => id).first
+            if resumen
+              resumen.informe_id = @informe.id
+              resumen.save
+            end
           end
         end
         format.html { redirect_to @informe, notice: 'Informe was successfully updated.' }
