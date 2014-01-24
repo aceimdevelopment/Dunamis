@@ -21,7 +21,7 @@
 	  <div class="controls">
 
 			<%# hidden_field_tag :id, @resumen.id %>
-	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 30%;', :data => {:placeholder => "Seleccione Vocero"}} %>
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 30%;', :data => {:placeholder => "Seleccione Vocero"}} %>
 	    <%# f.collection_select :vocero_id, Vocero.all.map{|v| [v.nombre, :title => image_path(v.foto)]}, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 30%;'} %>
 			<%# f.collection_select(:vocero_id, Vocero.all.map{|v| [v.nombre, :title => v.image_url(:foto)]}, :id, :nombre, {:prompt => "Vocero"}, {:required => true, :class => 'selects2', :style => 'width: 30%;'} } %>
 			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
@@ -91,7 +91,7 @@
 	function format(vocero) {
 	    return vocero.text;
 	}
-	$(".selects2").select2({
+	$("#resumen_vocero_id").select2({
 	    formatResult: format,
 	    formatSelection: format,
 	    escapeMarkup: function(m) { return m; }
