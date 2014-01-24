@@ -5,7 +5,7 @@
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
 	 	<li class= "<%= "active" if i.eql? 0 %>" style="font-size: 10px;">
-			<%= link_to "#{website.descripcion}-#{website.notas.creadas_hoy.count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
+			<%= link_to "#{website.descripcion} - #{(website.notas.creadas_hoy_no_incluidas_en_resumen @resumen.id).count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
 	 	</li>
 	<%- end -%>
 	</ul>
