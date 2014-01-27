@@ -1,6 +1,6 @@
 Dunamis::Application.routes.draw do
 
-  resources :wizards do
+  resources :wizard do
     collection do
       get 'paso1'
       get 'paso2'
