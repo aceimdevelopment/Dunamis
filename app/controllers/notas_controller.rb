@@ -60,6 +60,8 @@ class NotasController < ApplicationController
     @nota = Nota.find(params[:id])
     
     @nota.resumen_id = params[:resumen_id] if params[:resumen_id]
+    @nota.tipo_nota_id = params[:tipo_nota_id] if params[:tipo_nota_id]
+    
 
     respond_to do |format|
       if @nota.update_attributes(params[:nota])

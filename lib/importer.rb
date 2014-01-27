@@ -14,8 +14,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Buscamos todos los posibles tipos de notas
     notas_web = index.search ".postGroup"
@@ -46,7 +44,7 @@ module Importer
       nota.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota.url = url
       nota.website_id = website.id
-      nota.tipo_nota_id = tipo_nota.id
+      nota.tipo_nota_id = 1
       nota.imagen = imagen.text
       nota.save
     end
@@ -62,7 +60,6 @@ module Importer
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
 
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     # Buscamos todos los posibles tipos de notas
     notas = index.search ".espacio1"
     notas += index.search ".divnoticiasn2"
@@ -112,7 +109,7 @@ module Importer
       nota_local.contenido = contenido.text.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
     end
@@ -127,8 +124,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     notas_web = index.search ".TPHomeContent"
@@ -176,7 +171,7 @@ module Importer
         nota.contenido = contenido.text.gsub(/[\t\n\r]/, '')
         nota.url = url
         nota.website_id = website.id
-        nota.tipo_nota_id = tipo_nota.id
+        nota.tipo_nota_id = 1
         nota.imagen = imagen
         nota.save
       
@@ -194,8 +189,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     
@@ -258,7 +251,7 @@ module Importer
       nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
 
@@ -273,9 +266,7 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
-
+    
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".MainNews li"
     # notas += index.search ".MainNews.MoreSummary "
@@ -315,7 +306,7 @@ module Importer
       nota_local.contenido = contenido.text.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
 
@@ -331,8 +322,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".carousel-button"    
@@ -375,7 +364,7 @@ module Importer
       nota_local.contenido = contenido.text.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
 
@@ -390,8 +379,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".item"
@@ -434,7 +421,7 @@ module Importer
       nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
 
@@ -449,8 +436,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".views-row"
@@ -491,7 +476,7 @@ module Importer
       nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
 
@@ -506,8 +491,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".pod_chorro3_hm"
@@ -554,7 +537,7 @@ module Importer
       nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
 
@@ -569,8 +552,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".views_slideshow_thumbnailhover_slide.views_slideshow_slide"
@@ -619,7 +600,7 @@ module Importer
       nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
 
@@ -635,7 +616,6 @@ module Importer
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
     unless index.nil?
-      tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
       # Se Buscan las Todas las Notas de la Web
       notas = index.search ".views-row"
@@ -683,7 +663,7 @@ module Importer
         nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
         nota_local.url = url
         nota_local.website_id = website.id
-        nota_local.tipo_nota_id = tipo_nota.id
+        nota_local.tipo_nota_id = 1
         nota_local.imagen = imagen
         nota_local.save
       end
@@ -699,8 +679,6 @@ module Importer
     
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".md-24h-nws"
@@ -749,7 +727,7 @@ module Importer
       nota_local.contenido = contenido.gsub(/[\t\n\r]/, '')
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
 
@@ -765,8 +743,6 @@ module Importer
 
     # Se Carga la Pagina Principal del WebSite
     index = cargar_website website
-    
-    tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".categorypanel"
@@ -804,7 +780,7 @@ module Importer
       nota_local.contenido = contenido if contenido
       nota_local.url = url
       nota_local.website_id = website.id
-      nota_local.tipo_nota_id = tipo_nota.id
+      nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
       
