@@ -1,0 +1,141 @@
+<%= form_tag(:action => "paso1_guardar") do %>
+
+	<div class="form-actions" style="text-align: right;">
+		<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando...", :style => "align" %>	
+	</div>
+
+<div class="control-group">
+	<ul id="myTab" class="nav nav-tabs">
+	<%- @websites.each_with_index do |website,i| -%>
+	 	<li class= "<%= "active" if i.eql? 0 %>" style="font-size: 10px;">
+			<%= link_to "#{website.descripcion}-#{(website.notas.creadas_hoy).count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
+	 	</li>
+	<%- end -%>
+	</ul>
+	<div data-spy="scroll" data-target="#myTab" data-offset="0" class="scrollspy-example">
+		<div id="myTabContent" class="tab-content">
+			<%- @websites.each_with_index do |website,i| -%>
+				<%# website.importar_notas_website unless website.carga_reciente? %>
+				<%- @notas = website.notas.creadas_hoy -%>
+				<%- @notas = @notas.where('titulo LIKE ? OR contenido LIKE ?', "%#{@filtro}%", "%#{@filtro}%") unless @filtro.blank? -%>
+				<%- @notas.order("created_at DESC")  %>
+				<div class="tab-pane fade<%=" active in" if (i.eql? 0) %>" id="<%= website.nombre %>">
+
+					<table class="table table-hover">
+	        	<thead>
+	          	<tr>
+		            <th>#</th>
+								<th>Publicación</th>
+		            <th width="450px;"><%= Resumen.human_attribute_name(:titulo) %></th>
+		            <th>Enlace</th>
+								<th>Opciones</th>
+		          </tr>
+		        </thead>
+		        <tbody>
+							<%- @notas.each_with_index do |nota,j| -%>
+			          <div>
+									<tr id="<%=nota.id%>">
+				            <td><%= j+1 %></td>
+										<td>
+											<%= nota.fecha_publicacion %>
+											<%- unless nota.imagen.blank? -%>
+												<%= image_tag nota.imagen, :title => "imagen", :class => "img-rounded", :style => 'max-width: 120px; max-height:120px;'%>
+											<% end %>
+										</td>
+				            <td>
+											<strong><%= nota.titulo %></strong>
+											<% unless nota.contenido.blank? %>
+												<%= link_to "detalle", " ", {:class => 'btn btn-mini', :onclick => "return detalle('#{nota.id}')"} %>
+												<div id="contenido_nota<%=nota.id%>", style = "display: none;">
+													<%= nota.contenido %>
+												</div>
+											<% end %>
+											
+										</td>
+				            <td><%= link_to website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %></td>
+										<%# @agregar = "agregar("+nota.id.to_s+")" %>
+				            <td>
+											<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %>
+										</td>
+				          </tr>
+								</div>
+							<% end %>
+	        	</tbody>
+	      	</table>
+				</div> <!-- class="tab-pane fade -->
+			<%- end -%>
+		</div> <!-- id="myTabContent" -->
+	</div> <!-- data-spy="scroll" -->
+</div>  <!-- class="bs-docs-example" -->
+
+  
+<% end -%>
+
+
+
+<script type="text/javascript" charset="utf-8">
+	
+	function fondo_valido(){
+		
+		$('#6786').css('background-color') = 'greenyellow';
+		return false;
+	}
+	
+	function agregar(website_nombre, id){
+		$("#"+id).hide();
+		$.post("/notas/update/"+id+"?tipo_nota_id=2");
+		// $.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
+		// this = this+"#"+website_nombre;
+		// location.form.reload();
+		// $("#main").reload();
+		// location.reload();
+	
+		return false;
+	}
+
+	// function agregar(website_nombre, id, resumen_id){
+	// 	$("#"+id).hide();
+	// 	$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
+	// 	$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
+	// 	// this = this+"#"+website_nombre;
+	// 	// location.form.reload();
+	// 	$(".edit_resumen_"+resumen_id).reload();
+	// 	return false;
+	// }
+	
+	function detalle(nota_id){
+		if ($('#contenido_nota'+nota_id).css("display") == "none") { $('#contenido_nota'+nota_id).show();}
+		else{$('#contenido_nota'+nota_id).hide();}
+		return false;
+	}
+
+	// setTimeout(function(){
+	// 
+	//     $('.progress .bar').each(function() {
+	//         var me = $(this);
+	//         var perc = me.attr("data-percentage");
+	// 
+	//         var current_perc = 0;
+	// 
+	//         var progress = setInterval(function() {
+	//             if (current_perc>=perc) {
+	//                 clearInterval(progress);
+	//             } else {
+	//                 current_perc +=1;
+	//                 me.css('width', (current_perc)+'%');
+	//             }
+	// 
+	//             me.text((current_perc)+'%');
+	// 
+	//         }, 50);
+	// 
+	//     });
+	// 
+	// 
+	// },0);
+	// 
+	
+</script>
+
+
+
