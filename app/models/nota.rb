@@ -12,7 +12,7 @@ class Nota < ActiveRecord::Base
   
   scope :creadas_antes, -> {where("created_at < ?", Date.today)}
   
-  scope :creadas_hoy_no_incluidas_en_resumen, -> resumen_id {creadas_hoy.where("resumen_id != ? OR resumen_id IS ?", resumen_id, nil)}
+  scope :creadas_hoy_no_incluidas_en_resumen, -> resumen_id {creadas_hoy.validas.where("resumen_id != ? OR resumen_id IS ?", resumen_id, nil)}
   
   scope :validas, ->{where(:tipo_nota_id => 2)}
   

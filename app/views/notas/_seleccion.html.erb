@@ -1,14 +1,16 @@
-<%= form_tag(:action => "paso1_guardar") do %>
+<%= form_tag(:action => "#{action_name}_guardar") do %>
 
+<% if action_name == "paso1" %>
 	<div class="form-actions" style="text-align: right;">
-		<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando...", :style => "align" %>	
+		<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
 	</div>
-
+<% end %>
+<%= text_field_tag "website_activa", "#{session[:website_activa]}" %>
 <div class="control-group">
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
-	 	<li class= "<%= "active" if i.eql? 0 %>" style="font-size: 10px;">
-			<%= link_to "#{website.descripcion}-#{(website.notas.creadas_hoy).count}", "##{website.nombre}", :data => {:toggle => "tab"} %>
+	 	<li class= "<%=" active" if (website.nombre.eql? session[:website_activa]) %>" style="font-size: 10px;">
+			<%= link_to "#{website.descripcion}-#{(website.notas.creadas_hoy).count}", "##{website.nombre}", :data => {:toggle => "tab"}, :onclick => "return set_website_activa('#{website.nombre}')" %>
 	 	</li>
 	<%- end -%>
 	</ul>
@@ -16,10 +18,16 @@
 		<div id="myTabContent" class="tab-content">
 			<%- @websites.each_with_index do |website,i| -%>
 				<%# website.importar_notas_website unless website.carga_reciente? %>
-				<%- @notas = website.notas.creadas_hoy -%>
-				<%- @notas = @notas.where('titulo LIKE ? OR contenido LIKE ?', "%#{@filtro}%", "%#{@filtro}%") unless @filtro.blank? -%>
-				<%- @notas.order("created_at DESC")  %>
-				<div class="tab-pane fade<%=" active in" if (i.eql? 0) %>" id="<%= website.nombre %>">
+				<% case action_name %>
+				<% when "paso1" %>
+					<%- @notas = website.notas.creadas_hoy -%>
+				<% when "paso2" %>
+					<%- @notas = website.notas.creadas_hoy.validas -%>
+				<% else %>
+					<%- @notas = website.notas.creadas_hoy_no_incluidas_en_resumen @resumen.id -%>
+				<% end %>
+								
+				<div class="tab-pane fade<%=" active in" if (website.nombre.eql? session[:website_activa]) %>" id="<%= website.nombre %>">
 
 					<table class="table table-hover">
 	        	<thead>
@@ -52,10 +60,20 @@
 											<% end %>
 											
 										</td>
-				            <td><%= link_to website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %></td>
+				            <td>
+											<%= link_to website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %></td>
 										<%# @agregar = "agregar("+nota.id.to_s+")" %>
 				            <td>
-											<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %>
+											<% case action_name %>
+											<% when "paso1" %>
+												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %>
+											<% when "paso3" %>
+												<%= link_to (""), {:class => 'btn btn-success btn-mini', :onclick => "return agregar_nota(#{website.nombre}, #{nota.id.to_s},#{@resumen.id.to_s})"} do %>
+													<i class="icon-plus icon-white"></i>
+												<% end %>
+											<% end %>
+											
+												<%# select_tag "nota_vocero_ids[#{nota.id}]", options_from_collection_for_select(Vocero.order('nombre DESC'), 'id', 'descripcion_completa' ), :class => 'voceros', prompt: "Seleccione..."%>
 										</td>
 				          </tr>
 								</div>
@@ -72,68 +90,50 @@
 <% end -%>
 
 
-
 <script type="text/javascript" charset="utf-8">
+	
+	function set_website_activa(nombre_website){
+		document.getElementById("website_activa").value = nombre_website;
+
+		return false;
+		
+	}
 	
 	function fondo_valido(){
 		
 		$('#6786').css('background-color') = 'greenyellow';
 		return false;
 	}
-	
-	function agregar(website_nombre, id){
-		$("#"+id).hide();
-		$.post("/notas/update/"+id+"?tipo_nota_id=2");
-		// $.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
-		// this = this+"#"+website_nombre;
-		// location.form.reload();
-		// $("#main").reload();
-		// location.reload();
-	
-		return false;
-	}
 
-	// function agregar(website_nombre, id, resumen_id){
-	// 	$("#"+id).hide();
-	// 	$.post("/notas/update/"+id+"?resumen_id="+resumen_id);
-	// 	$.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
-	// 	// this = this+"#"+website_nombre;
-	// 	// location.form.reload();
-	// 	$(".edit_resumen_"+resumen_id).reload();
-	// 	return false;
-	// }
-	
+	function format(vocero) {
+		return vocero.text;
+	}
+	$(".voceros").select2({
+		formatResult: format,
+		formatSelection: format,
+		escapeMarkup: function(m) { return m; }
+	});
+
+
 	function detalle(nota_id){
 		if ($('#contenido_nota'+nota_id).css("display") == "none") { $('#contenido_nota'+nota_id).show();}
 		else{$('#contenido_nota'+nota_id).hide();}
 		return false;
 	}
 
-	// setTimeout(function(){
-	// 
-	//     $('.progress .bar').each(function() {
-	//         var me = $(this);
-	//         var perc = me.attr("data-percentage");
-	// 
-	//         var current_perc = 0;
-	// 
-	//         var progress = setInterval(function() {
-	//             if (current_perc>=perc) {
-	//                 clearInterval(progress);
-	//             } else {
-	//                 current_perc +=1;
-	//                 me.css('width', (current_perc)+'%');
-	//             }
-	// 
-	//             me.text((current_perc)+'%');
-	// 
-	//         }, 50);
-	// 
-	//     });
-	// 
-	// 
-	// },0);
-	// 
+	function agregar_nota(nombre_website, nota_id, resumen_id){
+		$("#"+nota_id).hide();
+		$.post("/notas/update/"+nota_id+"?resumen_id="+resumen_id);
+		$.post("/resumenes/update/"+resumen_id+"?nota_id="+nota_id);
+		$.post("/wizard/actualizar_website_activa?website_activa="+nombre_website);
+		// this = this+"#"+website_nombre;
+		// location.form.reload();
+		// $("#main").reload();
+		location.reload();
+
+		return false;
+	}
+
 	
 </script>
 

@@ -1,7 +1,5 @@
+<h3><%= "#{action_name.capitalize} - Seleccione las Notas" %></h3>
 
-<h3 id="">
-<%= "PASO 1 - Seleccione las Notas" %>
-</h3>
-<%= "(Actualizacido Hasta: #{Nota.last.updated_at})" if @websites.first.notas %>
+<%# "(Actualizacido Hasta: #{Nota.last.updated_at})" if @websites.first.notas %>
 
 <%= render :partial => 'notas/seleccion' %>

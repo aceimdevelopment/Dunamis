@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131024151014) do
+ActiveRecord::Schema.define(:version => 20140128153611) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -140,10 +140,12 @@ ActiveRecord::Schema.define(:version => 20131024151014) do
     t.integer  "resumen_id"
     t.string   "fecha_publicacion"
     t.string   "imagen"
+    t.integer  "vocero_id"
   end
 
   add_index "notas", ["resumen_id"], :name => "index_notas_on_resumen_id"
   add_index "notas", ["tipo_nota_id"], :name => "index_notas_on_tipo_nota_id"
+  add_index "notas", ["vocero_id"], :name => "index_notas_on_vocero_id"
   add_index "notas", ["website_id"], :name => "index_notas_on_website_id"
 
   create_table "organizaciones", :force => true do |t|

@@ -1,0 +1,92 @@
+<%= form_for @resumen, :url=>{:action => "#{action_name}_guardar"},  :html => { :class => 'form-actions' } do |f| %>
+	<%= hidden_field_tag "website_activa", "#{@website_activa}" %>
+	<%= hidden_field_tag "id", @resumen.id %>
+	
+		<% if action_name.eql? "paso3" %>
+			<div class="control-group">
+			  <%= label :compiladas, "Notas Agregadas a este vocero:", :class => 'control-label' if @resumen.notas.count > 0 %>
+			  <div class="controls">
+			    <%- @notas = @resumen.notas.order "updated_at DESC" -%>
+					<%- @notas.each do |nota| %>
+						<%= link_to nota.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+						<%= link_to "#", {:class => 'btn btn-mini btn-danger', :onclick => "return eliminar_nota(#{nota.id}, #{@resumen.id})"} do %>
+							<i class="icon-trash icon-black"></i>
+						<% end %>
+						|
+					<% end %>
+			  </div>
+			</div>
+		<% end %>
+
+	<div class="control-group">
+	  <%# f.label "Seleccione:", :class => 'control-label' %>
+	  <div class="controls">
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}} %>
+
+			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
+				<i class="icon-plus icon-white"></i>
+				<i class="icon-user icon-white"></i>
+			<% end %>
+		</div>
+		
+		<div class="controls">
+			<% if action_name.eql? "paso3" %>
+				</br>
+		    <div class="controls">
+		      <%= f.text_area :contenido, :class => 'text_area', :style => "width: 95%; height: 120px;", :placeholder=>"Contenido..." %>
+		    </div>
+			<% end %>
+		</div>
+	</div>
+	
+	<div class="form-actions">
+		<table border="0" style="width: 100%;">
+			<tr>
+				<td>
+					<%- if action_name.eql? "paso2" %>
+						<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso1/#{@resumen.id}"}, :class => 'btn'%>
+					<% elsif  action_name.eql? "paso3"%>
+						<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso2"}, :class => 'btn'%>
+					<% end %>
+				</td>
+				<td >
+					<div style="text-align: right;">
+						<%= f.submit "Siguiente", :class => 'btn btn-primary'%>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+<% end %>
+
+
+<div id="vocero_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-header">
+     <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+     <h3 id="myModalLabel">Nuevo Vocero</h3>
+   </div>
+   <div class="modal-body">
+     <%= render 'voceros/form' %>
+     
+   </div>
+ </div>
+
+
+<script type="text/javascript" charset="utf-8">
+	function format(vocero) {
+	    return vocero.text;
+	}
+	$("#resumen_vocero_id").select2({
+	    formatResult: format,
+	    formatSelection: format,
+	    escapeMarkup: function(m) { return m; }
+	});
+	
+	function eliminar_nota(nota_id, resumen_id){
+		$.post('/notas/update/'+nota_id+'?resumen_id=nil');
+		$.post("/resumenes/update/"+resumen_id+"?nota_id="+nota_id+"&borrar_nota_en_contenido=1");
+		location.reload();
+		return false;
+	}
+</script>
