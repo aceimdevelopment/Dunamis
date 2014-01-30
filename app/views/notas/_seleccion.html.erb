@@ -5,12 +5,12 @@
 		<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
 	</div>
 <% end %>
-<%= text_field_tag "website_activa", "#{session[:website_activa]}" %>
+<%= text_field_tag "website_activa", @website_activa %>
 <div class="control-group">
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
 	 	<li class= "<%=" active" if (website.nombre.eql? session[:website_activa]) %>" style="font-size: 10px;">
-			<%= link_to "#{website.descripcion}-#{(website.notas.creadas_hoy).count}", "##{website.nombre}", :data => {:toggle => "tab"}, :onclick => "return set_website_activa('#{website.nombre}')" %>
+			<%= link_to "#{website.descripcion}-#{(website.notas.creadas_hoy).count}", "##{website.nombre}", :data => {:toggle => "tab"}, :onclick => "return set_website_activa('#{website.nombre.to_s}')" %>
 	 	</li>
 	<%- end -%>
 	</ul>
@@ -68,7 +68,7 @@
 											<% when "paso1" %>
 												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %>
 											<% when "paso3" %>
-												<%= link_to (""), {:class => 'btn btn-success btn-mini', :onclick => "return agregar_nota(#{website.nombre}, #{nota.id.to_s},#{@resumen.id.to_s})"} do %>
+												<%= link_to (""), {:class => 'btn btn-success btn-mini', :onclick => "return agregar_nota(#{website.nombre.to_s}, #{nota.id.to_s},#{@resumen.id.to_s})"} do %>
 													<i class="icon-plus icon-white"></i>
 												<% end %>
 											<% end %>
@@ -125,7 +125,8 @@
 		$("#"+nota_id).hide();
 		$.post("/notas/update/"+nota_id+"?resumen_id="+resumen_id);
 		$.post("/resumenes/update/"+resumen_id+"?nota_id="+nota_id);
-		$.post("/wizard/actualizar_website_activa?website_activa="+nombre_website);
+		set_website_activa(nombre_website);
+		// $.post("/wizard/actualizar_website_activa?website_activa="+nombre_website);
 		// this = this+"#"+website_nombre;
 		// location.form.reload();
 		// $("#main").reload();

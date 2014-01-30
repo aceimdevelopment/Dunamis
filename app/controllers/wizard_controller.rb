@@ -18,7 +18,7 @@ class WizardController < ApplicationController
       end
     end
     #manejo de website activa mediante el uso de la sesion
-    actualizar_website_activa
+    session[:website_activa] = params[:website_activa]
     
     redirect_to :action => "paso2"
   end
@@ -36,14 +36,14 @@ class WizardController < ApplicationController
     @websites = Website.all
     
     # Manejo de website activa mediante el uso de la sesion
-    # @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
+    @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     
     @accion = "paso2"
   end
 
   def paso2_guardar
     #manejo de website activa mediante el uso de la sesion
-    actualizar_website_activa
+    session[:website_activa] = params[:website_activa]
     
     unless params[:id].blank?
       @resumen = Resumen.find(params[:id])
@@ -63,7 +63,7 @@ class WizardController < ApplicationController
   
   def paso3
     #manejo de website activa mediante el uso de la sesion
-    # @website_activa = session[:website_activa]
+    @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     
     @resumen = Resumen.find(params[:id])
     @websites = Website.all
