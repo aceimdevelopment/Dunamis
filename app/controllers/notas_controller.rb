@@ -59,7 +59,10 @@ class NotasController < ApplicationController
   def update
     @nota = Nota.find(params[:id])
     
-    @nota.resumen_id = params[:resumen_id] if params[:resumen_id]
+    if params[:resumen_id]
+      @nota.resumen_id = params[:resumen_id]
+      session[:website_activa] = params[:nombre_website]
+    end
     @nota.tipo_nota_id = params[:tipo_nota_id] if params[:tipo_nota_id]
     
 

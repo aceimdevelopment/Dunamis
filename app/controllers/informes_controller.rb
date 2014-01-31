@@ -2,6 +2,30 @@
 class InformesController < ApplicationController
   # GET /informes
   # GET /informes.json
+  def paso1
+    # @informe = Informe.new
+    @resumenes_con_tema = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")
+
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    # @websites = Website.all
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    # respond_to do |format|
+    #   format.html # new.html.erb
+    #   format.json { render json: @informe }
+    # end    
+    
+  end
+  
+  def agregar
+    resumen = Resumen.find(params[:id])
+    resumen.tema_id = params[:resumen][:tema_id]
+    @mensaje = resumen.save ? "Agregado" : "No Agregado"
+    
+    redirect_to :action => "paso1"
+      
+  end
+  
   def index
     @informes = Informe.all
     

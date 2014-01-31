@@ -1,0 +1,24 @@
+
+<% if @mensaje %>
+	<div class="alert <%= @tipo_alerta %>">
+	  <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  <h4>Mensaje:</h4>
+	  <%= @mensaje %>
+	</div>
+<% end %>
+
+<%= render :partial => 'resumenes_con_tema' %>
+<%= render :partial => 'resumenes_sin_tema' %>
+
+<script type="text/javascript" charset="utf-8">
+	function fusionar(id){
+		// $("#"+id).hide();
+		fusionar_resumenes_ids = $('.fusionar_resumenes_ids_').text
+		$.post("/resumenes/fusionar?fusionar_resumenes_ids="+fusionar_resumenes_ids);
+		// $.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
+		location.reload();
+		return false;
+	}
+	$().button('toggle')
+</script>
+

@@ -1,3 +1,11 @@
+<% if @mensaje %>
+	<div class="alert <%= @tipo_alerta %>">
+	  <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  <h4>Alerta:</h4>
+	  <%= @mensaje %>
+	</div>
+<% end %>
+
 <%= form_for @resumen, :url=>{:action => "#{action_name}_guardar"},  :html => { :class => 'form-actions' } do |f| %>
 	<%= hidden_field_tag "website_activa", "#{@website_activa}" %>
 	<%= hidden_field_tag "id", @resumen.id %>
@@ -44,9 +52,9 @@
 			<tr>
 				<td>
 					<%- if action_name.eql? "paso2" %>
-						<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso1/#{@resumen.id}"}, :class => 'btn'%>
+						<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso1"}, :class => 'btn'%>
 					<% elsif  action_name.eql? "paso3"%>
-						<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso2"}, :class => 'btn'%>
+						<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso2/#{@resumen.id}"}, :class => 'btn'%>
 					<% end %>
 				</td>
 				<td >

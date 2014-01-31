@@ -44,6 +44,8 @@ Dunamis::Application.routes.draw do
     resources :resumenes
     collection do
       get 'enviar_por_correo'
+      get 'paso1'
+      post 'agregar'
     end
   end
 

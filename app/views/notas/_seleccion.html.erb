@@ -5,7 +5,7 @@
 		<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
 	</div>
 <% end %>
-<%= text_field_tag "website_activa", @website_activa %>
+<%= text_field_tag "website_activa", session[:website_activa] %>
 <div class="control-group">
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
@@ -21,10 +21,10 @@
 				<% case action_name %>
 				<% when "paso1" %>
 					<%- @notas = website.notas.creadas_hoy -%>
-				<% when "paso2" %>
-					<%- @notas = website.notas.creadas_hoy.validas -%>
+				<%# when "paso2" %>
+					<%# @notas = website.notas.creadas_hoy_sin_resumen -%>
 				<% else %>
-					<%- @notas = website.notas.creadas_hoy_no_incluidas_en_resumen @resumen.id -%>
+					<%- @notas = website.notas.creadas_hoy_sin_resumen -%>
 				<% end %>
 								
 				<div class="tab-pane fade<%=" active in" if (website.nombre.eql? session[:website_activa]) %>" id="<%= website.nombre %>">
@@ -68,7 +68,7 @@
 											<% when "paso1" %>
 												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %>
 											<% when "paso3" %>
-												<%= link_to (""), {:class => 'btn btn-success btn-mini', :onclick => "return agregar_nota(#{website.nombre.to_s}, #{nota.id.to_s},#{@resumen.id.to_s})"} do %>
+												<%= link_to (""), {:class => 'btn btn-success btn-mini', :onclick => "return agregar_nota(#{website.nombre}, #{nota.id.to_s},#{@resumen.id.to_s})"} do %>
 													<i class="icon-plus icon-white"></i>
 												<% end %>
 											<% end %>
@@ -94,17 +94,10 @@
 	
 	function set_website_activa(nombre_website){
 		document.getElementById("website_activa").value = nombre_website;
-
 		return false;
 		
 	}
 	
-	function fondo_valido(){
-		
-		$('#6786').css('background-color') = 'greenyellow';
-		return false;
-	}
-
 	function format(vocero) {
 		return vocero.text;
 	}
@@ -123,10 +116,9 @@
 
 	function agregar_nota(nombre_website, nota_id, resumen_id){
 		$("#"+nota_id).hide();
-		$.post("/notas/update/"+nota_id+"?resumen_id="+resumen_id);
+		$.post("/notas/update/"+nota_id+"?resumen_id="+resumen_id+"&nombre_website"+nombre_website.id);
 		$.post("/resumenes/update/"+resumen_id+"?nota_id="+nota_id);
-		set_website_activa(nombre_website);
-		// $.post("/wizard/actualizar_website_activa?website_activa="+nombre_website);
+		$.post("/wizard/actualizar_website_activa?website_activa="+nombre_website.id);
 		// this = this+"#"+website_nombre;
 		// location.form.reload();
 		// $("#main").reload();
