@@ -28,7 +28,7 @@ class WizardController < ApplicationController
     @mensaje = params[:mensaje]
     @tipo_alerta = params[:tipo_alerta]
     
-    params[:mensaje] = nil
+    # params[:mensaje] = nil
     unless params[:id]
       @resumen = Resumen.new
     else
@@ -40,8 +40,6 @@ class WizardController < ApplicationController
     
     # Manejo de website activa mediante el uso de la sesion
     @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
-    
-    @accion = "paso2"
   end
 
   def paso2_guardar
@@ -75,22 +73,72 @@ class WizardController < ApplicationController
   
   def paso3_guardar
     @resumen = Resumen.find(params[:id])
-    @resumen.vocero_id = params[:resumen][:vocero_id]
-    @resumen.contenido = params[:resumen][:contenido]
-    if @resumen.save
-      redirect_to :action => "paso2", :mensaje => "Resumen generado Satisfactoriamente", :tipo_alerta => "alert-success"#, notice: 'Resumen was successfully created.'
+    # @resumen.vocero_id = params[:resumen][:vocero_id]
+    # @resumen.contenido = params[:resumen][:contenido]
+
+    respond_to do |format|
+      if @resumen.update_attributes(params[:resumen])
+        format.html { redirect_to :action => "paso2", :params => {:mensaje => "Resumen generado Satisfactoriamente", :tipo_alerta => "alert-success"}  }
+        format.json { head :no_content }
+      else
+        format.html { render :action => "paso3", :mensaje => "Resumen no pudo ser guardado", :tipo_alerta => "alert-error"}
+        format.json { render json: @resumen.errors, status: :unprocessable_entity }
+      end
+    end
+
+
+    # if @resumen.save
+    #   redirect_to :action => "paso2", :mensaje => "Resumen generado Satisfactoriamente", :tipo_alerta => "alert-success"
+    # else
+    #   render :action => "paso3", :mensaje => "Resumen no pudo ser guardado", :tipo_alerta => "alert-error"
+    # end
+  end
+  
+  def desagregar_nota
+    nota = Nota.find params[:nota_id]
+    resumen = Resumen.find params[:resumen_id]
+    if (nota and resumen)
+      nota.resumen_id = nil
+      resumen.contenido = resumen.contenido.sub("| #{nota.titulo}",'') 
+      session[:website_activa] = params[:website_name]
+      if nota.save and resumen.save
+        redirect_to :action => "paso3/#{resumen.id}"
+      else
+        render :action => "paso3"
+      end
+      
+      
     else
-      render :action => "paso3", :mensaje => "Resumen no pudo ser guardado", :tipo_alerta => "alert-error"
+      render :action => "paso3"
+    end
+  end
+  
+  def agregar_nota
+    nota = Nota.find params[:nota_id]
+    resumen = Resumen.find params[:resumen_id]
+    if (nota and resumen)
+      nota.resumen_id =resumen.id
+      resumen.contenido = "#{resumen.contenido} | #{nota.titulo}"
+      session[:website_activa] = params[:website_name]
+      if nota.save and resumen.save
+        redirect_to :action => "paso3/#{resumen.id}"
+      else
+        render :action => "paso3"
+      end
+      
+      
+    else
+      render :action => "paso3"
     end
   end
   
   def actualizar_website_activa 
 
     puts "------------------------------------------------------------------------------------------------"
-    puts "parametro: <#{params[:website_activa]}>"
+    puts "parametro: <#{params[:id]}>"
     puts "------------------------------------------------------------------------------------------------"    
-    session[:website_activa] = params[:website_activa].to_s
-    return false
+    session[:website_activa] = params[:id]
+
     
   end
 

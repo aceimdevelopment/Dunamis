@@ -23,11 +23,11 @@
     <% @voceros.each do |vocero| %>
       <tr>
         <td><%= link_to vocero.id, vocero_path(vocero) %></td>
-        <td><%= vocero.organizacion.nombre %></td>
+        <td><%= vocero.organizacion.nombre if vocero.organizacion%></td>
         <td><%= vocero.nombre %></td>
 				<td><%= image_tag vocero.foto, :title => "foto", :class => "img-rounded", :style => 'width: 80px;'%></td>
         <td><%= vocero.descripcion %></td>
-				<td><%= vocero.tipo_cargo.nombre %></td>
+				<td><%= vocero.tipo_cargo.nombre if vocero.tipo_cargo%></td>
         <td><%=l vocero.created_at %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

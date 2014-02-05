@@ -20,28 +20,28 @@
   <div class="control-group">
     <%= f.label :foto, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :foto, :class => 'input-medium', :placeholder => "url…", :required => true %>
+      <%= f.text_field :foto, :class => 'input-medium', :placeholder => "url…" %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :descripcion, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :descripcion, :class => 'input-medium', :placeholder => "Descripcion…", :required => true %>
+      <%= f.text_field :descripcion, :class => 'input-medium', :placeholder => "Descripcion…" %>
     </div>
   </div>
-	<div class="control-group">
-    <%= f.label :tipo_cargo_id, "Cargo Actual", :class => 'control-label' %>
+	<!-- <div class="control-group">
+    <%# f.label :tipo_cargo_id, "Cargo Actual", :class => 'control-label' %>
     <div class="controls">
-      <%= f.collection_select :tipo_cargo_id, TipoCargo.all, :id, :nombre, {:prompt => true}, {:required => true} %>
+      <%# f.collection_select :tipo_cargo_id, TipoCargo.all, :id, :nombre, {:prompt => true}, {:required => true} %>
     </div>
   </div>
 
 	<div class="control-group">
-    <%= f.label :organizacion_id, :class => 'control-label' %>
+    <%# f.label :organizacion_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.collection_select :organizacion_id, Organizacion.all, :id, :nombre, {:prompt => true}, {:required => true} %>
+      <%# f.collection_select :organizacion_id, Organizacion.all, :id, :nombre, {:prompt => true}, {:required => true} %>
     </div>
-  </div>
+  </div> -->
 
   <div class="form-actions">
 		<%= f.submit nil, :class => 'btn btn-primary', data: { :disable_with => "Por favor espere..." } %>

@@ -1,14 +1,14 @@
 <%# form_tag do -%>
-	<div class="input-append" style="text-align: right;">
-		<%= text_field_tag 'filtro' %>
+	<!-- <div> -->
+		<%= text_field_tag 'filtro', nil ,{:onkeyup => "return filtrar()", :placeholder=>"Filtrar..."}%>
 		<%# link_to "",  {:class => 'btn btn-success', :onclick => "return filtrar()"} do %>
-		<a class="btn btn-success" onclick="return filtrar()">
+		<!-- <a class="btn btn-success" onclick="return filtrar()">
 			<i class="icon-filter icon-white"></i>
-		</a>
+		</a> -->
 		<%# end %>	
-	</div>
+	<!-- </div> -->
 <%# end -%>
-<p id="text"></p>
+<p id="text" style="color:grey;"></p>
 
 
 <script type="text/javascript" charset="utf-8">

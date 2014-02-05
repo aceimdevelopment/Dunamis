@@ -5,7 +5,8 @@
 		<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
 	</div>
 <% end %>
-<%= text_field_tag "website_activa", session[:website_activa] %>
+<%= hidden_field_tag "website_activa", session[:website_activa] %>
+<%= render :partial => 'resumenes/filtro' %>
 <div class="control-group">
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
@@ -20,11 +21,11 @@
 				<%# website.importar_notas_website unless website.carga_reciente? %>
 				<% case action_name %>
 				<% when "paso1" %>
-					<%- @notas = website.notas.creadas_hoy -%>
+					<%- @notas = website.notas.creadas_hoy.invalidas.sin_resumen -%>
 				<%# when "paso2" %>
 					<%# @notas = website.notas.creadas_hoy_sin_resumen -%>
 				<% else %>
-					<%- @notas = website.notas.creadas_hoy_sin_resumen -%>
+					<%- @notas = website.notas.creadas_hoy.validas.sin_resumen -%>
 				<% end %>
 								
 				<div class="tab-pane fade<%=" active in" if (website.nombre.eql? session[:website_activa]) %>" id="<%= website.nombre %>">
@@ -68,8 +69,8 @@
 											<% when "paso1" %>
 												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %>
 											<% when "paso3" %>
-												<%= link_to (""), {:class => 'btn btn-success btn-mini', :onclick => "return agregar_nota(#{website.nombre}, #{nota.id.to_s},#{@resumen.id.to_s})"} do %>
-													<i class="icon-plus icon-white"></i>
+												<%= link_to ("/wizard/agregar_nota?website_name=#{website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
+													<%= content_tag(:i, "", class: "icon-plus icon-white") %> 
 												<% end %>
 											<% end %>
 											
@@ -114,18 +115,18 @@
 		return false;
 	}
 
-	function agregar_nota(nombre_website, nota_id, resumen_id){
-		$("#"+nota_id).hide();
-		$.post("/notas/update/"+nota_id+"?resumen_id="+resumen_id+"&nombre_website"+nombre_website.id);
-		$.post("/resumenes/update/"+resumen_id+"?nota_id="+nota_id);
-		$.post("/wizard/actualizar_website_activa?website_activa="+nombre_website.id);
-		// this = this+"#"+website_nombre;
-		// location.form.reload();
-		// $("#main").reload();
-		location.reload();
-
-		return false;
-	}
+	// function agregar_nota(nombre_website, nota_id, resumen_id){
+	// 	$("#"+nota_id).hide();
+	// 	$.post("/notas/update/"+nota_id+"?resumen_id="+resumen_id+"&nombre_website"+nombre_website.id);
+	// 	$.post("/resumenes/update/"+resumen_id+"?nota_id="+nota_id);
+	// 	$.post("/wizard/actualizar_website_activa/"+nombre_website.id);
+	// 	// this = this+"#"+website_nombre;
+	// 	// location.form.reload();
+	// 	// $("#main").reload();
+	// 	location.reload();
+	// 
+	// 	return false;
+	// }
 
 	
 </script>

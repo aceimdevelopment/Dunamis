@@ -60,8 +60,11 @@ class NotasController < ApplicationController
     @nota = Nota.find(params[:id])
     
     if params[:resumen_id]
-      @nota.resumen_id = params[:resumen_id]
-      session[:website_activa] = params[:nombre_website]
+      if params[:resumen_id].eql? "-1"
+        @nota.resumen_id = nil
+      else
+        @nota.resumen_id = params[:resumen_id] 
+      end
     end
     @nota.tipo_nota_id = params[:tipo_nota_id] if params[:tipo_nota_id]
     

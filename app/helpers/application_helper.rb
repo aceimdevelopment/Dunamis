@@ -24,6 +24,19 @@ module ApplicationHelper
   #   
   # end
 
+  def notas_estructuradas resumen
+    mensaje = "<strong>"
+    mensaje += resumen.vocero.nombre
+    mensaje += ": </strong>"
+    mensaje += resumen.contenido
+    if resumen.notas
+			resumen.notas.each do |nota|
+				mensaje += link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'}
+			end
+		end
+		 
+    raw mensaje
+  end
 
   def importar_notas_websites
     require "Importer"

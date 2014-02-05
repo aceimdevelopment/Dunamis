@@ -70,9 +70,14 @@ class VocerosController < ApplicationController
   def update
     @vocero = Vocero.find(params[:id])
 
+
     respond_to do |format|
       if @vocero.update_attributes(params[:vocero])
+      if params[:controlador]  
+        format.html { redirect_to :controller => params[:controlador], :action => params[:accion], :mensaje => @mensaje, :tipo => @tipo }
+      else
         format.html { redirect_to @vocero, notice: 'Vocero was successfully updated.' }
+      end
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

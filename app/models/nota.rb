@@ -1,7 +1,7 @@
 class Nota < ActiveRecord::Base
   belongs_to :tipo_nota
   belongs_to :website
-  # belongs_to :resumen
+  belongs_to :resumen
   
   attr_accessible :contenido, :titulo, :url, :website_id, :tipo_nota_id, :resumen_id, :imagen
   validates_presence_of :titulo, :url, :website_id, :tipo_nota_id
@@ -14,7 +14,10 @@ class Nota < ActiveRecord::Base
   
   scope :creadas_hoy_no_incluidas_en_resumen, -> resumen_id {creadas_hoy.validas.where("resumen_id != ? OR resumen_id IS ?", resumen_id, nil)}
   
-  scope :creadas_hoy_sin_resumen, -> {creadas_hoy.validas.where("resumen_id IS ?", nil)}
+  # scope :creadas_hoy_sin_resumen, -> {creadas_hoy.validas.where("resumen_id IS ?", nil)}
+  scope :con_resumen, -> {where("resumen_id IS NOT ?", nil)}
+  
+  scope :sin_resumen, -> {where("resumen_id IS ?", nil)}
   
   scope :validas, ->{where(:tipo_nota_id => 2)}
   

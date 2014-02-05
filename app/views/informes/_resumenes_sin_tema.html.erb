@@ -10,26 +10,27 @@
 						<% @resumenes_sin_tema.each do |resumen| %>
 							<div id="<%= resumen.id %>">
 
-								<dd style="text-align:justify;"><strong><%= resumen.vocero.nombre %>: </strong>
-								<%= resumen.contenido %>
-								<%- if resumen.notas %>
-									<%- resumen.notas.each do |nota| -%>
-										| <%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-									<% end %>
-								<% end %>								
-								</dd>
-								<%= link_to t('.edit', :default => t("helpers.links.edit")),{:controller => 'wizard', :action => "paso2/#{resumen.id}"}, {:class => 'btn btn-mini'} %>
 								<div style = "text-align: right;background-color: #ddd; padding: 5px;">
+									
 									<%= form_for resumen, :url=>{:action => "agregar/#{resumen.id}"} do |f| %>
-										<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
-										<%# select_tag "Asunto[tema]", grouped_options_for_select({Asunto.all, :temas, :nombre, :id }) %>
-										<%# grouped_options_for_select(grouped_options) %>
 										
-										<%= link_to (""), {:id => "ver_#{resumen.id}", :class => 'btn btn-success btn-mini',:style => 'display: none;', :type => 'submit'} do %>
+										<%= link_to t('.edit', :default => t("helpers.links.edit")),{:controller => 'wizard', :action => "paso2/#{resumen.id}"}, {:class => 'btn btn-mini'} %> |
+										
+										<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
+										
+										<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
 											<i class="icon-plus icon-white"></i>
+											<i class="icon-th-list icon-white"></i>
+										<% end %>
+										
+										<%= button_tag(:id => "ver_#{resumen.id}", :class => 'btn btn-success btn-mini',:style => 'display: none;', :type => 'submit') do %>
+											<i class="icon-arrow-up icon-white"></i>
 										<% end %>
 									<% end %>
+								
+								<dd style="text-align:justify;"><%= notas_estructuradas resumen%></dd>
 								</div>
+								<br>
 							</div>	
 						<% end %><!-- each resumenes  -->
 					</li>
@@ -37,10 +38,6 @@
 			</td></tr>
 		</table>
 	</div>
-<% else %>
-	<% if @resumenes_con_tema > 0 %>
-		<h3>Se Agregaron todos los resumenes</h3>
-	<% end %>
 <% end %>
 
 <script type="text/javascript" charset="utf-8">

@@ -6,7 +6,7 @@ class InformesController < ApplicationController
     # @informe = Informe.new
     @resumenes_con_tema = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")
-
+    @tema = Tema.new
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     # @websites = Website.all
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)

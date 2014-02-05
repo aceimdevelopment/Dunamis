@@ -16,9 +16,9 @@
 			  <div class="controls">
 			    <%- @notas = @resumen.notas.order "updated_at DESC" -%>
 					<%- @notas.each do |nota| %>
-						<%= link_to nota.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-						<%= link_to "#", {:class => 'btn btn-mini btn-danger', :onclick => "return eliminar_nota(#{nota.id}, #{@resumen.id})"} do %>
-							<i class="icon-trash icon-black"></i>
+						<%= link_to nota.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>						
+						<%= link_to ("/wizard/desagregar_nota?website_name=#{nota.website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
+							<%= content_tag(:i, "", class: "icon-trash icon-black") %> 
 						<% end %>
 						|
 					<% end %>
@@ -29,11 +29,17 @@
 	<div class="control-group">
 	  <%# f.label "Seleccione:", :class => 'control-label' %>
 	  <div class="controls">
-	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}} %>
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}, :onChange => "return mostrar_edit();"} %>
 
+
+			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :id => 'boton_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
+				<%= content_tag(:i, "", class: "icon-edit icon-white") %>
+				<%= content_tag(:i, "", class: "icon-user icon-white") %>
+			<% end %>
+								
 			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
-				<i class="icon-plus icon-white"></i>
-				<i class="icon-user icon-white"></i>
+				<%= content_tag(:i, "", class: "icon-plus icon-white") %>
+				<%= content_tag(:i, "", class: "icon-user icon-white") %>
 			<% end %>
 		</div>
 		
@@ -69,7 +75,35 @@
 <% end %>
 
 
-<div id="vocero_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+
+	<div id="vocero_editar" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ 		<div class="modal-header">
+   		<button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+   		<h3 id="myModalLabel">Editar Vocero</h3>
+ 		</div>
+ 		<div class="modal-body">
+			<form accept-charset="UTF-8" action="/voceros/update/1" class="form-horizontal" id="edit_vocero" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="lrMM0/5jvr8Nxb2Dv4IFME7xQM3W0kTPcky2c8BT4D8="></div>
+
+				<div class="control-group">
+    			<label class="control-label" for="vocero_nombre">Nombre</label>
+    			<div class="controls">
+      			<input autofocus="autofocus" class="input-medium" id="vocero_nombre" name="vocero[nombre]" placeholder="nombre…" required="required" size="30" type="text">
+    			</div>
+  			</div>
+  			<div class="form-actions">
+					<input class="btn btn-primary" data-disable-with="Por favor espere..." name="commit" type="submit" value="Editar Vocero">
+
+					<input id="controlador" name="controlador" type="hidden" value="wizard">
+					<input id="accion" name="accion" type="hidden" value="paso2">
+    			<a href="" class="btn" data-dismiss="modal">Cancelar</a>
+  			</div>
+			</form>
+		</div>
+	</div>
+
+
+	<div id="vocero_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-header">
      <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
      <h3 id="myModalLabel">Nuevo Vocero</h3>
@@ -78,7 +112,7 @@
      <%= render 'voceros/form' %>
      
    </div>
- </div>
+	</div>
 
 
 <script type="text/javascript" charset="utf-8">
@@ -91,8 +125,25 @@
 	    escapeMarkup: function(m) { return m; }
 	});
 	
+	function mostrar_edit(){
+		document.getElementById("boton_vocero").style.display="";
+		return false;
+	}
+	
+	function form_editar_vocero(){
+		
+		var vocero_selected = $("#resumen_vocero_id");
+
+		// document.getElementById("vocero_nombre").value = vocero_selected.text();
+		
+		
+		document.getElementById("edit_vocero").action="/voceros/update/"+vocero_selected.val();
+		$('#vocero_editar').modal();
+		return false;
+	}
+	
 	function eliminar_nota(nota_id, resumen_id){
-		$.post('/notas/update/'+nota_id+'?resumen_id=nil');
+		$.post('/notas/update/'+nota_id+"?resumen_id=-1");
 		$.post("/resumenes/update/"+resumen_id+"?nota_id="+nota_id+"&borrar_nota_en_contenido=1");
 		location.reload();
 		return false;

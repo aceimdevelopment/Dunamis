@@ -18,13 +18,8 @@
 									<dd><u><%= tema.nombre %>:</u></dd>
 										<% resumenes.each do |resumen| %>
 											<p>
-												<dd style="text-align:justify;"><strong><%= resumen.vocero.nombre %>: </strong>
-												<%= resumen.contenido %>
-												<%- if resumen.notas %>
-													<%- resumen.notas.each do |nota| -%>
-														| <%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-													<% end %>
-												<% end %>
+												<dd style="text-align:justify;">
+												<%= notas_estructuradas resumen%>
 												<% if sub_resumenes = resumen.resumenes %>
 													<%- sub_resumenes.each do |sub_resumen| -%>
 														<%= link_to "separar", {:controller => 'resumenes', :action => 'separar', :id => sub_resumen.id,  :informe_id => @informe.id },  {:class => 'btn btn-mini'} %>
