@@ -1,7 +1,7 @@
 <%= form_tag(:action => "#{action_name}_guardar") do %>
 
 <% if action_name == "paso1" %>
-	<div class="form-actions" style="text-align: right;">
+	<div class="well well-small" style="text-align: right;">
 		<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
 	</div>
 <% end %>
@@ -21,7 +21,7 @@
 				<%# website.importar_notas_website unless website.carga_reciente? %>
 				<% case action_name %>
 				<% when "paso1" %>
-					<%- @notas = website.notas.creadas_hoy.invalidas.sin_resumen -%>
+					<%- @notas = website.notas.creadas_hoy.sin_resumen -%>
 				<%# when "paso2" %>
 					<%# @notas = website.notas.creadas_hoy_sin_resumen -%>
 				<% else %>
@@ -43,6 +43,7 @@
 		        <tbody>
 							<%- @notas.each_with_index do |nota,j| -%>
 			          <div>
+									<%- fondo = 'background-color: honeydew;' if nota.valida? %>
 									<tr id="<%=nota.id%>">
 				            <td><%= j+1 %></td>
 										<td>
@@ -67,7 +68,8 @@
 				            <td>
 											<% case action_name %>
 											<% when "paso1" %>
-												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %>
+												
+												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %> <%# , :onclick => "return pintar_fondo('#{nota.id}');" %>
 											<% when "paso3" %>
 												<%= link_to ("/wizard/agregar_nota?website_name=#{website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
 													<%= content_tag(:i, "", class: "icon-plus icon-white") %> 
@@ -92,6 +94,25 @@
 
 
 <script type="text/javascript" charset="utf-8">
+	
+	
+	// function pintar_fondo(nota_id){
+	// 	// alert(document.getElementById(nota_id).cells.item(4).setAttribute("checked") );
+	// 	var div_nota = document.getElementById(nota_id);
+	// 	// div_nota.cells.item(4).innerHTML.click();
+	// 	var valor;
+	// 
+	// 	
+	// 	if (div_nota.cells[4].getElementsByName('checkbox')){
+	// 		valor = "si"+div_nota.cells[4];
+	// 	}else{
+	// 		valor = "no"+div_nota.cells[4].getElementsByName('checkbox');
+	// 	}
+	// 		
+	// 	alert(valor);
+	// 	div_nota.style.backgroundColor = "honeydew";
+	// 	return true;		
+	// }
 	
 	function set_website_activa(nombre_website){
 		document.getElementById("website_activa").value = nombre_website;
