@@ -148,6 +148,8 @@ es:
       save: "Guardar"
       new: "Nuevo: %{model}"
       delete: "Eliminar"
+      paso1: "Paso1"
+      paso2: "Paso2"
       
   number:
     currency:

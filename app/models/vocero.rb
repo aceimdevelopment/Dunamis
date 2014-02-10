@@ -4,6 +4,9 @@ class Vocero < ActiveRecord::Base
   
   has_many :candidatos
   accepts_nested_attributes_for :candidatos
+
+  has_many :resumenes
+  accepts_nested_attributes_for :resumenes
   
   attr_accessible :descripcion, :foto, :nombre, :organizacion_id, :tipo_cargo_id
   validates :nombre, uniqueness: { case_sensitive: false }

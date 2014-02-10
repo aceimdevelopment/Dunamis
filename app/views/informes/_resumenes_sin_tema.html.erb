@@ -14,10 +14,8 @@
 									
 									<%= form_for resumen, :url=>{:action => "agregar/#{resumen.id}"} do |f| %>
 										
-										<%= link_to t('.edit', :default => t("helpers.links.edit")),{:controller => 'wizard', :action => "paso2/#{resumen.id}"}, {:class => 'btn btn-mini'} %> |
-										
 										<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
-										
+									
 										<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
 											<i class="icon-plus icon-white"></i>
 											<i class="icon-th-list icon-white"></i>
@@ -28,7 +26,9 @@
 										<% end %>
 									<% end %>
 								
-								<dd style="text-align:justify;"><%= notas_estructuradas resumen%></dd>
+								<dd style="text-align:justify;">
+									<%= notas_estructuradas resumen, "/informes/paso1" %>
+								</dd>
 								</div>
 								<br>
 							</div>	

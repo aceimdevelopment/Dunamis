@@ -72,7 +72,7 @@
 												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %> <%# , :onclick => "return pintar_fondo('#{nota.id}');" %>
 											<% when "paso3" %>
 												<%= link_to ("/wizard/agregar_nota?website_name=#{website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
-													<%= content_tag(:i, "", class: "icon-plus icon-white") %> 
+													<%= content_tag(:i, "", class: "icon-arrow-up icon-white") %> 
 												<% end %>
 											<% end %>
 											

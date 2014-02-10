@@ -26,6 +26,33 @@ class InformesController < ApplicationController
       
   end
   
+  def desagregar_resumen
+    resumen = Resumen.find(params[:id])
+    resumen.tema_id = nil
+    resumen.save 
+    redirect_to :action => "paso1"
+  end
+  
+  def paso2
+    @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
+    temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    # @websites = Website.all
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
+    
+    @informe = Informe.new
+    if @resumenes
+      @resumenes.each do |resumen|
+        resumen.informe_id = @informe.id
+        resumen.save
+      end
+    end
+    # @informe.resumen = encabezado
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @informe }
+    end    
+  end
+  
   def index
     @informes = Informe.all
     

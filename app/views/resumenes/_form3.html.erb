@@ -18,9 +18,18 @@
 					<%- @notas.each do |nota| %>
 						<%= link_to nota.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>						
 						<%= link_to ("/wizard/desagregar_nota?website_name=#{nota.website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
-							<%= content_tag(:i, "", class: "icon-trash icon-black") %> 
+							<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %> 
 						<% end %>
 						|
+					<% end %>
+			  </div>
+			</div>
+		<% elsif action_name.eql? "paso2" %>
+		  <div class="control-group">
+			  <%= label :compiladas, "Voceros con Notas:", :class => 'control-label' if @voceros.count > 0 %>
+			  <div class="controls">
+					<%- @voceros.each do |vocero| %>
+						<%= link_to vocero.nombre, "paso3/#{vocero.resumenes.last.id}", {:class => 'btn btn-success'} %>
 					<% end %>
 			  </div>
 			</div>

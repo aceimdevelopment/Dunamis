@@ -19,25 +19,30 @@
 										<% resumenes.each do |resumen| %>
 											<p>
 												<dd style="text-align:justify;">
-												<%= notas_estructuradas resumen%>
-												<% if sub_resumenes = resumen.resumenes %>
-													<%- sub_resumenes.each do |sub_resumen| -%>
-														<%= link_to "separar", {:controller => 'resumenes', :action => 'separar', :id => sub_resumen.id,  :informe_id => @informe.id },  {:class => 'btn btn-mini'} %>
-														<strong><%= "/ #{sub_resumen.vocero.nombre}:" if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </strong>
-														<%= sub_resumen.contenido %>
-														<%- if sub_resumen.notas %>
-															<%- resumen.notas.each do |nota| -%>
-																<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
-															<% end %><!-- each notas sub_resumenes  -->
-														<% end %><!-- if notas sub_resumenes  -->
-															
-													<% end %><!-- each sub_resumenes  -->
-
-												<% end %><!-- if sub_resumenes  -->
+												<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
 												
-												</dd>
-												<div style = "text-align: right;background-color: #ddd; padding: 5px;">	
-													<%= link_to t('.edit', :default => t("helpers.links.edit")),
+												<%# if sub_resumenes = resumen.resumenes %>
+													<%# sub_resumenes.each do |sub_resumen| -%>
+														<%# link_to "separar", {:controller => 'resumenes', :action => 'separar', :id => sub_resumen.id,  :informe_id => @informe.id },  {:class => 'btn btn-mini'} %>
+														<strong><%# "/ #{sub_resumen.vocero.nombre}:" if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </strong>
+														<%# sub_resumen.contenido %>
+														<%# if sub_resumen.notas %>
+															<%# resumen.notas.each do |nota| -%>
+																<%# link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
+															<%# end %><!-- each notas sub_resumenes  -->
+														<%# end %><!-- if notas sub_resumenes  -->
+															
+													<%# end %><!-- each sub_resumenes  -->
+
+												<%# end %><!-- if sub_resumenes  -->
+												
+												</dd>												
+												<div style = "text-align: right;background-color: #ddd; padding: 5px;">
+													<%= link_to ("/informes/desagregar_resumen/#{resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
+														<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %> 
+													<% end %>
+													
+													<%# link_to t('.edit', :default => t("helpers.links.edit")),
 								                      {:controller => 'wizard', :action => "paso2/#{resumen.id}"}, {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
 												</div>
 											</p>	

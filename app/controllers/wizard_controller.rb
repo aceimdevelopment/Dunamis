@@ -19,7 +19,6 @@ class WizardController < ApplicationController
     end
     #manejo de website activa mediante el uso de la sesion
     session[:website_activa] = params[:website_activa]
-    
     redirect_to :action => "paso2"
   end
   
@@ -34,7 +33,7 @@ class WizardController < ApplicationController
     else
       @resumen = Resumen.find(params[:id])
     end
-
+    @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @vocero = Vocero.new
     @websites = Website.all
     

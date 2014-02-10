@@ -160,6 +160,7 @@ class ResumenesController < ApplicationController
   end
   
   def fusionar
+    1/0
     informe = Informe.find params[:informe_id] 
     if fusionar_resumenes_ids = params[:fusionar_resumenes_ids]
       primer_id = fusionar_resumenes_ids.first
@@ -178,18 +179,20 @@ class ResumenesController < ApplicationController
         end
       end
     end
-    redirect_to edit_informe_path(informe)
+    redirect_to paso2_informe_path(informe)
   end  
   
   # DELETE /resumenes/1
   # DELETE /resumenes/1.json
   def destroy
     @resumen = Resumen.find(params[:id])
-    @resumen.notas.delete_all
+    @resumen.notas.each {|nota| nota.tipo_nota_id = 1; nota.save}
+    
     @resumen.destroy
-
+    
     respond_to do |format|
-      format.html { redirect_to paso1_resumenes_path }
+      url = params[:url] ? params[:url] : paso1_resumenes_path
+      format.html { redirect_to url }
       format.json { head :no_content }
     end
   end
