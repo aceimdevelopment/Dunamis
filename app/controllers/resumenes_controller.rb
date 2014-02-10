@@ -160,8 +160,7 @@ class ResumenesController < ApplicationController
   end
   
   def fusionar
-    1/0
-    informe = Informe.find params[:informe_id] 
+    # informe = Informe.find params[:informe_id] 
     if fusionar_resumenes_ids = params[:fusionar_resumenes_ids]
       primer_id = fusionar_resumenes_ids.first
       r1 = Resumen.find(primer_id)
@@ -179,7 +178,7 @@ class ResumenesController < ApplicationController
         end
       end
     end
-    redirect_to paso2_informe_path(informe)
+    redirect_to paso2_informe_path
   end  
   
   # DELETE /resumenes/1
