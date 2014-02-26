@@ -35,9 +35,9 @@
 	          	<tr>
 		            <th>#</th>
 								<th>Publicación</th>
-		            <th width="450px;"><%= Resumen.human_attribute_name(:titulo) %></th>
+		            <th><%= Resumen.human_attribute_name(:titulo) %></th>
 		            <th>Enlace</th>
-								<th>Opciones</th>
+								<th width="90px;">Opciones</th>
 		          </tr>
 		        </thead>
 		        <tbody>
@@ -71,6 +71,10 @@
 												
 												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %> <%# , :onclick => "return pintar_fondo('#{nota.id}');" %>
 											<% when "paso3" %>
+												<%= link_to "/#{controller_name}/invalidar/#{nota.id}?resumen_id=#{@resumen.id}&action_name=#{action_name}", :resumen_id => @resumen.id, :class => 'btn btn-mini btn-danger', :data => {:confirm => '¿Esta Seguro?', :method => 'delete'} do %>
+													<i class='icon-trash icon-black'></i>
+												<% end %>
+												|
 												<%= link_to ("/wizard/agregar_nota?website_name=#{website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
 													<%= content_tag(:i, "", class: "icon-arrow-up icon-white") %> 
 												<% end %>

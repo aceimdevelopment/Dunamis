@@ -33,7 +33,8 @@ class WizardController < ApplicationController
     else
       @resumen = Resumen.find(params[:id])
     end
-    @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    # @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @resumenes = Resumen.creados_hoy
     @vocero = Vocero.new
     @websites = Website.all
     
@@ -68,6 +69,12 @@ class WizardController < ApplicationController
     @resumen = Resumen.find(params[:id])
     @websites = Website.all
     @vocero = Vocero.new
+  end
+
+  def invalidar
+    1/0
+    @nota = Nota.find(params[:id])
+    
   end
   
   def paso3_guardar

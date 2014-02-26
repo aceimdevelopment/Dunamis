@@ -3,7 +3,7 @@ class InformesController < ApplicationController
   # GET /informes
   # GET /informes.json
   def paso1
-    # @informe = Informe.new
+    @informe = Informe.new
     @resumenes_con_tema = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")
     @tema = Tema.new
@@ -15,6 +15,20 @@ class InformesController < ApplicationController
     #   format.json { render json: @informe }
     # end    
     
+  end
+  
+  def paso1_guardar
+    informe = Informe.new
+    # informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
+    informe.save!
+    resumenes = Resumen.creados_hoy.con_tema
+    if resumenes
+      resumenes.each do |resumen|
+        resumen.informe_id = informe.id
+        resumen.save
+      end
+    end
+    redirect_to :action => "paso2/#{informe.id}"
   end
   
   def agregar
@@ -33,24 +47,46 @@ class InformesController < ApplicationController
     redirect_to :action => "paso1"
   end
   
+  
+  
   def paso2
-    @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
+    @informe = Informe.find(params[:id])
+    # @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
+    @resumenes = Resumen.where(:informe_id => @informe.id).order("vocero_id DESC")
     temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     # @websites = Website.all
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
     
-    @informe = Informe.new
-    if @resumenes
-      @resumenes.each do |resumen|
-        resumen.informe_id = @informe.id
-        resumen.save
-      end
-    end
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema
+    # if @resumenes
+    #   @resumenes.each do |resumen|
+    #     resumen.informe_id = @informe.id
+    #     resumen.save
+    #   end
+    # end
     # @informe.resumen = encabezado
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @informe }
     end    
+  end
+  
+  def paso3
+    @informe = Informe.find(params[:id])
+
+    @resumenes = Resumen.where(:informe_id => @informe.id).order("vocero_id DESC")
+    temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
+    # Ordenar
+  end
+  
+  def paso4
+    @informe = Informe.find(params[:id])
+    
+    @resumenes = Resumen.where(:informe_id => @informe.id).order("vocero_id DESC")
+    temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
+    
   end
   
   def index
@@ -110,6 +146,7 @@ class InformesController < ApplicationController
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
     
     @informe = Informe.new
+    @informe.save
     if @resumenes
       @resumenes.each do |resumen|
         resumen.informe_id = @informe.id

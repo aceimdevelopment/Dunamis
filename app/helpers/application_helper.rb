@@ -25,7 +25,7 @@ module ApplicationHelper
   #   
   # end
 
-  def notas_estructuradas resumen, url=nil
+  def notas_estructuradas resumen, url=nil, informe_id=nil
     
     mensaje = "<a href='/resumenes/#{resumen.id}?url=#{url}' class='btn btn-mini btn-danger' data-confirm='¿Esta Seguro?' data-method='delete' rel='nofollow'>
     						<i class='icon-trash icon-black'></i>
@@ -40,13 +40,14 @@ module ApplicationHelper
 
     if resumen.notas
 			resumen.notas.each do |nota|
-				mensaje += link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'}
+				mensaje += link_to_nota nota
 			end
 		end
 		
 		sub_resumenes = resumen.resumenes
 		sub_resumenes.each do |sub_resumen|
-		  mensaje += link_to "separar", {:controller => 'resumenes', :action => 'separar', :id => sub_resumen.id},  {:class => 'btn btn-mini'}	
+		  
+		  mensaje += link_to "separar", {:controller => 'resumenes', :action => "separar", :id => sub_resumen.id, :informe_id => informe_id},  {:class => 'btn btn-mini'}	if (not informe_id.nil? and action_name!="paso4")
 			mensaje +=  "<strong> / #{sub_resumen.vocero.nombre}: </strong>" if not resumen.vocero_id.eql? sub_resumen.vocero_id
 			mensaje += sub_resumen.contenido
 			if sub_resumen.notas
@@ -58,6 +59,10 @@ module ApplicationHelper
 		end		
 		
     raw mensaje
+  end
+
+  def link_to_nota nota
+    link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'}
   end
 
   def importar_notas_websites

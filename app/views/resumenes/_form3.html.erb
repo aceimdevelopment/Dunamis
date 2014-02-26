@@ -26,10 +26,10 @@
 			</div>
 		<% elsif action_name.eql? "paso2" %>
 		  <div class="control-group">
-			  <%= label :compiladas, "Voceros con Notas:", :class => 'control-label' if @voceros.count > 0 %>
+			  <%= label :compiladas, "Voceros con Notas:", :class => 'control-label' if @resumenes.count > 0 %>
 			  <div class="controls">
-					<%- @voceros.each do |vocero| %>
-						<%= link_to vocero.nombre, "paso3/#{vocero.resumenes.last.id}", {:class => 'btn btn-success'} %>
+					<%- @resumenes.each do |resumen| %>
+						<%= link_to resumen.descripcion_corta, "paso3/#{resumen.id}", {:class => 'btn btn-success'} %>
 					<% end %>
 			  </div>
 			</div>

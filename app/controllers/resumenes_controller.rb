@@ -156,11 +156,11 @@ class ResumenesController < ApplicationController
       resumen.informe_id = informe.id
       resumen.save
     end
-    redirect_to edit_informe_path(informe)
+    redirect_to :controller => 'informes', :action => "paso2/#{informe.id}"
   end
   
   def fusionar
-    # informe = Informe.find params[:informe_id] 
+    informe = Informe.find params[:informe_id] 
     if fusionar_resumenes_ids = params[:fusionar_resumenes_ids]
       primer_id = fusionar_resumenes_ids.first
       r1 = Resumen.find(primer_id)
@@ -178,7 +178,7 @@ class ResumenesController < ApplicationController
         end
       end
     end
-    redirect_to paso2_informe_path
+    redirect_to :controller => 'informes', :action => "paso2/#{informe.id}"
   end  
   
   # DELETE /resumenes/1
