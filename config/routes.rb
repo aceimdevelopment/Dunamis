@@ -1,6 +1,8 @@
 Dunamis::Application.routes.draw do
 
   
+  resources :usuarios
+
   resources :partidos
 
   resources :tipos_webnotas

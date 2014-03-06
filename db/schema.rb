@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140128153611) do
+ActiveRecord::Schema.define(:version => 20140306162202) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -250,6 +250,15 @@ ActiveRecord::Schema.define(:version => 20140128153611) do
     t.string   "nombre"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "usuarios", :force => true do |t|
+    t.string   "nombre"
+    t.string   "nombre_sesion"
+    t.string   "contrasena"
+    t.string   "correo"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "voceros", :force => true do |t|
