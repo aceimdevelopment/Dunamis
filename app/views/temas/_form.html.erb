@@ -1,15 +1,17 @@
 <%= form_for @tema, :html => { :class => 'form-horizontal' } do |f| %>
-<% if @tema.errors.any? %>
-  <div id="error_explanation">
-    <h2><%= pluralize(@tema.errors.count, "error") %> impiden el registro:</h2>
 
-    <ul>
-    <% @tema.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<!-- Errores en la validación -->
+
+  <% if @tema.errors.any? %>
+    <div class="alert fade in alert-error">
+      <h2><%= pluralize(@tema.errors.count, "error impide") %> realizar el registro:</h2>
+      <ul>
+      <% @tema.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 
   <div class="control-group">
     <%= f.label :nombre, :class => 'control-label' %>

@@ -1,15 +1,8 @@
 <%- model_class = Informe -%>
 <div class="page-header">
-  <h1><%="#{t '.title', :default => [:'helpers.titles.paso1', 'New %{model}'], :model => model_class.model_name.human.titleize} - Agrupar por temas" %></h1>
+	<h3><%= controller_name.titleize.singularize %></h3>
+  <h3><%="#{t '.title', :default => [:'helpers.titles.paso1', 'New %{model}'], :model => model_class.model_name.human.titleize} - Agrupar por temas" %></h3>
 </div>
-
-<% if @mensaje %>
-	<div class="alert <%= @tipo_alerta %>">
-	  <button type="button" class="close" data-dismiss="alert">&times;</button>
-	  <h4>Mensaje:</h4>
-	  <%= @mensaje %>
-	</div>
-<% end %>
 
 <% if @resumenes_con_tema.count > 0 %>
 	<% if @resumenes_sin_tema.count <= 0  %>

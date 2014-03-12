@@ -14,6 +14,7 @@ class WizardController < ApplicationController
       params[:notas_validas_ids].each do |nota_id|
         nota = Nota.find nota_id
         nota.tipo_nota_id = 2
+        flash[:success] = "Notas Guardadas" 
         nota.save
       end
     end
@@ -56,8 +57,10 @@ class WizardController < ApplicationController
     end
     
     if @resumen.save
+      flash[:success] = "Vocero Seleccionado" 
       redirect_to :action => "paso3/#{@resumen.id}" #, notice: 'Resumen was successfully created.'
     else
+      flash[:alert] = "No se puedo agregar el Vocero"
       render :action => "paso2"
     end
   end
@@ -72,9 +75,14 @@ class WizardController < ApplicationController
   end
 
   def invalidar
-    1/0
-    @nota = Nota.find(params[:id])
-    
+    nota = Nota.find params[:id]
+    nota.tipo_nota_id = 1
+    if nota.save
+      flash[:notice] = "Nota descartada" 
+    else
+      flash[:alert] = "La nota no pudo ser descartada"
+    end
+    redirect_to :action => "#{params[:action_name]}/#{params[:resumen_id]}"
   end
   
   def paso3_guardar
@@ -84,10 +92,12 @@ class WizardController < ApplicationController
 
     respond_to do |format|
       if @resumen.update_attributes(params[:resumen])
-        format.html { redirect_to :action => "paso2", :params => {:mensaje => "Resumen generado Satisfactoriamente", :tipo_alerta => "alert-success"}  }
+        flash[:success] = "Resumen generado correctamente"
+        format.html { redirect_to :action => "paso2"}
         format.json { head :no_content }
       else
-        format.html { render :action => "paso3", :mensaje => "Resumen no pudo ser guardado", :tipo_alerta => "alert-error"}
+        flash[:alert] = "Resumen no pudo ser guardado"
+        format.html { render :action => "paso3"}
         format.json { render json: @resumen.errors, status: :unprocessable_entity }
       end
     end
@@ -108,8 +118,10 @@ class WizardController < ApplicationController
       resumen.contenido = resumen.contenido.sub("| #{nota.titulo}",'') 
       session[:website_activa] = params[:website_name]
       if nota.save and resumen.save
+        flash[:notice] = " Nota desagregada del resumen actual" 
         redirect_to :action => "paso3/#{resumen.id}"
       else
+        flash[:alert] = "No se puedo desagregar la nota"
         render :action => "paso3"
       end
       
@@ -127,8 +139,10 @@ class WizardController < ApplicationController
       resumen.contenido = "#{resumen.contenido} | #{nota.titulo}"
       session[:website_activa] = params[:website_name]
       if nota.save and resumen.save
+        flash[:success] = " Nota agregada al resumen actual" 
         redirect_to :action => "paso3/#{resumen.id}"
       else
+        flash[:alert] = "No se puedo agregar la nota"
         render :action => "paso3"
       end
       

@@ -86,5 +86,14 @@ module ApplicationHelper
   def limpiar_notas_antiguas_inservibles
     Nota.delete_all (["resumen_id IS ? AND created_at <= ?", nil, Date.today])
   end
+  
+  def flash_class(level)
+      case level
+          when :notice then "alert alert-info"
+          when :success then "alert alert-success"
+          when :error then "alert alert-error"
+          when :alert then "alert alert-error"
+      end
+  end
 
 end

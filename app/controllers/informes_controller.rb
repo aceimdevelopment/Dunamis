@@ -28,6 +28,7 @@ class InformesController < ApplicationController
         resumen.save
       end
     end
+    flash[:success] = "Resumenes agregados al informe actual" 
     redirect_to :action => "paso2/#{informe.id}"
   end
   

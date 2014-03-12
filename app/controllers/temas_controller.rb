@@ -49,16 +49,15 @@ class TemasController < ApplicationController
       respond_to do |format|
         if params[:controlador]
           if @tema.save
-            @mensaje = "Tema Creado Satisfactoriamente"
-            @tipo = "correcto"
+            flash[:success] = "Tema Creado Satisfactoriamente"
           else
-            @mensaje = @tema.errors.full_messages.join(" | ")
-            @tipo = "error"
+            flash[:alert] = @tema.errors.full_messages.join(" | ")
           end
           format.html { redirect_to :controller => params[:controlador], :action => params[:accion], :mensaje => @mensaje, :tipo => @tipo }
         else
-          if @@tema.save
-            format.html { redirect_to @tema, notice: 'Vocero was successfully created.' }
+          if @tema.save
+            flash[:success] = "Tema Creado Satisfactoriamente" 
+            format.html { redirect_to @tema}
             format.json { render json: @tema, status: :created, location: @tema }
           else
             format.html { render action: "new" }
@@ -76,7 +75,8 @@ class TemasController < ApplicationController
 
     respond_to do |format|
       if @tema.update_attributes(params[:tema])
-        format.html { redirect_to @tema, notice: 'Tema was successfully updated.' }
+        flash[:success] = "Tema Actualizado Satisfactoriamente" 
+        format.html { redirect_to @tema}
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -92,7 +92,8 @@ class TemasController < ApplicationController
     @tema.destroy
 
     respond_to do |format|
-      format.html { redirect_to temas_url }
+      flash[:notice] = "Tema completamente eliminado"
+      format.html { redirect_to temas_url}
       format.json { head :no_content }
     end
   end
