@@ -11,7 +11,13 @@
 	<ul id="myTab" class="nav nav-tabs">
 	<%- @websites.each_with_index do |website,i| -%>
 	 	<li class= "<%=" active" if (website.nombre.eql? session[:website_activa]) %>" style="font-size: 10px;">
-			<%= link_to "#{website.descripcion}-#{(website.notas.creadas_hoy).count}", "##{website.nombre}", :data => {:toggle => "tab"}, :onclick => "return set_website_activa('#{website.nombre.to_s}')" %>
+			<% case action_name %>
+			<% when "paso1" %>
+				<% contador_notas = website.notas.creadas_hoy.sin_resumen.count %>
+			<% else %>
+				<% contador_notas = website.notas.creadas_hoy.validas.sin_resumen.count %>
+			<% end %>
+			<%= link_to "#{website.descripcion}-#{contador_notas}", "##{website.nombre}", :data => {:toggle => "tab"}, :onclick => "return set_website_activa('#{website.nombre.to_s}')" %>
 	 	</li>
 	<%- end -%>
 	</ul>

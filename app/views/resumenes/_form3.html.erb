@@ -31,7 +31,7 @@
 	<div class="control-group">
 	  <%# f.label "Seleccione:", :class => 'control-label' %>
 	  <div class="controls">
-	    <%= f.collection_select :vocero_id, Vocero.order('nombre DESC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}, :onChange => "return mostrar_edit();"} %>
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}, :onChange => "return mostrar_edit();"} %>
 
 
 			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :id => 'boton_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>

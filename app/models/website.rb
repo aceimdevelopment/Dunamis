@@ -8,6 +8,12 @@ class Website < ActiveRecord::Base
   has_many :tipos_webnotas
   accepts_nested_attributes_for :tipos_webnotas
   
+  def descripcion_con_notas
+    "#{descripcion}-#{(notas.creadas_hoy).count}"
+  end
+  
+  
+  
   def eliminar_notas_irrelevantes
     notas.each { |nota| nota.destroy unless nota.resumen_id }
   end
