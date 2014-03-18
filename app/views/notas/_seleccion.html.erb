@@ -17,7 +17,13 @@
 			<% else %>
 				<% contador_notas = website.notas.creadas_hoy.validas.sin_resumen.count %>
 			<% end %>
-			<%= link_to "#{website.descripcion}-#{contador_notas}", "##{website.nombre}", :data => {:toggle => "tab"}, :onclick => "return set_website_activa('#{website.nombre.to_s}')" %>
+			<% if contador_notas > 0 %>
+			
+				<%= link_to "##{website.nombre}", :data => {:toggle => "tab"}, :onclick => "return set_website_activa('#{website.nombre.to_s}')" do %>
+					<%= "#{website.descripcion}" %>
+					<span class="badge badge-inverse"><%= contador_notas %></span>
+				<% end %>
+			<% end %>
 	 	</li>
 	<%- end -%>
 	</ul>
@@ -43,42 +49,45 @@
 		          	<tr>
 			            <th></th>
 									<th></th>
-			            <th></th>
-			            <th></th>
 									<th width="90px;"></th>
 			          </tr>
 			        </thead>
 			        <tbody>
 								<%- @notas.each_with_index do |nota,j| -%>
-									<%- fondo = 'background-color: honeydew;' if nota.valida? %>
+									
+									<%# fondo = 'background-color: honeydew;' if nota.valida? %>
 									<tr id="<%=nota.id%>">
-				            <td><%= j+1 %></td>
+										<td><%= j+1 %></td>
 										<td>
-											<%= nota.fecha_publicacion %>
-											<%- unless nota.imagen.blank? -%>
-												<%= image_tag nota.imagen, :title => "imagen", :class => "img-rounded", :style => 'max-width: 120px; max-height:120px;'%>
-											<% end %>
-										</td>
-				            <td>
-											<strong><%= nota.titulo %></strong>
-											<% unless nota.contenido.blank? %>
-												<%= link_to "detalle", " ", {:class => 'btn btn-mini', :onclick => "return detalle('#{nota.id}')"} %>
-												<div id="contenido_nota<%=nota.id%>", style = "display: none;">
-													<%= nota.contenido %>
+											<div class="media">
+											  <%- unless nota.imagen.blank? -%>
+													<a class="pull-left">
+														<%= image_tag nota.imagen, :title => "imagen", :class => "media-object img-rounded", :style => 'max-width: 120px; max-height:120px;'%>
+											  	</a>
+												<% end %>
+											  <div class="media-body">
+											    <h5 class="media-heading"><%= nota.fecha_publicacion %> : <%= nota.titulo %></h5>
+													<%= link_nota nota %>
+											    <% unless nota.contenido.blank? %>
+														<%= link_to "detalle", " ", {:class => 'btn btn-mini', :onclick => "return detalle('#{nota.id}')"} %>
+														<div id="contenido_nota<%=nota.id%>", style = "display: none; text-align: justify;">
+															<%= nota.contenido %>
+														</div>
+													<% end %>
 												</div>
-											<% end %>
-
-										</td>
-				            <td>
-											<%= link_to website.descripcion, nota.url, :class => 'btn btn-link btn-mini', :target => '_blank' %>
-										<%# @agregar = "agregar("+nota.id.to_s+")" %>
+											</div>
 										</td>
 				            <td>
 											<% case action_name %>
 											<% when "paso1" %>
-
-												<%= check_box_tag 'notas_validas_ids[]', nota.id, nota.valida? %> <%# , :onclick => "return pintar_fondo('#{nota.id}');" %>
-												<%= nota.valida? ? "Inluido" : "Incluir" %>
+												<%# etiq = nota.valida? ? "success" : "info" %>
+												<%= check_box_tag "notas_validas_ids[]", nota.id, nota.valida? %>
+												<span class="label label-info">
+													<%= nota.valida? ? "Inluido" : "Incluir" %>
+												</span>
+												
+												<%# , :onclick => "return pintar_fondo('#{nota.id}');" %>
+												
 											<% when "paso3" %>
 												<%= link_to "/#{controller_name}/invalidar/#{nota.id}?resumen_id=#{@resumen.id}&action_name=#{action_name}", :resumen_id => @resumen.id, :class => 'btn btn-mini btn-danger', :data => {:confirm => '¿Esta Seguro?', :method => 'delete'} do %>
 													<i class='icon-trash icon-black'></i>

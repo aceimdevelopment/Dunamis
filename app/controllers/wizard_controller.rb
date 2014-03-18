@@ -2,7 +2,7 @@ class WizardController < ApplicationController
   
   def paso1
     @websites = Website.all
-    
+    @titulo = "Paso 1: Seleccione Notas"
     #manejo de website activa mediante el uso de la sesion
     @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     
@@ -24,9 +24,6 @@ class WizardController < ApplicationController
   end
   
   def paso2
-    
-    @mensaje = params[:mensaje]
-    @tipo_alerta = params[:tipo_alerta]
     
     # params[:mensaje] = nil
     unless params[:id]
@@ -66,6 +63,7 @@ class WizardController < ApplicationController
   end
   
   def paso3
+    @url = params[:url] if params[:url]
     #manejo de website activa mediante el uso de la sesion
     # @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     # session[:website_activa] = @websites.first.nombre if session[:website_activa].nil?
@@ -93,7 +91,11 @@ class WizardController < ApplicationController
     respond_to do |format|
       if @resumen.update_attributes(params[:resumen])
         flash[:success] = "Resumen generado correctamente"
-        format.html { redirect_to :action => "paso2"}
+        if params[:url]
+          format.html { redirect_to params[:url]}
+        else
+          format.html { redirect_to :action => "paso2"}
+        end
         format.json { head :no_content }
       else
         flash[:alert] = "Resumen no pudo ser guardado"

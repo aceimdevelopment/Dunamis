@@ -1,18 +1,7 @@
-<%- model_class = Informe -%>
-<div class="page-header">
-	<h3><%= controller_name.titleize.singularize %></h3>
-  <h3><%="#{t '.title', :default => [:'helpers.titles.paso1', 'New %{model}'], :model => model_class.model_name.human.titleize} - Agrupar por temas" %></h3>
-</div>
-
 <% if @resumenes_con_tema.count > 0 %>
 	<% if @resumenes_sin_tema.count <= 0  %>
 		<div style="text-align: right;">
-			
-			<%= form_tag :action => 'paso1_guardar' do %>
-				<%= hidden_field_tag "informe_id", @informe.id %> 
-				<%= submit_tag "Siguiente", :class => 'btn btn-primary'%>
-			<% end %>
-			<%# link_to "Siguiente", "paso2", :class => 'btn btn-primary', :type => "button"%>
+			<%= link_to "Siguiente", "paso2", :class => 'btn btn-primary', :style=>"text-align: right;", :type => "submit"%>
 		</div>
 	<% end %>
 	<%= render :partial => 'resumenes_con_tema'%>

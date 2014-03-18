@@ -1,14 +1,6 @@
-<%- model_class = Informe -%>
-<div class="page-header">
-	<h3><%= controller_name.titleize.singularize %></h3>
-  <h3><%="#{t '.title', :default => [:'helpers.titles.paso2', 'New %{model}'], :model => model_class.model_name.human.titleize} - Gestionar Resumenes" %></h3>
-</div>
-
 <div style = "text-align: right">
-<%= button_to "siguiente", {:action => "paso3/#{@informe.id}"}, :class => 'btn btn-primary' %>	
+<%= button_to "siguiente", {:action => "paso3"}, :class => 'btn btn-primary' %>	
 </div>
 
 <%= render :partial => 'resumenes/estructurados' %>
-
-
 <%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>

@@ -2,86 +2,63 @@
 class InformesController < ApplicationController
   # GET /informes
   # GET /informes.json
-  def paso1
-    @informe = Informe.new
-    @resumenes_con_tema = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")
-    @tema = Tema.new
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
-    # @websites = Website.all
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
-    # respond_to do |format|
-    #   format.html # new.html.erb
-    #   format.json { render json: @informe }
-    # end    
-    
-  end
-  
-  def paso1_guardar
-    informe = Informe.new
-    # informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
-    informe.save!
-    resumenes = Resumen.creados_hoy.con_tema
-    if resumenes
-      resumenes.each do |resumen|
-        resumen.informe_id = informe.id
-        resumen.save
-      end
-    end
-    flash[:success] = "Resumenes agregados al informe actual" 
-    redirect_to :action => "paso2/#{informe.id}"
-  end
+
   
   def agregar
     resumen = Resumen.find(params[:id])
     resumen.tema_id = params[:resumen][:tema_id]
-    @mensaje = resumen.save ? "Agregado" : "No Agregado"
+
+    if resumen.save
+      flash[:success] = "Resumen agregado" 
+    else
+      flash[:alert] = "Disculpe, el resumen no pudo ser agregado"
+    end
     
-    redirect_to :action => "paso1"
+    redirect_to :action => params[:accion]
       
   end
   
   def desagregar_resumen
     resumen = Resumen.find(params[:id])
     resumen.tema_id = nil
-    resumen.save 
+
+    if resumen.save
+      flash[:notice] = "Resumen desagregado" 
+    else
+      flash[:alert] = "Disculpe, el resumen no pudo ser desagregado"
+    end
     redirect_to :action => "paso1"
   end
-  
-  
-  
-  def paso2
-    @informe = Informe.find(params[:id])
-    # @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
-    @resumenes = Resumen.where(:informe_id => @informe.id).order("vocero_id DESC")
-    temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
-    # @websites = Website.all
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
+
+
+  def paso1 #Agrupar por Tema
+    @titulo = "Agrupar por Tema"
+    @resumenes_con_tema = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    @tema = Tema.new
     
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema
-    # if @resumenes
-    #   @resumenes.each do |resumen|
-    #     resumen.informe_id = @informe.id
-    #     resumen.save
-    #   end
-    # end
-    # @informe.resumen = encabezado
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @informe }
-    end    
   end
   
-  def paso3
-    @informe = Informe.find(params[:id])
-
+  def paso2 #Fusionar Resumenes
+    @titulo = "Fusionar Resumenes"
+    @resumenes = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
+  end
+  
+  def paso3 #Ordenar entre temas
+    @titulo = "Ordenar entre temas"
     @resumenes = Resumen.where(:informe_id => @informe.id).order("vocero_id DESC")
-    temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
-    # Ordenar
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")    
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
   end
   
   def paso4
+    @titulo = "Generar Informe"
     @informe = Informe.find(params[:id])
     
     @resumenes = Resumen.where(:informe_id => @informe.id).order("vocero_id DESC")

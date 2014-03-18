@@ -1,6 +1,6 @@
 
 <% if @resumenes_sin_tema.count > 0 %>
-<h3>Resumenes No Agregados</h3>
+	<h4>Resumenes No Agregados</h4>
 	<div class ="well">
 		<table border="0" cellspacing="5" cellpadding="5">
 			<tr><td>
@@ -12,7 +12,7 @@
 
 								<div style = "text-align: right;background-color: #ddd; padding: 5px;">
 									
-									<%= form_for resumen, :url=>{:action => "agregar/#{resumen.id}"} do |f| %>
+									<%= form_for resumen, :url=>{:action => "agregar/#{resumen.id}", :accion => action_name} do |f| %>
 										
 										<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
 									
@@ -27,7 +27,7 @@
 									<% end %>
 								
 								<dd style="text-align:justify;">
-									<%= notas_estructuradas resumen, "/informes/paso1" %>
+									<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
 								</dd>
 								</div>
 								<br>
