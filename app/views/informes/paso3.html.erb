@@ -1,6 +1,3 @@
-<div style = "text-align: right">
-<%= button_to "siguiente", {:action => "paso4"}, :class => 'btn btn-primary' %>	
-</div>
-
+<%= render :partial => 'wizard'%>
 <%= render :partial => 'resumenes/estructurados' %>
 <%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>

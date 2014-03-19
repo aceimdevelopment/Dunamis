@@ -59,6 +59,7 @@ $(document).ready(function() {
 // Dropdown display menu bar
 $(document).ready(function() {
 	$('.dropdown-toggle').dropdown()
+	$('.tooltip').tooltip()
 });
 	
 

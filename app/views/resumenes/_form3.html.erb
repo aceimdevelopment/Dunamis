@@ -22,7 +22,7 @@
 			  <%= label :compiladas, "Voceros con Notas:", :class => 'control-label' if @resumenes.count > 0 %>
 			  <div class="controls">
 					<%- @resumenes.each do |resumen| %>
-						<%= link_to resumen.descripcion_corta, "/#{controller_name}/paso3/#{resumen.id}", {:class => 'btn btn-success'} %>
+						<%= link_to resumen.descripcion_corta, "/#{controller_name}/paso3/#{resumen.id}", {:class => 'btn btn-link toltip', :data => {:toggle => "tooltip", :placement => "top", "original-title" => "#{resumen.descripcion}"}} %>
 					<% end %>
 			  </div>
 			</div>
@@ -123,6 +123,11 @@
 
 
 <script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('.toltip').tooltip();
+	});
+
+
 	function format(vocero) {
 	    return vocero.text;
 	}

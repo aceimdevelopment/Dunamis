@@ -2,7 +2,7 @@ class WizardController < ApplicationController
   
   def paso1
     @websites = Website.all
-    @titulo = "Paso 1: Seleccione Notas"
+    @titulo = "Paso 1 > Seleccione Notas"
     #manejo de website activa mediante el uso de la sesion
     @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     
@@ -24,7 +24,7 @@ class WizardController < ApplicationController
   end
   
   def paso2
-    
+    @titulo = "Paso 2 > Seleccione Vocero"
     # params[:mensaje] = nil
     unless params[:id]
       @resumen = Resumen.new

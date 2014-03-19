@@ -1,0 +1,25 @@
+<% case action_name %>
+<% when "paso2" %>
+	<% @atras = "paso1" %>
+	<% @siguiente = "paso3" %>
+<% when "paso3" %>
+	<% @atras = "paso2" %>
+	<% @siguiente = "paso4" %>
+<% when "paso4" %>
+	<% @atras = "paso3" %>
+<% end %>
+
+<div class="form-actions">
+	<table border="0" style="width: 100%;">
+		<tr>
+			<td>
+					<%= link_to t('.back', :default => t("helpers.links.back")), {:action => @atras}, :class => 'btn'%>
+			</td>
+			<td >
+				<div style="text-align: right;">
+					<%= link_to "siguiente", {:action => @siguiente}, :class => 'btn btn-primary' %>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
