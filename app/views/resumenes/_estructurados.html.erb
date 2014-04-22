@@ -27,7 +27,7 @@
 								<% if resumenes_final.count > 0 %> 
 								<li style = 'display:block;'>
 									<dd><strong><em><%= tema.nombre %></em></strong></dd>
-									<div class="well" style="padding: 5px; margin: 5px;">
+									<div class="well well-small">
 										<%# resumenes_final.order("titulo ASC") %>
 										<% resumenes_final.each_with_index do |resumen, i| %>
 											<% if resumen.resumen_id.nil? %>
