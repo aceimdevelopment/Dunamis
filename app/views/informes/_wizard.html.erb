@@ -9,17 +9,7 @@
 	<% @atras = "paso3" %>
 <% end %>
 
-<div class="form-actions">
-	<table border="0" style="width: 100%;">
-		<tr>
-			<td>
-					<%= link_to t('.back', :default => t("helpers.links.back")), {:action => @atras}, :class => 'btn'%>
-			</td>
-			<td >
-				<div style="text-align: right;">
-					<%= link_to "siguiente", {:action => @siguiente}, :class => 'btn btn-primary' %>
-				</div>
-			</td>
-		</tr>
-	</table>
+<div class='well'>
+	<%= link_to t('.back', :default => t("helpers.links.back")), {:action => @atras}, :class => 'btn pull-left'%>
+	<%= link_to "siguiente", {:action => @siguiente}, :class => 'btn btn-primary pull-right' %>	
 </div>

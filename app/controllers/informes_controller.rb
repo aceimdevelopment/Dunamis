@@ -33,25 +33,25 @@ class InformesController < ApplicationController
 
   def paso1 #Agrupar por Tema
     @titulo = "Agrupar por Tema"
-    @resumenes_con_tema = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")
+    @resumenes_con_tema = Resumen.creados_hoy.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema#.order("vocero_id DESC")
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @tema = Tema.new
     
   end
   
-  def paso2 #Fusionar Resumenes
-    @titulo = "Fusionar Resumenes"
-    @resumenes = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")
+  def paso2 #unir Resumenes
+    @titulo = "Unir Resumenes"
+    @resumenes = Resumen.creados_hoy.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema#.order("vocero_id DESC")
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
   end
   
   def paso3 #Ordenar entre temas
-    @titulo = "Ordenar entre temas"
-    @resumenes = Resumen.creados_hoy.con_tema.order("vocero_id DESC")
+    @titulo = "Ordenar entre Temas"
+    @resumenes = Resumen.creados_hoy.con_tema.order("orden ASC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")    
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
@@ -59,8 +59,8 @@ class InformesController < ApplicationController
   
   def paso4
     @titulo = "Generar Informe"
-    @informe = Informe.find(params[:id])  
-    @resumenes = Resumen.where(:informe_id => @informe.id).order("vocero_id DESC")
+    @informe = Informe.new
+    @resumenes = Resumen.creados_hoy.con_tema.order("orden ASC")
     temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
     
@@ -198,12 +198,12 @@ class InformesController < ApplicationController
     end
   end
 
-  # def fusionar_resumenes # (fusionar_resumenes_ids, informe_id)
-  #   primer_id = fusionar_resumenes_ids.first
+  # def unir_resumenes # (unir_resumenes_ids, informe_id)
+  #   primer_id = unir_resumenes_ids.first
   #   
   #   r1 = Resumen.find(primer_id)
-  #   fusionar_resumenes_ids.shift
-  #   resumenes_fusionar_ids.each do |id| 
+  #   unir_resumenes_ids.shift
+  #   resumenes_unir_ids.each do |id| 
   #     r2 = Resumen.find id
   #     
   #     r1.titulo += r2.titulo
@@ -212,18 +212,18 @@ class InformesController < ApplicationController
   #     r2.notas.each do |nota| 
   #       nota.resumen_id = r1.id
   #       unless nota.save
-  #         @mensaje = "Error al Intentar Fusionar" 
+  #         @mensaje = "Error al Intentar unir" 
   #         @tipo_alerta = 'alert-error'
   #         break
   #       end
   #     end
-  #   end # each_resumenes_fusionar_ids
+  #   end # each_resumenes_unir_ids
   #   
   #   if r1.save
   #     @mensaje = "Fusión Completada Satisfactoriamente" 
   #     @tipo_alerta = 'alert-success'
   #   else
-  #     @mensaje = "Error al Intentar Fusionar" 
+  #     @mensaje = "Error al Intentar unir" 
   #     @tipo_alerta = 'alert-error'
   #   end
   # end

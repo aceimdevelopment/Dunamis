@@ -1,44 +1,47 @@
 
-<% if @resumenes_sin_tema.count > 0 %>
-	<h4>Resumenes No Agregados</h4>
-	<div class ="well">
-		<table border="0" cellspacing="5" cellpadding="5">
-			<tr><td>
-				<ul>
-					<li style = 'display:block;'>
-						
-						<% @resumenes_sin_tema.each do |resumen| %>
-							<div id="<%= resumen.id %>">
+<li class="span7">
+  <div class="thumbnail">
+		<div class="caption">
+			<h3>Resúmenes Pendientes por Asignar Tema</h3>
+		</div>
+		<% if @resumenes_sin_tema.count > 0 %>
+			<div class ="well">
+				<table border="0" cellspacing="5" cellpadding="5">
+					<tr><td>
+						<ul>
+							<li style = 'display:block;'>
 
-								<div style = "text-align: right;background-color: #ddd; padding: 5px;">
-									
-									<%= form_for resumen, :url=>{:action => "agregar/#{resumen.id}", :accion => action_name} do |f| %>
-										
-										<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
-									
-										<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
-											<i class="icon-plus icon-white"></i>
-											<i class="icon-th-list icon-white"></i>
-										<% end %>
-										
-										<%= button_tag(:id => "ver_#{resumen.id}", :class => 'btn btn-success btn-mini',:style => 'display: none;', :type => 'submit') do %>
-											<i class="icon-arrow-up icon-white"></i>
-										<% end %>
-									<% end %>
-								
-								<dd style="text-align:justify;">
-									<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-								</dd>
-								</div>
-								<br>
-							</div>	
-						<% end %><!-- each resumenes  -->
-					</li>
-				</ul>
-			</td></tr>
-		</table>
-	</div>
-<% end %>
+								<% @resumenes_sin_tema.each do |resumen| %>
+									<div id="<%= resumen.id %>" class="well" style="padding: 5px; margin: 5px;">
+
+											<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+											<%= form_for resumen, :url=>{:action => "agregar/#{resumen.id}", :accion => action_name} do |f| %>
+												<div style = "text-align: right;background-color: #ddd; padding: 5px;">
+													<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
+
+													<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
+														<i class="icon-plus icon-white"></i>
+														<i class="icon-th-list icon-white"></i>
+													<% end %>
+
+													<%= button_tag(:id => "ver_#{resumen.id}", :class => 'btn btn-success btn-mini',:style => 'display: none;', :type => 'submit') do %>
+														<i class="icon-arrow-right icon-white"></i>
+													<% end %>
+												</div>
+											<% end %>
+									</div>	
+								<% end %><!-- each resumenes  -->
+							</li>
+						</ul>
+					</td></tr>
+				</table>
+			</div>
+		<% end %>
+
+  </div>
+</li>
+
+<!-- Javascript -->
 
 <script type="text/javascript" charset="utf-8">
 	function ver_agregar(resumen){

@@ -40,11 +40,11 @@
 		<div class ="well">
 			<table border="0" cellspacing="5" cellpadding="5">
 				<tr><td>
-					<%= form_tag url_for(:controller => 'resumenes', :action => 'fusionar'), :method => 'get' do %>
+					<%= form_tag url_for(:controller => 'resumenes', :action => 'unir'), :method => 'get' do %>
 						<% disabled = (action_name == 'edit') ? "disabled" : "enabled"%>
 						
 						<div style='text-align:right;'>
-							<%= submit_tag "fusionar", {:class => "btn btn-success", :disabled => disabled} %>
+							<%= submit_tag "unir", {:class => "btn btn-success", :disabled => disabled} %>
 						</div>
 						<% @asuntos.each do |asunto| %>
 
@@ -63,7 +63,7 @@
 													<p>
 														<%= hidden_field_tag "informe_id", @informe.id %> 
 														<%# hidden_field_tag "resumenes_ids[]", resumen.id %> 
-														<!-- <input type="checkbox" id="inlineCheckbox1" value="option1" > fusionar														 -->
+														<!-- <input type="checkbox" id="inlineCheckbox1" value="option1" > unir														 -->
 
 														<dd style="text-align:justify;"><strong><%= resumen.vocero.nombre %>: </strong>
 														<%= resumen.contenido %>
@@ -92,10 +92,10 @@
 															<%= link_to t('.edit', :default => t("helpers.links.edit")),
 										                      {:controller => 'resumenes', :action => 'paso2', :id => resumen.id}, {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
 															<span class="label label-success">
-																<%= check_box_tag "fusionar_resumenes_ids[]", resumen.id %>
-																Fusionar
+																<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
+																unir
 															</span>
-															<!-- <button type="button" class="btn btn-primary" data-toggle="button" value="option1">Fusionar</button>	 -->
+															<!-- <button type="button" class="btn btn-primary" data-toggle="button" value="option1">unir</button>	 -->
 														</div>
 													</p>	
 												<% end %>
@@ -112,10 +112,10 @@
 
 
 <script type="text/javascript" charset="utf-8">
-	function fusionar(id){
+	function unir(id){
 		// $("#"+id).hide();
-		fusionar_resumenes_ids = $('.fusionar_resumenes_ids_').text
-		$.post("/resumenes/fusionar?fusionar_resumenes_ids="+fusionar_resumenes_ids);
+		unir_resumenes_ids = $('.unir_resumenes_ids_').text
+		$.post("/resumenes/unir?unir_resumenes_ids="+unir_resumenes_ids);
 		// $.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
 		location.reload();
 		return false;

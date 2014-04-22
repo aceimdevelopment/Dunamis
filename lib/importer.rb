@@ -4,50 +4,51 @@ module Importer
   require 'uri'
   require 'mechanize'
   
-  def self.import_notas_noticias24
+  def self.limpio text
+    text.gsub(/[\t\n\r]/, '')
+  end
+
+  def self.importar_notas_noticias24
+    
     website = Website.find_by_nombre("noticias24")
-    puts website.nombre
-    
-
-    # Eliminando las notas no asociadas a algun resumen
-    # website.eliminar_notas_irrelevantes
-    
-    # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
-    
-    # Buscamos todos los posibles tipos de notas
+    index = cargar_website website.url
     notas_web = index.search ".postGroup"
-
-    notas_web.each do |nota_web|
-
-      # buscamos el título
-      titulo = nota_web.search(".post h2 a")
-      
-      # Buscamos Contenido o resumen de la Nota
-      contenido = nota_web.search(".post")
-      contenido = contenido.text unless contenido.blank?
-      
-      # Buscamos la imagen
-      imagen = nota_web.search(".post img")
-      imagen = imagen.attr "src" unless imagen.blank?
-      
-      fecha = nota_web.search(".postTime p")
-      fecha = nota_web.search(".postTime") if fecha.blank?
-      fecha = fecha.text
-      
-      url = (titulo.attr "href").value unless titulo.blank?
-      titulo = titulo.text
-      
-      nota = Nota.new
-      nota.titulo = titulo.gsub(/[\t\n\r]/, '')
-      nota.fecha_publicacion = fecha
-      nota.contenido = contenido.gsub(/[\t\n\r]/, '')
-      nota.url = url
-      nota.website_id = website.id
-      nota.tipo_nota_id = 1
-      nota.imagen = imagen.text
-      nota.save
-    end
+    index = cargar_website "#{website.url}venezuela/"
+    notas_web += index.search ".initialPost"
+    
+     notas_web.each do |nota_web|
+       # Creación del Hast para la Nota
+       nota_temp = Hash.new
+       nota_temp[:website_id] = website.id
+       nota_temp[:tipo_nota_id] = 1
+       
+       # Gestión de titulo y url
+       nota_temp[:titulo] = nota_web.search("a")
+       nota_temp[:url] = (nota_temp[:titulo].attr "href").value unless nota_temp[:titulo].blank?
+       nota_temp[:url] = website.url + nota_temp[:url] unless nota_temp[:url].include? website.url
+       nota_temp[:titulo] = (limpio nota_temp[:titulo].text) unless nota_temp[:titulo].blank?
+       
+       # Gestión de Resumen de la nota
+       nota_temp[:contenido] = nota_web.search(".post")
+       nota_temp[:contenido] = nota_web.search("p") if nota_temp[:contenido].blank?
+       nota_temp[:contenido] = (limpio nota_temp[:contenido].text) unless nota_temp[:contenido].blank?
+       
+       # Gestión de la Imagen
+       nota_temp[:imagen] = nota_web.search(".post img")
+       nota_temp[:imagen] = nota_web.search("img") if nota_temp[:imagen].blank?
+       nota_temp[:imagen] = (nota_temp[:imagen].attr "src").text unless nota_temp[:imagen].blank?
+       
+       # Gestión de la Fecha de publicación
+       nota_temp[:fecha_publicacion] = nota_web.search(".postTime p")
+       nota_temp[:fecha_publicacion] = nota_web.search(".postTime") if nota_temp[:fecha_publicacion].blank?
+       nota_temp[:fecha_publicacion] = nota_web.search(".postMeta") if nota_temp[:fecha_publicacion].blank?
+       nota_temp[:fecha_publicacion] = (limpio nota_temp[:fecha_publicacion].text) unless nota_temp[:fecha_publicacion].blank?
+       
+       # Crear Nota
+       Nota.create nota_temp
+       
+     end
+    
   end
   
   def self.import_notas_globovision
@@ -58,19 +59,23 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
 
     # Buscamos todos los posibles tipos de notas
-    notas = index.search ".espacio1"
+    notas = index.search ".thumbnail_videos"    
+    notas += index.search ".noticia_ultimahora"
+    notas += index.search ".espacio1"
     notas += index.search ".divnoticiasn2"
     notas += index.search ".divnoticiasn4"
     notas += index.search ".divnoticiasn5"
-    
+
     notas.each do |nota|
       # buscamos el título
       titulo = nota.search("h1 a")
       titulo = nota.search("h2 a") if titulo.blank?
       titulo = nota.search(".h3titulo") if titulo.blank?
+      titulo = nota.search(".sumariovideo a") if titulo.blank?
+      titulo = nota.search("a") if titulo.blank?
       
       # buscamos url de la Nota
       url = (titulo.attr "href").value unless titulo.blank?
@@ -79,7 +84,12 @@ module Importer
       
       # Título en texto plano
       titulo = titulo.text
+      
+      # titulo = "Video: " + titulo if nota.values[0].eql? "thumbnail_videos"
+      # titulo = "Última hora: " + titulo if nota.values[0].eql? "noticia_ultimahora"
+      # titulo = "Principal: " + titulo if nota.values[0].eql? "espacio1"
 
+      
       # Buscamos Contenido o resumen de la Nota      
       contenido = nota.search(".sumario_nota p")
       contenido = nota.search(".sumarioh3 p") if contenido.blank?
@@ -87,14 +97,30 @@ module Importer
       contenido = nota.search("ctl10_lblMostra") if contenido.blank?      
       
       #buscamos fecha
-      fecha = nota.search(".h5s")      
-      fecha = fecha.text  
+      fecha = nota.search(".h5s")
+      fecha = nota.search(".h6s") if fecha.blank?
+      fecha = fecha.text unless fecha.blank?
+      # fecha = "Video" if fecha.blank?
+
+			case nota.values[0]
+			when "thumbnail_videos"
+			  titulo = "Video: " + titulo
+			  fecha = ""
+			when "noticia_ultimahora"
+			  titulo = "Última hora: " + titulo
+			when "espacio1"
+			  titulo = "Principal: " + titulo
+			end
       
       #tratamientop de imagen
       imagen = nota.search(".divnoticiasn2img")
       imagen = nota.search(".divnoticiasn4img") if imagen.blank?
-      imagen = imagen.attr "src" unless imagen.blank?
-      imagen = imagen.text
+      imagen = nota.search("img") if imagen.blank?
+      if imagen.count > 1
+        imagen = imagen.last.attr "src"
+      else  
+        imagen = imagen.text
+      end
       
       # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
       # puts "Titulo: #{titulo}\n"
@@ -123,7 +149,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas_web = index.search ".TPHomeContent"
@@ -143,7 +169,8 @@ module Importer
       unless contenido.blank? && titulo.blank?
         # Si la Nota tiene titulo y contenido
         href = titulo.attr "href"
-        url = "#{website.url}#{(href).value}" if href
+        url = href.value if href
+        url = website.url + url unless url.include? website.url
         
         titulo = titulo.text
         
@@ -155,7 +182,8 @@ module Importer
         imagen = nota_web.search "img"
         imagen = imagen.attr "src" unless imagen.blank?
         imagen = imagen.text
-        imagen = "http://www1.unionradio.net#{imagen}" unless imagen.blank?
+        # imagen = "http://www1.unionradio.net#{imagen}" unless imagen.blank?
+        
 
         # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"
         # puts "Titulo: #{titulo}\n"
@@ -188,7 +216,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     
@@ -265,7 +293,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".MainNews li"
@@ -321,7 +349,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".carousel-button"    
@@ -378,7 +406,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".item"
@@ -435,7 +463,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".views-row"
@@ -490,7 +518,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".pod_chorro3_hm"
@@ -551,7 +579,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".views_slideshow_thumbnailhover_slide.views_slideshow_slide"
@@ -614,7 +642,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     unless index.nil?
     
       # Se Buscan las Todas las Notas de la Web
@@ -678,7 +706,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".md-24h-nws"
@@ -734,7 +762,6 @@ module Importer
     end
   end
 
-
   def self.import_notas_rnv
     website = Website.find_by_nombre "rnv"
     puts website.nombre
@@ -742,7 +769,7 @@ module Importer
     # website.eliminar_notas_irrelevantes
 
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website
+    index = cargar_website website.url
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".categorypanel"
@@ -811,7 +838,7 @@ module Importer
   #   # website.eliminar_notas_irrelevantes
   # 
   #   # Se Carga la Pagina Principal del WebSite
-  #   index = cargar_website website
+  #   index = cargar_website website.url
   #   
   #   tipo_nota = TipoNota.find_by_nombre("Nota de Prensa")
   #   
@@ -890,8 +917,8 @@ module Importer
 # page2 = page.link_with(:href => cunas_fichas_url).click
 
   
-  def self.cargar_website website
-    url = URI.parse website.url
+  def self.cargar_website url
+    url = URI.parse url
     agente = Mechanize.new
     # Importante para los tiempos
     # agente.open_timeout = 1

@@ -42,7 +42,7 @@ class Website < ActiveRecord::Base
   end
 
   def importar_notas_website 
-    Importer.import_notas_noticias24 if nombre.eql? "noticias24"
+    Importer.importar_notas_noticias24 if nombre.eql? "noticias24"
     Importer.import_notas_globovision if nombre.eql? "globovision"
     Importer.import_notas_union_radio if nombre.eql? "unionradio"
     Importer.import_notas_noticierodigital if nombre.eql? "noticierodigital"

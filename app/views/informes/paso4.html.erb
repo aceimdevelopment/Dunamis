@@ -1,24 +1,21 @@
-<%- model_class = Informe -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
-</div>
 
 <%= form_for @informe, :html => { :class => 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :fecha, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.date_select :fecha, :class => 'date_select' %>
-    </div>
+  <div class="well">
+		<p>
+			Total de Notas:
+			<%= @resumenes.count %>
+		</p>
   </div>
 		
 	<div class ="well">
 		<div style = "text-align:center;">
 			<strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong>
 			<strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong>
-			<% fecha = @informe.fecha ? @informe.fecha : Date.today %>
-			<strong><h6><%= fecha.strftime('%A, %d de %B de %Y')%></h6></strong>
-			<%= f.date_select :fecha, :class => 'date_select', :style => "width:60px;" %>
-			
+			<div class='well' style='padding:5px; margin:5px;'>
+				<% fecha = @informe.fecha ? @informe.fecha : Date.today %>
+				<strong><h6><%= fecha.strftime('%A, %d de %B de %Y')%></h6></strong>
+				<%= f.date_select :fecha, :class => 'date_select', :style => "width:60px;" %>
+			</div>
 			
 			<strong>
 				<h6 style = "background-color: black; color: white;">

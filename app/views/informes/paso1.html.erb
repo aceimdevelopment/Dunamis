@@ -1,16 +1,16 @@
-<% if @resumenes_con_tema.count > 0 %>
-	<% if @resumenes_sin_tema.count <= 0  %>
-		<div style="text-align: right;">
-			<%= link_to "Siguiente", "paso2", :class => 'btn btn-primary', :style=>"text-align: right;", :type => "submit"%>
-		</div>
-	<% end %>
-	<%= render :partial => 'resumenes_con_tema'%>
+<% if (@resumenes_sin_tema.count <= 0 and @resumenes_con_tema.count > 0) %>
+	<div class='well'>
+		<%= link_to "Siguiente", "paso2", :class => 'btn btn-primary pull-right', :style=>"text-align: right;", :type => "submit"%>
+	</div>
 <% end %>
-	<%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>
-
-  
-
-
+<div class='row'>
+	<ul class="thumbnails">
+		<%= render :partial => 'resumenes_sin_tema' %>
+		<%= render :partial => 'resumenes_con_tema' %>
+	</ul>	
+</div>	
+	
+<!-- Modal de Tema -->
 <div id="tema_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
@@ -22,12 +22,12 @@
   </div>
 </div>
 
-
+<!-- Javascript -->
 <script type="text/javascript" charset="utf-8">
-	function fusionar(id){
+	function unir(id){
 		// $("#"+id).hide();
-		fusionar_resumenes_ids = $('.fusionar_resumenes_ids_').text
-		$.post("/resumenes/fusionar?fusionar_resumenes_ids="+fusionar_resumenes_ids);
+		unir_resumenes_ids = $('.unir_resumenes_ids_').text
+		$.post("/resumenes/unir?unir_resumenes_ids="+unir_resumenes_ids);
 		// $.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
 		location.reload();
 		return false;

@@ -1,59 +1,53 @@
-<% if @asuntos %>
-<h4>Resumenes Agregados</h4>
-	<div class ="well">
-		<table border="0" cellspacing="5" cellpadding="5">
-			<tr><td>
-				<% @asuntos.each do |asunto| %>
 
-					<% temas = asunto.temas %>
-					<% if temas.count > 0 %> 
-						</br>
-						<dd><em><strong><%= asunto.nombre %></strong></em></dd>
-						</br>
-						<ul>
-							<% temas.each do |tema| %>
-								<% resumenes = @resumenes_con_tema.where(:tema_id => tema.id) %>
-								<% if resumenes.count > 0 %> 
-								<li style = 'display:block;'>
-									<dd><u><%= tema.nombre %>:</u></dd>
-										<% resumenes.each do |resumen| %>
-											<p>
-												<dd style="text-align:justify;">
-												<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-												
-												<%# if sub_resumenes = resumen.resumenes %>
-													<%# sub_resumenes.each do |sub_resumen| -%>
-														<%# link_to "separar", {:controller => 'resumenes', :action => 'separar', :id => sub_resumen.id,  :informe_id => @informe.id },  {:class => 'btn btn-mini'} %>
-														<strong><%# "/ #{sub_resumen.vocero.nombre}:" if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </strong>
-														<%# sub_resumen.contenido %>
-														<%# if sub_resumen.notas %>
-															<%# resumen.notas.each do |nota| -%>
-																<%# link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
-															<%# end %><!-- each notas sub_resumenes  -->
-														<%# end %><!-- if notas sub_resumenes  -->
-															
-													<%# end %><!-- each sub_resumenes  -->
+<li class="span7">
+  <div class="thumbnail">
+		<div class="caption">
+			<h3>Resúmenes con Temas Asignados</h3>
+		</div>
+		<% if @asuntos %>
+			<div class ="well">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr><td>
+						<% @asuntos.each do |asunto| %>
 
-												<%# end %><!-- if sub_resumenes  -->
-												
-												</dd>												
-												<div style = "text-align: right;background-color: #ddd; padding: 5px;">
-													<%= link_to ("/informes/desagregar_resumen/#{resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
-														<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %> 
-													<% end %>
-													
-													<%# link_to t('.edit', :default => t("helpers.links.edit")),
-								                      {:controller => 'wizard', :action => "paso2/#{resumen.id}"}, {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
+							<% temas = asunto.temas %>
+							<% if temas.count > 0 %> 
+								</br>
+								<dd><em><strong><%= asunto.nombre %></strong></em></dd>
+								</br>
+								<ul>
+									<% temas.each do |tema| %>
+										<% resumenes = @resumenes_con_tema.where(:tema_id => tema.id) %>
+										<% if resumenes.count > 0 %> 
+										<li style = 'display:block;'>
+											<dd><u><%= tema.nombre %></u></dd>
+												<div class="well" style="padding: 5px; margin: 5px;">
+													<% resumenes.each do |resumen| %>
+														<div class="well" style="padding: 5px; margin: 5px;">
+															<p>
+																<dd style="text-align:justify;">
+																<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+
+																</dd>												
+																<div style = "text-align: right;background-color: #ddd; padding: 5px;">
+																	<%= link_to ("/informes/desagregar_resumen/#{resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
+																		<%= content_tag(:i, "", class: "icon-arrow-left icon-black") %> 
+																	<% end %>
+
+																</div>
+															</p>
+														</div>
+													<% end %><!-- each resumenes  -->
 												</div>
-											</p>	
-										<% end %><!-- each resumenes  -->
-									</li>
-								<% end %>	<!-- if resumenes > 0  -->
-							<% end %><!-- each temas  -->
-						</ul>
-					<% end %><!-- if temas  -->
-				<% end %><!-- each asuntos  -->
-			</td></tr>
-		</table>
-	</div>
-<% end %>
+											</li>
+										<% end %>	<!-- if resumenes > 0  -->
+									<% end %><!-- each temas  -->
+								</ul>
+							<% end %><!-- if temas  -->
+						<% end %><!-- each asuntos  -->
+					</td></tr>
+				</table>
+			</div>
+		<% end %>
+  </div>
+</li>

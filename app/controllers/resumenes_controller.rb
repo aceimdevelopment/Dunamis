@@ -157,13 +157,13 @@ class ResumenesController < ApplicationController
     redirect_to :controller => 'informes', :action => "paso2"
   end
   
-  def fusionar
+  def unir
     # informe = Informe.find params[:informe_id] 
-    if fusionar_resumenes_ids = params[:fusionar_resumenes_ids]
-      primer_id = fusionar_resumenes_ids.first
+    if unir_resumenes_ids = params[:unir_resumenes_ids]
+      primer_id = unir_resumenes_ids.first
       r1 = Resumen.find(primer_id)
-      fusionar_resumenes_ids.shift
-      fusionar_resumenes_ids.each do |id|
+      unir_resumenes_ids.shift
+      unir_resumenes_ids.each do |id|
         r2 = Resumen.find id
         r2.informe_id = nil
         r2.resumen_id = r1.id
@@ -171,13 +171,25 @@ class ResumenesController < ApplicationController
           @mensaje = "Fusión Completada Satisfactoriamente" 
           @tipo_alerta = 'alert-success'
         else
-          @mensaje = "Error al Intentar Fusionar" 
+          @mensaje = "Error al Intentar unir" 
           @tipo_alerta = 'alert-error'
         end
       end
     end
     redirect_to :controller => 'informes', :action => "paso2"
   end  
+  
+  def ordenar
+    orden_resumen = params[:orden_resumenes]
+    orden_resumen.each_pair do |k,v|
+      resumen = Resumen.find k
+      resumen.orden = v
+      unless resumen.save
+        flash[:alert] = "No se Pudo ordenar el tema"
+      end
+    end
+    redirect_to :controller => 'informes', :action => "paso3"
+  end
   
   # DELETE /resumenes/1
   # DELETE /resumenes/1.json

@@ -11,7 +11,7 @@ module ResumenesHelper
 		sub_resumenes = resumen.resumenes
 		sub_resumenes.each do |sub_resumen|
 		  
-		  mensaje += link_to "separar", {:controller => 'resumenes', :action => "separar", :id => sub_resumen.id, :informe_id => informe_id},  {:class => 'btn btn-mini'}	#if (not informe_id.nil? and action_name!="paso4")
+		  mensaje += link_to "separar", {:controller => 'resumenes', :action => "separar", :id => sub_resumen.id, :informe_id => informe_id},  {:class => 'btn btn-mini'} if action_name.eql? "paso2"	#if (not informe_id.nil? and action_name!="paso4")
 			mensaje +=  "<strong> / #{sub_resumen.vocero.nombre}: </strong>" if not resumen.vocero_id.eql? sub_resumen.vocero_id
 			mensaje += sub_resumen.contenido
 			mensaje += enlaces_notas sub_resumen
@@ -35,9 +35,9 @@ module ResumenesHelper
   def enlaces_notas resumen
     mensaje = ""
     if resumen.notas
-			resumen.notas.each do |nota|
+			resumen.notas.each_with_index do |nota,i|
 				mensaje += link_nota nota
-				mensaje += "|"
+				mensaje += "-" if i < resumen.notas.count-1
 			end
 		end
 		return mensaje

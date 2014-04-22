@@ -1,46 +1,55 @@
 <div class ="well">
-	<table border="0" cellspacing="5" cellpadding="5">
+	<table border="0" cellspacing="0" cellpadding="0">
 		<tr><td>
-			<%= form_tag url_for(:controller => 'resumenes', :action => 'fusionar'), :method => 'get' do %>
+			<% if action_name=="paso2" %>
+				<% @proceso = 'unir' %>
+			<% else %>
+			  <% @proceso = 'ordenar' %>
+			<% end %>
+			
+			<%= form_tag url_for(:controller => 'resumenes', :action => @proceso), :method => 'post' do %>
 				<%# hidden_field_tag "informe_id", @informe.id %> 
-				<div style='text-align:right;'>
-					<%= submit_tag "fusionar", {:class => "btn btn-success"} if (action_name=="paso2" and controller_name=="informes")%>
-				</div>
+				<% if ((action_name=="paso2" or action_name=="paso3")  and controller_name=="informes") %>
+					<div class= 'pull-right'>
+						<%= submit_tag @proceso, {:class => "btn btn-success"} %>
+					</div>
+				<% end %>
 				<% @asuntos.each do |asunto| %>
 
 					<% temas = asunto.temas %>
 					<% if temas.count > 0 %> 
 						</br>
-						<dd><em><strong><%= asunto.nombre %></strong></em></dd>
+						<dd><u><%= asunto.nombre %></u></dd>
 						</br>
 						<ul>
 							<% temas.each do |tema| %>
-								<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
+								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
 								<% if resumenes_final.count > 0 %> 
 								<li style = 'display:block;'>
-									<dd><u><%= tema.nombre %>:</u></dd>
+									<dd><strong><em><%= tema.nombre %></em></strong></dd>
+									<div class="well" style="padding: 5px; margin: 5px;">
+										<%# resumenes_final.order("titulo ASC") %>
 										<% resumenes_final.each_with_index do |resumen, i| %>
 											<% if resumen.resumen_id.nil? %>
-												<% resumen.orden = i %>
-												<%# resumen.save %>
-												<%= "id = #{resumen.orden} - #{resumen.id}" %>
-												<p>
-												
+												<div class="well" style="padding: 5px; margin: 5px;">
+													<% resumen.orden = i+1 if resumen.orden.nil? %>
 													<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-												
-													<div style = "text-align: right;background-color: #ddd; padding: 5px;">
-														<% if (action_name=="paso2" and controller_name=="informes") %>
-														
+													<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso3") %>
+														<div style = "text-align: right;background-color: #ddd; padding: 5px;">
 															<span class="label label-success">
-																<%= check_box_tag "fusionar_resumenes_ids[]", resumen.id %>
-																Fusionar
+																<% if (action_name=="paso2" and controller_name=="informes") %>
+																	<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
+																<% elsif (action_name=="paso3" and controller_name=="informes") and resumenes_final.count > 1 %>
+																	<%= number_field_tag "orden_resumenes[#{resumen.id}]", resumen.orden, :in => 1...resumenes_final.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
+																<% end %>
+																<%= @proceso if @proceso %>
 															</span>
-													
-														<% end %>
-													</div>
-												</p>
+														</div>
+													<% end %>
+												</div>
 											<% end %>
 										<% end %>
+										</div>
 									</li>
 								<% end %>	
 							<% end %>
