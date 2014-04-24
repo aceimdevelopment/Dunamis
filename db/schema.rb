@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140314193523) do
+ActiveRecord::Schema.define(:version => 20140423191002) do
 
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
@@ -119,6 +119,16 @@ ActiveRecord::Schema.define(:version => 20140314193523) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "informes_temas", :force => true do |t|
+    t.integer  "informe_id", :null => false
+    t.integer  "tema_id",    :null => false
+    t.integer  "orden"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "informes_temas", ["informe_id", "tema_id"], :name => "index_informes_temas_on_informe_id_and_tema_id", :unique => true
 
   create_table "municipios", :force => true do |t|
     t.integer  "estado_id"

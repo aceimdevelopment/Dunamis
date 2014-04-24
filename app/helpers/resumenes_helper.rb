@@ -4,7 +4,8 @@ module ResumenesHelper
   def notas_estructuradas resumen, url=nil, informe_id=nil
     
     # Se agregan los botones de editar y eliminar resumen
-    mensaje = crud_botones resumen, url
+    mensaje = ""
+    mensaje += crud_botones resumen, url unless (action_name=="paso4" and controller_name=="informes")
     mensaje += " <strong> #{resumen.vocero.nombre}: </strong>"
     mensaje += resumen.contenido if resumen.contenido
     mensaje += enlaces_notas resumen 

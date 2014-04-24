@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  informe_id: 1
+  tema_id: 1
+  orden: 1
+
+two:
+  informe_id: 1
+  tema_id: 1
+  orden: 1

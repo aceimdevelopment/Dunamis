@@ -1,0 +1,40 @@
+<%= form_for @informe, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="well">
+		<p>
+			Total de Notas:
+			<%= @resumenes.count %>
+		</p>
+  </div>
+		
+	<div class ="well">
+		<div style = "text-align:center;">
+			<strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong>
+			<strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong>
+			<div class='well' style='padding:5px; margin:5px;'>
+				<% fecha = @informe.fecha ? @informe.fecha : Date.today %>
+				<strong><h6><%= fecha.strftime('%A, %d de %B de %Y')%></h6></strong>
+				<%= f.date_select :fecha, :class => 'date_select', :style => "width:60px;" %>
+			</div>
+			
+			<strong>
+				<h6 style = "background-color: black; color: white;">
+					MONITOREO DE MEDIOS (de 10:00am a 04:00pm)
+					<%# f.text_field :titulo, :value => "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)", :class=> "span5" %> 
+				</h6>
+			</strong>				
+		</div>
+		
+    <%= f.text_area :resumen, :cols => 12, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :style => "height:100px;"%>
+		<% @resumenes.collect do |r| %>
+			<%= hidden_field_tag "resumenes_ids[]", r.id %> 
+		<% end %>
+		
+	  <div class="form-actions" style = "text-align: right">
+	    <%= f.submit nil, :class => 'btn btn-primary' %>
+	    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+	                informes_path, :class => 'btn' %>
+	  </div>
+	</div>
+<% end %>
+
+<%= render :partial => 'resumenes/estructurados' %>

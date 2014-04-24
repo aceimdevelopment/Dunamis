@@ -1,9 +1,10 @@
 <div class ="well">
 	<table border="0" cellspacing="0" cellpadding="0">
 		<tr><td>
-			<% if action_name=="paso2" %>
+			<% case action_name %>
+			<% when "paso2" %>
 				<% @proceso = 'unir' %>
-			<% else %>
+			<% when "paso3" %>
 			  <% @proceso = 'ordenar' %>
 			<% end %>
 			
@@ -17,7 +18,7 @@
 				<% @asuntos.each do |asunto| %>
 
 					<% temas = asunto.temas %>
-					<% if temas.count > 0 %> 
+					<% if temas.count > 0 %>
 						</br>
 						<dd><u><%= asunto.nombre %></u></dd>
 						</br>
@@ -25,30 +26,35 @@
 							<% temas.each do |tema| %>
 								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
 								<% if resumenes_final.count > 0 %> 
-								<li style = 'display:block;'>
-									<dd><strong><em><%= tema.nombre %></em></strong></dd>
-									<div class="well well-small">
-										<%# resumenes_final.order("titulo ASC") %>
-										<% resumenes_final.each_with_index do |resumen, i| %>
-											<% if resumen.resumen_id.nil? %>
-												<div class="well" style="padding: 5px; margin: 5px;">
-													<% resumen.orden = i+1 if resumen.orden.nil? %>
-													<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-													<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso3") %>
-														<div style = "text-align: right;background-color: #ddd; padding: 5px;">
-															<span class="label label-success">
-																<% if (action_name=="paso2" and controller_name=="informes") %>
-																	<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
-																<% elsif (action_name=="paso3" and controller_name=="informes") and resumenes_final.count > 1 %>
-																	<%= number_field_tag "orden_resumenes[#{resumen.id}]", resumen.orden, :in => 1...resumenes_final.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
-																<% end %>
-																<%= @proceso if @proceso %>
-															</span>
-														</div>
-													<% end %>
-												</div>
+									<li style = 'display:block;'>
+										<dd><strong><em><%= tema.nombre %></em></strong>
+											<% if (controller_name=="informes" and action_name=="paso4") %>
+												<%= number_field_tag "orden_temas[#{tema.id}]", nil, :in => 1...temas.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
 											<% end %>
-										<% end %>
+										</dd>
+										<div class="well well-small">
+											<%# resumenes_final.order("titulo ASC") %>
+											<% resumenes_final.each_with_index do |resumen, i| %>
+												<% if resumen.resumen_id.nil? %>
+													<div class="well" style="padding: 5px; margin: 5px;">
+														<% resumen.orden = i+1 if resumen.orden.nil? %>
+														<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+														<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso3") %>
+															<div style = "text-align: right;background-color: #ddd; padding: 5px;">
+																<span class="label label-success">
+																	<% case action_name %>
+																	<% when "paso2" %>
+																		<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
+																	<% when "paso3" %>
+																		<%= number_field_tag "orden_resumenes[#{resumen.id}]", resumen.orden, :in => 1...resumenes_final.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
+																	<% end %>
+																	<%= @proceso if @proceso %>
+																</span>
+															</div>
+														<% end %>
+													</div>
+												<% end %>
+											<% end %>
 										</div>
 									</li>
 								<% end %>	

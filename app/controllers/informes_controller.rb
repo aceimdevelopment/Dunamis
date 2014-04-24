@@ -32,7 +32,7 @@ class InformesController < ApplicationController
 
 
   def paso1 #Agrupar por Tema
-    @titulo = "Agrupar por Tema"
+    @titulo = "Asignar Tema"
     @resumenes_con_tema = Resumen.creados_hoy.con_tema#.order("vocero_id DESC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_tema#.order("vocero_id DESC")
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
@@ -58,12 +58,19 @@ class InformesController < ApplicationController
   end
   
   def paso4
+    @titulo = "Ordenar Temas entre Asunto"
+    @resumenes = Resumen.creados_hoy.con_tema.order("orden ASC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")    
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
+  end
+  
+  def paso5
     @titulo = "Generar Informe"
     @informe = Informe.new
     @resumenes = Resumen.creados_hoy.con_tema.order("orden ASC")
     temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
-    
   end
   
   def index
