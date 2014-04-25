@@ -68,6 +68,9 @@ class InformesController < ApplicationController
   def paso5
     @titulo = "Generar Informe"
     @informe = Informe.new
+    @informe.autor = "Dirección de Seguimiento de la Información Electoral"
+    @informe.tema = "AGENDA TEMÁTICA DE MEDIOS"
+    @informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
     @resumenes = Resumen.creados_hoy.con_tema.order("orden ASC")
     temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
