@@ -1,5 +1,5 @@
 class WizardController < ApplicationController
-  
+  # before_filter :filtro_logueado
   def paso1
     @websites = Website.all
     @titulo = "Paso 1 > Seleccione Notas"

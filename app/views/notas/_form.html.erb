@@ -8,7 +8,7 @@
   <div class="control-group">
     <%= f.label :contenido, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :contenido, :class => 'text_area', :size => '5x5', :placeholder => "Contenido…", :required => true %>
+      <%= f.text_area :contenido, :class => 'text_area', :size => '5x5', :placeholder => "Contenido…" %>
     </div>
   </div>
   <div class="control-group">
@@ -30,12 +30,12 @@
       <%= f.collection_select :website_id, @website, :id, :nombre, :prompt => true, :required => true, :class => "selectpicker" %>
     </div>
   </div>
-  <div class="control-group">
-    <%= f.label :resumen_id, :class => 'control-label' %>
+  <!-- <div class="control-group">
+    <%# f.label :resumen_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.number_field :resumen_id, :class => 'number_field' %>
+      <%# f.number_field :resumen_id, :class => 'number_field' %>
     </div>
-  </div>
+  </div> -->
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>

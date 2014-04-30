@@ -1,6 +1,7 @@
 class AparicionesController < ApplicationController
   # GET /apariciones
   # GET /apariciones.json
+
   require 'importer'
   
   def index

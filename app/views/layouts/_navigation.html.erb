@@ -5,12 +5,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </button>
-	  	<%= link_to image_tag("cne_logo.png", :border => 0), 'http://www.cne.gov.ve', :class => 'brand', :target => '_blank' %>
-      <%= link_to 'Inicio', root_path, :class => 'brand' %>
-      
+      </button>      
       <div class="nav-collapse">
-        <ul class="nav">
+				<% if true #session[:usuario] %>
+        	<ul class="nav">
+		      	<li><%= link_to image_tag("cne_logo.png", :border => 0), 'http://www.cne.gov.ve', :class => 'brand', :target => '_blank' %></li>
+			      <li><%= link_to 'Inicio', root_path, :class => 'brand' %></li>
+						<li class="divider-vertical"></li>
+
 						<li class="dropdown">
 					    <a class="dropdown-toggle"
 					       data-toggle="dropdown"
@@ -19,43 +21,80 @@
 					        <b class="caret"></b>
 					    </a>
 					    <ul class="dropdown-menu">
+								<li><%= link_to 'Ver Informes', informes_path %></li>
 								<li><%= link_to 'Compilar Informe', paso1_informes_path %></li>
-								<li><%= link_to 'Seleccionar Notas', :action => 'paso1', :controller => 'wizard' %></li>
-								<li><%# link_to 'Websites', websites_path %></li>
-								<li><%# link_to 'Notas', notas_path %></li>			            
+								<li><%= link_to 'Barrer Sitios Web', :action => 'paso1', :controller => 'wizard' %></li>
+								<li><%= link_to 'Crear Notas', new_nota_path %></li>           
 					    </ul>
 					  </li>
-					<!-- <li class="dropdown">
-				    <a class="dropdown-toggle"
-				       data-toggle="dropdown"
-				       href="#">
-				        Entidates 
-				        <b class="caret"></b>
-				    </a>
-				    <ul class="dropdown-menu">
-							<li><%# link_to 'Voceros', voceros_path %></li>
-				      <li><%# link_to 'Candidatos', candidatos_path %></li>
-							<li><%# link_to 'Organizaciones', organizaciones_path %></li>
-							<li><%# link_to 'Estados', estados_path %></li>
-							<li><%# link_to 'Municipios', municipios_path %></li>
-				    </ul>
-				  </li> -->
-					<li class="dropdown">
-				    <a class="dropdown-toggle"
-				       data-toggle="dropdown"
-				       href="#">
-				        Asuntos y Temas
-				        <b class="caret"></b>
-				    </a>
-				    <ul class="dropdown-menu">
-							<li><%= link_to 'Temas', temas_path %></li>
-							<li><%= link_to 'Asunto', asuntos_path %></li>
-				    </ul>
-				  </li>
-        </ul>
+
+						<li class="dropdown">
+					    <a class="dropdown-toggle"
+					       data-toggle="dropdown"
+					       href="#">
+					        Componentes
+					        <b class="caret"></b>
+					    </a>
+					    <ul class="dropdown-menu">
+								<li><%= link_to 'Websites', websites_path %></li>
+								<li><%= link_to 'Notas', notas_path %></li>           
+					    </ul>
+					  </li>
+							
+						<li class="dropdown">
+					    <a class="dropdown-toggle"
+					       data-toggle="dropdown"
+					       href="#">
+					        Asuntos y Temas
+					        <b class="caret"></b>
+					    </a>
+					    <ul class="dropdown-menu">
+								<li><%= link_to 'Temas', temas_path %></li>
+								<li><%= link_to 'Asunto', asuntos_path %></li>
+					    </ul>
+					  </li>
+        	</ul>
+					<div class= "pull-right">
+						<%# link_to "Cerrar Sesión", :controller => "home", :action=> "cerrar_sesion" %>
+					</div>
+					
+				<% else %>
+				<ul class="nav">
+	      	<li><% link_to image_tag("cne_logo.png", :border => 0), 'http://www.cne.gov.ve', :class => 'brand', :target => '_blank' %></li>
+      	</ul>
+				<div class= "pull-right">
+					<%= link_to "Iniciar Sesión", "", :data => {:toggle => 'modal'}, :onclick => "return $('#iniciar_sesion').modal();", :style=> "text" %>
+				</div>
+				<% end %>
+					
+
       </div>
     </div>
   </div>
+</div>
+
+<!-- Modal -->
+<div id="iniciar_sesion" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header" id="titulo">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Iniciar Sesión</h3>
+  </div>
+	<form action="validar">
+  	<div class="modal-body">
+	    <fieldset>
+	      <div class="clearfix">
+	        <input type="text" placeholder="Usuario" name="usuario[nombre_sesion]" required="required">
+	      </div>
+	      <div class="clearfix">
+	        <input type="password" placeholder="Contraseña" name="usuario[contrasena]" required="required">
+	      </div>
+	    </fieldset>
+  	</div>
+	  <div class="modal-footer">
+	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+	    <button class="btn primary" type="submit">Entrar</button>
+	  </div>
+	</form>
 </div>
 
 <script type="text/javascript" charset="utf-8">
