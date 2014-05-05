@@ -3,8 +3,8 @@ task :importar_notas_website => :environment do
   puts 'Iniciando Barrido...'
   # Nota.delete_all (["resumen_id IS ? AND created_at < ?", nil, Date.today])
   # puts 'Borrando notas anteriores a hoy...'
-  for i in (1..10000)
-    puts "Inicio Vuelta: <#{i}>"
+  while true do
+    puts "Inicio Vuelta: <#{DateTime.now}>"
     Website.all.each do |website|
       begin
         puts "------------------------------------"
@@ -16,7 +16,7 @@ task :importar_notas_website => :environment do
         puts "Se continua la carga ..."
       end
     end
-    puts "Fin de vuelta <#{i}>"
+    puts "Fin de vuelta <#{DateTime.now}>"
     sleep(5.minutes)
   end
 end

@@ -13,7 +13,7 @@
 			<p>
 				<% fecha = @informe.fecha ? @informe.fecha : Date.today %>
 				<!-- <strong><h6><%# fecha.strftime('%A, %d de %B de %Y')%></h6></strong> -->
-				<%= f.date_select :fecha, :class => 'date_select', :style => "width:60px;" %>
+				<%= f.date_select :fecha, {:style => "width:60px;"}, {:required => true, :class => 'date_select span2'} %>
 			</p>
 			<strong>
 				<h6 style = "background-color: black; color: white; height:40px; padding-top:10px;">
@@ -40,7 +40,7 @@
 
 <div class="alert alert-info" style="text-align:center;">
 		<a class="close" data-dismiss="alert">&#215;</a>
-		<strong>Total de Notas:</strong>
+		<strong>Total de notas compiladas:</strong>
 		<span class="badge"><%= @resumenes.count %></span>
 </div>
 

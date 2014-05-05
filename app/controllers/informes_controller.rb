@@ -33,9 +33,9 @@ class InformesController < ApplicationController
 
   def paso1 #Agrupar por Tema
     @titulo = "Asignar Tema"
-    @resumenes_con_tema = Resumen.creados_hoy.con_tema#.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @resumenes_con_tema = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @tema = Tema.new
     
@@ -43,25 +43,25 @@ class InformesController < ApplicationController
   
   def paso2 #unir Resumenes
     @titulo = "Unir Resumenes"
-    @resumenes = Resumen.creados_hoy.con_tema#.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
   end
   
   def paso3 #Ordenar entre temas
     @titulo = "Ordenar entre Temas"
-    @resumenes = Resumen.creados_hoy.con_tema.order("orden ASC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")    
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
   end
   
   def paso4
     @titulo = "Ordenar Temas entre Asunto"
-    @resumenes = Resumen.creados_hoy.con_tema.order("orden ASC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_tema.order("vocero_id DESC")    
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
   end
   
@@ -71,7 +71,7 @@ class InformesController < ApplicationController
     @informe.autor = "Dirección de Seguimiento de la Información Electoral"
     @informe.tema = "AGENDA TEMÁTICA DE MEDIOS"
     @informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
-    @resumenes = Resumen.creados_hoy.con_tema.order("orden ASC")
+    @resumenes = Resumen.creados_hoy.con_tema.sin_informe.order("orden ASC")
     temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
   end
@@ -96,13 +96,13 @@ class InformesController < ApplicationController
 
   def enviar_por_correo
     @informe = Informe.find(params[:id])
-    mensaje = 'No enviado'
-    tipo = 'error'
+
     if InformeMailer.enviar_informe(@informe).deliver
-      mensaje = 'Enviado'
-      tipo = 'correcto'
+      flash[:success] = 'Correo Enviado Satisfactoriamente'
+    else
+      flash[:error] = 'El informe no pude ser enviado por correo'
     end
-    redirect_to :action => 'index', :mensaje => mensaje, :tipo => tipo
+    redirect_to :action => 'index'
   end
 
   # GET /informes/1
@@ -161,7 +161,7 @@ class InformesController < ApplicationController
     # @resumenes = Resumen.creados_hoy.order("vocero_id DESC")
     resumenes_ids = params[:resumenes_ids]
     
-    puts "RESUMEN: #{resumenes_ids}"
+    # puts "RESUMEN: #{resumenes_ids}"
     @informe = Informe.new(params[:informe])
 
     respond_to do |format|
@@ -173,7 +173,7 @@ class InformesController < ApplicationController
             resumen.save
           end
         end
-        format.html { redirect_to @informe, notice: 'Informe was successfully created.' }
+        format.html { redirect_to @informe, notice: 'Informe creado Satisfactoriamente.' }
         format.json { render json: @informe, status: :created, location: @informe }
       else
         format.html { render action: "new" }

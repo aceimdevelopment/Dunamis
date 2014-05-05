@@ -3,4 +3,5 @@ class Informe < ActiveRecord::Base
   
   has_many :resumenes
   accepts_nested_attributes_for :resumenes
+  
 end

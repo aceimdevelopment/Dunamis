@@ -39,7 +39,7 @@
 													<div class="well justificar" style="padding: 5px; margin: 5px; text-align:justify;">
 														<% resumen.orden = i+1 if resumen.orden.nil? %>
 														<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-														<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso3") %>
+														<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso3") and resumenes_final.count > 1 %>
 															<div style = "text-align: right;background-color: #ddd; padding: 5px;">
 																<span class="label label-success">
 																	<% case action_name %>

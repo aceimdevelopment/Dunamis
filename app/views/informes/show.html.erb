@@ -1,26 +1,13 @@
 <%- model_class = Informe -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
-	<h6><%= @informe.fecha.strftime('%A, %d de %B de %Y')%></h6>
+	<%= link_to t('Ver Informer', :default => t("helpers.links.back")),
+              informes_path, :class => 'btn'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_informe_path(@informe), :class => 'btn' %>	
   <%= link_to t('enviar por correo'),
-              {:controller => 'informes', :action => 'enviar_por_correo', :id => @informe.id }, :class => 'btn btn-success'  %>	
+              {:controller => 'informes', :action => "enviar_por_correo/#{@informe.id}" }, :class => 'btn btn-success'  %>	
 </div>
 
 <div class="well">
 	<%= render :partial => 'contenido' %>
-</div>
-
-
-<div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              informes_path, :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_informe_path(@informe), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              informe_path(@informe),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
 </div>

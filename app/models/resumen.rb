@@ -16,6 +16,8 @@ class Resumen < ActiveRecord::Base
   
   scope :sin_tema, -> {where("tema_id IS ?", nil)}
   
+  scope :sin_informe, -> {where("informe_id IS ?", nil)}
+  
   scope :con_tema, -> {where("tema_id IS NOT ?", nil)}
   
   scope :creados_hoy_sin_tema_agregados, -> informe_id {where("created_at >= ? and informe_id IS ? and tema_id IS ?", Date.today, informe_id, nil)}

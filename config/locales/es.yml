@@ -137,7 +137,7 @@ es:
     actions: "Acciones"
     created_at: "Creado"
     links:
-      back: "Atras"
+      back: "Atrás"
       cancel: "Cancelar"
       confirm: "¿Estas Seguro?"
       destroy: "Eliminar"

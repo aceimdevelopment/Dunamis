@@ -32,7 +32,7 @@ class WizardController < ApplicationController
       @resumen = Resumen.find(params[:id])
     end
     # @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
-    @resumenes = Resumen.creados_hoy
+    @resumenes = Resumen.creados_hoy.sin_informe
     @vocero = Vocero.new
     @websites = Website.all
     

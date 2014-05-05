@@ -1,62 +1,65 @@
 <div style = "text-align:center;">
-	<strong>Dirección de Seguimiento de la Información Electoral</strong>
-	<div style="padding: 10px 0 0 0;"><strong>AGENDA TEMÁTICA DE MEDIOS</strong></div>
+	<strong><%= @informe.autor %></strong>
+	<div style="padding: 10px 0 0 0;"><strong><%= @informe.tema %></strong></div>
 	<div style="padding: 10px 0 10px 0;"><strong><%= @informe.fecha.strftime('%A, %d de %B de %Y')%></strong></div>
-	<div style="background-color: black; color: white;"><strong>MONITOREO DE MEDIOS (de 10:00am a 04:00pm)</strong></div>		
+	<div style="background-color: black; color: white;"><strong><%= @informe.titulo %></strong></div>		
 	<div style="text-align:justify;padding: 10px 0 10px 0;">
 		<%= @informe.resumen %>
 	</div>
-	</br>
 	</br>
 	<strong>Panorama Informativo</strong>
 	</br>
 </div>
 
-<table border="0" cellspacing="5" cellpadding="5">
+<table border="0">
 	<tr><td>
-	
 		<% @asuntos.each do |asunto| %>
 
 			<% temas = asunto.temas %>
-			<% if temas.count > 0 %> 
-				</br>
-				<dd><em><strong><%= asunto.nombre %></strong></em></dd>
-				</br>
-				<ul>
+			<% if temas.count > 0 %>
+				<p><u><%= asunto.nombre %></u></p>
+				<!-- <ul> -->
 					<% temas.each do |tema| %>
-						<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
+						<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
 						<% if resumenes_final.count > 0 %> 
-						<li style = 'display:block;'>
-							<dd><u><%= tema.nombre %>:</u></dd>
-								<% resumenes_final.each do |resumen| %>
-									<p>
-										<%# hidden_field_tag :resumen, :id, resumen.id %>
-										<dd style="text-align:justify;"><strong><%= resumen.vocero.nombre %>: </strong>
-											<%= resumen.contenido %>
-											<%- if resumen.notas %>
-												<%- resumen.notas.each do |nota| -%>
-													|<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-												<% end %>
-											<% end %>
-											<% if sub_resumenes = resumen.resumenes %>
-												<%- sub_resumenes.each do |sub_resumen| -%>
-													<strong><%= "/ #{sub_resumen.vocero.nombre}:" if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </strong>
-													<%= resumen.contenido %>
-													<%- if resumen.notas %>
-														<%- resumen.notas.each do |nota| -%>
-															<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
-														<% end %>
-													<% end %>
-												<% end %>
-											<% end %>
-										
-										</dd>
-									</p>	
+							<!-- <li style = 'display:block;'> -->
+								<em><%= tema.nombre %></em>
+								<% resumenes_final.each_with_index do |resumen, i| %>
+									<% if resumen.resumen_id.nil? %>
+										<div style="text-align:justify;">
+											<% resumen.orden = i+1 if resumen.orden.nil? %>
+											
+											<strong> <%= "#{resumen.vocero.nombre}" %> </strong>
+											<%= resumen.contenido if resumen.contenido %>
+											
+										  <%- if resumen.notas %>
+												<%- resumen.notas.each_with_index do |nota,i| -%>
+													<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+													<%= "-" if i < resumen.notas.count-1 %>
+												<%- end -%>
+											<%- end -%>
+											
+											<%- sub_resumenes = resumen.resumenes %>
+											
+											<%- sub_resumenes.each do |sub_resumen| -%>
+										      /
+												<%= "<strong> #{sub_resumen.vocero.nombre}: </strong>" if not resumen.vocero_id.eql? sub_resumen.vocero_id %>
+												<%= sub_resumen.contenido %>
+												<%# raw enlaces_notas sub_resumen %>
+												
+												<%- sub_resumen.notas.each_with_index do |nota,i| -%>
+													<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+													<%= "-" if i < sub_resumen.notas.count-1 %>
+												<%- end -%>
+												
+											<%- end %>		
+										</div>
+									<% end %>
 								<% end %>
-							</li>
+							<!-- </li> -->
 						<% end %>	
 					<% end %>
-				</ul>
+				<!-- </ul> -->
 			<% end %>
 		<% end %>
 	
