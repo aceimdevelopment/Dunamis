@@ -186,6 +186,8 @@ class ResumenesController < ApplicationController
       resumen.orden = v
       unless resumen.save
         flash[:alert] = "No se Pudo ordenar el tema"
+      else
+        flash[:success] = "Ordenado"
       end
     end
     redirect_to :controller => 'informes', :action => "paso3"

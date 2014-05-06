@@ -51,7 +51,7 @@ class InformesController < ApplicationController
   
   def paso3 #Ordenar entre temas
     @titulo = "Ordenar entre Temas"
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema.order("orden ASC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
