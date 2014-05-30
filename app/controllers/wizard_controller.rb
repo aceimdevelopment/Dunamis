@@ -31,11 +31,11 @@ class WizardController < ApplicationController
     else
       @resumen = Resumen.find(params[:id])
     end
+    @resumen.vocero_id = params[:vocero_id] if params[:vocero_id]
     # @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @resumenes = Resumen.creados_hoy.sin_informe
     @vocero = Vocero.new
     @websites = Website.all
-    
     # Manejo de website activa mediante el uso de la sesion
     @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
   end

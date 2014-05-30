@@ -46,13 +46,11 @@ class VocerosController < ApplicationController
     respond_to do |format|
       if params[:controlador]
         if @vocero.save
-          @mensaje = "Vocero Creado Satisfactoriamente"
-          @tipo = "correcto"
+          flash[:success] = "Vocero Creado Satisfactoriamente"
         else
-          @mensaje = @vocero.errors.full_messages.join(" | ")
-          @tipo = "error"
+          flash[:alert] = @vocero.errors.full_messages.join(" | ")
         end
-        format.html { redirect_to :controller => params[:controlador], :action => params[:accion], :mensaje => @mensaje, :tipo => @tipo }
+        format.html { redirect_to :controller => params[:controlador], :action => params[:accion], :vocero_id => @vocero.id }
       else
         if @vocero.save
           format.html { redirect_to @vocero, notice: 'Vocero was successfully created.' }
