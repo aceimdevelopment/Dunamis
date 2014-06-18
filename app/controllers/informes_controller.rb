@@ -55,14 +55,55 @@ class InformesController < ApplicationController
     @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    
+    # Después de aqui los pasos o procesos son dependientes del informe
   end
   
   def paso4
+    unless session[:compilando_informe_id]
+      @informe = Informe.new
+      @informe.save!
+      inicializar_orden_temas(@informe.id)
+      session[:compilando_informe_id] = @informe.id
+    else
+      @informe = Informe.find(session[:compilando_informe_id])
+    end
+
+    @informes_temas = InformeTema.where(:informe_if => @informe.id).order(:orden)
     @titulo = "Ordenar Temas entre Asunto"
     @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
+  end
+  
+
+  def inicializar_orden_temas(informe_id)      
+    temas_hoy = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    asuntos = Asunto.joins(:temas).where('temas.id' => temas_hoy)
+    asuntos.each do |asunto|
+      temas = temas_hoy.where(:asunto_id => asunto.id).group(:id)
+      temas.each_with_index do |tema, orden_inicial|
+        orden_inicial += 1
+        informe_tema = InformeTema.find_or_create_by_tema_id_and_informe_id(tema.id, informe_id)
+        informe_tema.orden = orden_inicial
+        informe_tema.save
+      end  
+    end  
+  end
+  
+  def ordenar_temas
+    # informe_id = session[:compilando_informe_id]
+    informe_id = params[:informe_id]
+    orden_temas = params[:orden_temas]
+    orden_temas.each_pair do |tema_id,orden|
+      informe_tema = InformeTema.find_or_create_by_tema_id_and_informe_id(tema_id, informe_id)
+      informe_tema.orden = orden
+      informe_tema.save
+    end
+    flash[:success] = "Temas Ordenados"
+    redirect_to :action => "paso4"
+    
   end
   
   def paso5
@@ -173,10 +214,11 @@ class InformesController < ApplicationController
             resumen.save
           end
         end
-        format.html { redirect_to @informe, notice: 'Informe creado Satisfactoriamente.' }
+        flash[:success] = 'Informe creado Satisfactoriamente.'
+        format.html { redirect_to @informe }
         format.json { render json: @informe, status: :created, location: @informe }
       else
-        format.html { render action: "new" }
+        format.html { render action: "paso5" }
         format.json { render json: @informe.errors, status: :unprocessable_entity }
       end
     end
@@ -208,6 +250,20 @@ class InformesController < ApplicationController
     end
   end
 
+
+
+  # DELETE /informes/1
+  # DELETE /informes/1.json
+  def destroy
+    @informe = Informe.find(params[:id])
+    @informe.destroy
+
+    respond_to do |format|
+      format.html { redirect_to informes_url }
+      format.json { head :no_content }
+    end
+  end
+  
   # def unir_resumenes # (unir_resumenes_ids, informe_id)
   #   primer_id = unir_resumenes_ids.first
   #   
@@ -236,17 +292,6 @@ class InformesController < ApplicationController
   #     @mensaje = "Error al Intentar unir" 
   #     @tipo_alerta = 'alert-error'
   #   end
-  # end
-
-  # DELETE /informes/1
-  # DELETE /informes/1.json
-  def destroy
-    @informe = Informe.find(params[:id])
-    @informe.destroy
-
-    respond_to do |format|
-      format.html { redirect_to informes_url }
-      format.json { head :no_content }
-    end
-  end
+  # end  
+  
 end

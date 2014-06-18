@@ -13,3 +13,11 @@
 .justificar {text-align: justify;}
 
 .centrar {text-align: center;}
+
+#banner {
+	background-image: url('header.png');
+	background-repeat: no-repeat;
+	height: 97px;
+	margin-top: 42px;
+	
+}

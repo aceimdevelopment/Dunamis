@@ -152,7 +152,11 @@ class ResumenesController < ApplicationController
     resumen = Resumen.find params[:id]
     if resumen
       resumen.resumen_id = nil
-      resumen.save
+      if resumen.save
+        flash[:info] = "Separación completada" 
+      else
+        flash[:alert] = "Error al intentar separar los resumenes" 
+      end
     end
     redirect_to :controller => 'informes', :action => "paso2"
   end
@@ -168,11 +172,9 @@ class ResumenesController < ApplicationController
         r2.informe_id = nil
         r2.resumen_id = r1.id
         if r2.save 
-          @mensaje = "Fusión Completada Satisfactoriamente" 
-          @tipo_alerta = 'alert-success'
+          flash[:success] = "Unión Completada Satisfactoriamente" 
         else
-          @mensaje = "Error al Intentar unir" 
-          @tipo_alerta = 'alert-error'
+          flash[:alert] = "Error al Intentar unir" 
         end
       end
     end

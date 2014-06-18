@@ -3,21 +3,34 @@
 		<tr><td>
 			<% case action_name %>
 			<% when "paso2" %>
+				<% @controlador = 'resumenes'%>
 				<% @proceso = 'unir' %>
 			<% when "paso3" %>
-			  <% @proceso = 'ordenar' %>
+			  <% @controlador = 'resumenes'%>
+				<% @proceso = 'ordenar' %>
+			<% when "paso4" %>
+				<% @controlador = 'informes'%>
+				<% @proceso = 'ordenar_temas' %>
+			<% when "paso5" %>
+				<% @controlador = 'informes'%>
+				<% @proceso = 'create' %>
 			<% end %>
-			
-			<%= form_tag url_for(:controller => 'resumenes', :action => @proceso), :method => 'post' do %>
+			<%= form_tag url_for(:controller => @controlador, :action => @proceso), :method => 'post' do %>
 				<%# hidden_field_tag "informe_id", @informe.id %> 
-				<% if ((action_name=="paso2" or action_name=="paso3")  and controller_name=="informes") %>
+				<% if ((action_name=="paso2" or action_name=="paso3" or action_name=="paso4")  and controller_name=="informes") %>
 					<div class= 'pull-right'>
-						<%= submit_tag @proceso, {:class => "btn btn-success"} %>
+						<%= submit_tag @proceso.humanize, {:class => "btn btn-success"} %>
 					</div>
+				<% end %>
+
+				<% if ((action_name=="paso4" or action_name=="paso5")  and controller_name=="informes") %>
+					<%= hidden_field_tag :informe_id, @informe.id %>
+					
 				<% end %>
 				<% @asuntos.each do |asunto| %>
 
 					<% temas = asunto.temas %>
+					<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
 					<% if temas.count > 0 %>
 						</br>
 						<dd><u><%= asunto.nombre %></u></dd>
@@ -29,7 +42,8 @@
 									<li style = 'display:block;'>
 										<dd><strong><em><%= tema.nombre %></em></strong>
 											<% if (controller_name=="informes" and action_name=="paso4") %>
-												<%= number_field_tag "orden_temas[#{tema.id}]", nil, :in => 1...temas.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
+												<% @informe_tema = tema.informes_temas.where(:informe_id => @informe.id).first %>
+												<%= number_field_tag "orden_temas[#{tema.id}]", (@informe_tema.orden if @informe_tema) , :in => 1...temas.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
 											<% end %>
 										</dd>
 										<div class="well well-small">

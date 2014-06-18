@@ -3,5 +3,10 @@ class Informe < ActiveRecord::Base
   
   has_many :resumenes
   accepts_nested_attributes_for :resumenes
+
+  has_many :informes_temas
+  accepts_nested_attributes_for :informes_temas
+  
+  # has_and_belongs_to_many :temas, :join_table => "informes_temas"
   
 end
