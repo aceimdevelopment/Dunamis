@@ -104,19 +104,7 @@ class InformesController < ApplicationController
     flash[:success] = "Temas Ordenados"
     redirect_to :action => "paso4"
     
-  end
-  
-  def paso6
-    @titulo = "Generar Informe"
-    @informe = Informe.new
-    @informe.autor = "Dirección de Seguimiento de la Información Electoral"
-    @informe.tema = "AGENDA TEMÁTICA DE MEDIOS"
-    @informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
-    @resumenes = Resumen.creados_hoy.con_tema.sin_informe.order("orden ASC")
-    temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
-  end
-  
+  end  
   
   def paso5
     unless session[:compilando_informe_id]
@@ -136,6 +124,32 @@ class InformesController < ApplicationController
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
 
   end
+
+  def inicializar_orden_asuntos(informe_id)      
+    asuntos = Asunto.all
+    asuntos.each do |asunto|
+      temas = temas_hoy.where(:asunto_id => asunto.id).group(:id)
+      temas.each_with_index do |tema, orden_inicial|
+        orden_inicial += 1
+        informe_tema = InformeTema.find_or_create_by_tema_id_and_informe_id(tema.id, informe_id)
+        informe_tema.orden = orden_inicial
+        informe_tema.save
+      end  
+    end  
+  end
+
+
+  def paso6
+    @titulo = "Generar Informe"
+    @informe = Informe.new
+    @informe.autor = "Dirección de Seguimiento de la Información Electoral"
+    @informe.tema = "AGENDA TEMÁTICA DE MEDIOS"
+    @informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
+    @resumenes = Resumen.creados_hoy.con_tema.sin_informe.order("orden ASC")
+    temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
+  end
+
   
   def index
     @informes = Informe.all
