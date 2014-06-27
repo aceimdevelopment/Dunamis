@@ -40,10 +40,12 @@
 								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
 								<% if resumenes_final.count > 0 %> 
 									<li style = 'display:block;'>
-										<dd><strong><em><%= tema.nombre %></em></strong>
-											<% if (controller_name=="informes" and action_name=="paso4") %>
+										<dd style = 'background-color: #ddd;'><strong><em><%= tema.nombre %></em></strong>
+											<% if (controller_name=="informes" and action_name=="paso4") and  temas.count > 1%>
 												<% @informe_tema = tema.informes_temas.where(:informe_id => @informe.id).first %>
-												<%= number_field_tag "orden_temas[#{tema.id}]", (@informe_tema.orden if @informe_tema) , :in => 1...temas.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
+												<span class="label label-success pull-right">
+													<%= number_field_tag "orden_temas[#{tema.id}]", (@informe_tema.orden if @informe_tema) , :in => 1...temas.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
+												<span>
 											<% end %>
 										</dd>
 										<div class="well well-small">

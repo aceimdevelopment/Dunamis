@@ -106,7 +106,7 @@ class InformesController < ApplicationController
     
   end
   
-  def paso5
+  def paso6
     @titulo = "Generar Informe"
     @informe = Informe.new
     @informe.autor = "Dirección de Seguimiento de la Información Electoral"
@@ -115,6 +115,26 @@ class InformesController < ApplicationController
     @resumenes = Resumen.creados_hoy.con_tema.sin_informe.order("orden ASC")
     temas = Tema.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
+  end
+  
+  
+  def paso5
+    unless session[:compilando_informe_id]
+      @informe = Informe.new
+      @informe.save!
+      inicializar_orden_temas(@informe.id)
+      session[:compilando_informe_id] = @informe.id
+    else
+      @informe = Informe.find(session[:compilando_informe_id])
+    end
+  
+    @informes_temas = InformeTema.where(:informe_if => @informe.id).order(:orden)
+    @titulo = "Ordenar Temas entre Asunto"
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
+
   end
   
   def index
