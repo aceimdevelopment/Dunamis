@@ -60,6 +60,7 @@ class InformesController < ApplicationController
   end
   
   def paso4
+    
     unless session[:compilando_informe_id]
       @informe = Informe.new
       @informe.save!
@@ -69,14 +70,46 @@ class InformesController < ApplicationController
       @informe = Informe.find(session[:compilando_informe_id])
     end
 
-    @informes_temas = InformeTema.where(:informe_if => @informe.id).order(:orden)
+    @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
     @titulo = "Ordenar Temas entre Asunto"
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema.order("orden ASC")#.order("vocero_id DESC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
     temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
   end
   
+  def paso5
+    # session[:paso5] = nil
+    unless session[:compilando_informe_id]
+      @informe = Informe.new
+      @informe.save!
+      session[:compilando_informe_id] = @informe.id
+    else
+      @informe = Informe.find(session[:compilando_informe_id])
+    end
+    
+    # unless session[:paso5]
+    #   inicializar_orden_asuntos(@informe.id)
+    #   session[:paso5] = true
+    # end
+    
+    @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
+    @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
+    
+    if @informes_asuntos.count < 1
+      inicializar_orden_asuntos(@informe.id)
+      @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
+    end
+    
+    @titulo = "Ordenar Temas entre Asunto"
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
+    
+  end
+
 
   def inicializar_orden_temas(informe_id)      
     temas_hoy = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
@@ -106,40 +139,37 @@ class InformesController < ApplicationController
     
   end  
   
-  def paso5
-    unless session[:compilando_informe_id]
-      @informe = Informe.new
-      @informe.save!
-      inicializar_orden_temas(@informe.id)
-      session[:compilando_informe_id] = @informe.id
-    else
-      @informe = Informe.find(session[:compilando_informe_id])
-    end
-  
-    @informes_temas = InformeTema.where(:informe_if => @informe.id).order(:orden)
-    @titulo = "Ordenar Temas entre Asunto"
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
 
-  end
 
   def inicializar_orden_asuntos(informe_id)      
-    asuntos = Asunto.all
-    asuntos.each do |asunto|
-      temas = temas_hoy.where(:asunto_id => asunto.id).group(:id)
-      temas.each_with_index do |tema, orden_inicial|
-        orden_inicial += 1
-        informe_tema = InformeTema.find_or_create_by_tema_id_and_informe_id(tema.id, informe_id)
-        informe_tema.orden = orden_inicial
-        informe_tema.save
-      end  
+    temas_hoy = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today).uniq
+    asuntos = Asunto.joins(:temas).where('temas.id' => temas_hoy).uniq
+    
+    
+    asuntos.each_with_index do |asunto, orden_inicial|
+      orden_inicial += 1
+      informe_asunto = InformeAsunto.find_or_create_by_asunto_id_and_informe_id(asunto.id, informe_id)
+      informe_asunto.orden = orden_inicial
+      informe_asunto.save      
     end  
+  end
+
+  def ordenar_asuntos
+    informe_id = params[:informe_id]
+    orden_asuntos = params[:orden_asuntos]
+    orden_asuntos.each_pair do |asunto_id,orden|
+      informe_asunto = InformeAsunto.find_or_create_by_asunto_id_and_informe_id(asunto_id, informe_id)
+      informe_asunto.orden = orden
+      informe_asunto.save
+    end
+    flash[:success] = "Asuntos Ordenados"
+    redirect_to :action => "paso5"
+    
   end
 
 
   def paso6
+    session[:compilando_informe_id] = nil
     @titulo = "Generar Informe"
     @informe = Informe.new
     @informe.autor = "Dirección de Seguimiento de la Información Electoral"

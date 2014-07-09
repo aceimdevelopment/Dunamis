@@ -5,8 +5,10 @@
 <% end %>
 <div class='row'>
 	<ul class="thumbnails">
-		<%= render :partial => 'resumenes_sin_tema' %>
-		<%= render :partial => 'resumenes_con_tema' %>
+
+		<%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>
+		
+		<%= render :partial => 'resumenes_con_tema' if @resumenes_con_tema.count > 0 %>
 	</ul>	
 </div>	
 	

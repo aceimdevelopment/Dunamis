@@ -13,11 +13,11 @@
 				<% @proceso = 'ordenar_temas' %>
 			<% when "paso5" %>
 				<% @controlador = 'informes'%>
-				<% @proceso = 'create' %>
+				<% @proceso = 'ordenar_asuntos' %>
 			<% end %>
 			<%= form_tag url_for(:controller => @controlador, :action => @proceso), :method => 'post' do %>
 				<%# hidden_field_tag "informe_id", @informe.id %> 
-				<% if ((action_name=="paso2" or action_name=="paso3" or action_name=="paso4")  and controller_name=="informes") %>
+				<% if ((action_name=="paso2" or action_name=="paso3" or action_name=="paso4"or action_name=="paso5")  and controller_name=="informes") %>
 					<div class= 'pull-right'>
 						<%= submit_tag @proceso.humanize, {:class => "btn btn-success"} %>
 					</div>
@@ -25,15 +25,25 @@
 
 				<% if ((action_name=="paso4" or action_name=="paso5")  and controller_name=="informes") %>
 					<%= hidden_field_tag :informe_id, @informe.id %>
-					
 				<% end %>
 				<% @asuntos.each do |asunto| %>
-
 					<% temas = asunto.temas %>
+
 					<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
 					<% if temas.count > 0 %>
 						</br>
-						<dd><u><%= asunto.nombre %></u></dd>
+
+						<dd style = 'background-color: #ddd;'><u><%= asunto.nombre %></u>
+							<% if (controller_name=="informes" and action_name=="paso5") %>
+								<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
+								<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>
+								
+								<span class="label label-success pull-right">
+									<%= number_field_tag "orden_asuntos[#{asunto.id}]", (@informe_asunto.orden if @informe_asunto) , :in => 1...@informes_asuntos.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
+								<span>
+							<% end %>
+						</dd>
+
 						</br>
 						<ul>
 							<% temas.each do |tema| %>
@@ -78,6 +88,7 @@
 						</ul>
 					<% end %>
 				<% end %>
+				
 			<% end %>
 		</td></tr>
 	</table>

@@ -4,4 +4,8 @@ class Asunto < ActiveRecord::Base
   has_many :temas
   accepts_nested_attributes_for :temas
   
+  has_many :informes_asuntos
+  accepts_nested_attributes_for :informes_asuntos
+  
+  
 end

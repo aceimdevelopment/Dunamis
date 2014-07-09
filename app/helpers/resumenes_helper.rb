@@ -11,7 +11,7 @@ module ResumenesHelper
     mensaje += enlaces_notas resumen 
 		sub_resumenes = resumen.resumenes
 		sub_resumenes.each do |sub_resumen|
-		  if action_name.eql? "paso2" or action_name.eql? "paso5"  
+		  if action_name.eql? "paso2"
 		    mensaje += link_to "separar", {:controller => 'resumenes', :action => "separar", :id => sub_resumen.id, :informe_id => informe_id},  {:class => 'btn btn-mini'} 	#if (not informe_id.nil? and action_name!="paso4")
 	    else
 	      mensaje += " / "
