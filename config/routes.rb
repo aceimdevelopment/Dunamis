@@ -50,6 +50,7 @@ Dunamis::Application.routes.draw do
       get 'paso3'
       get 'paso4'
       get 'paso5'
+      get 'paso6'
       post 'agregar'
       post 'desagregar_resumen'
     end

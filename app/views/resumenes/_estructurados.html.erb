@@ -24,7 +24,7 @@
 				<% end %>
 
 				<% if ((action_name=="paso4" or action_name=="paso5")  and controller_name=="informes") %>
-					<%= hidden_field_tag :informe_id, @informe.id %>
+					<%= hidden_field_tag :id, @informe.id %>
 				<% end %>
 				<% @asuntos.each do |asunto| %>
 					<% temas = asunto.temas %>

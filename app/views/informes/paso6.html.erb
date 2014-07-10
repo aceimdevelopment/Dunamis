@@ -44,4 +44,48 @@
 		<span class="badge"><%= @resumenes.count %></span>
 </div>
 
-<%= render :partial => 'resumenes/estructurados' %>
+<div class ="well well-small">
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td>
+				<% @asuntos.each do |asunto| %>
+					<% temas = asunto.temas %>
+
+					<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
+					<% if temas.count > 0 %>
+						</br>
+
+						<dd style = 'background-color: #ddd;'><u><%= asunto.nombre %></u>
+							<% if (controller_name=="informes" and action_name=="paso5") %>
+								<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
+								<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>								
+							<% end %>
+						</dd>
+
+						</br>
+						<ul>
+							<% temas.each do |tema| %>
+								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
+								<% if resumenes_final.count > 0 %> 
+									<li style = 'display:block;'>
+										<dd style = 'background-color: #ddd;'><strong><em><%= tema.nombre %></em></strong></dd>
+										<div class="well well-small">
+											<% resumenes_final.each_with_index do |resumen, i| %>
+												<% if resumen.resumen_id.nil? %>
+													<div class="well justificar" style="padding: 5px; margin: 5px; text-align:justify;">
+														<% resumen.orden = i+1 if resumen.orden.nil? %>
+														<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+													</div>
+												<% end %>
+											<% end %>
+										</div>
+									</li>
+								<% end %>
+							<% end %>
+						</ul>
+					<% end %>
+				<% end %>
+		</td></tr>
+	</table>
+</div>
+

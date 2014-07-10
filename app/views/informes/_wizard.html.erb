@@ -13,6 +13,8 @@
 		<% @siguiente = "paso6" %>
 <% end %>
 
+<% @atras += "/#{@informe.id}" if @informe %>
+<% @siguiente += "/#{@informe.id}" if @informe %>
 <div class='well'>
 	<%= link_to t('.back', :default => t("helpers.links.back")), {:action => @atras}, :class => 'btn pull-left'%>
 	<%= link_to "Siguiente", {:action => @siguiente}, :class => 'btn btn-primary pull-right' %>	
