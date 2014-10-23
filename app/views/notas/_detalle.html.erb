@@ -1,0 +1,17 @@
+<div class="row-fluid">
+	<ul class="media-list">
+	  <li class="media">
+	    <a class="pull-right" href="#">
+	      <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/png;" style="width: 64px; height: 64px;">
+	    </a>
+	    <div class="media-body">
+	      <b class="media-heading"><%= @nota.fecha_publicacion %> : <%= @nota.titulo.to_s[0..100] %></b>
+	      <% unless @nota.contenido.blank? %>
+					<%# @nota.contenido %>
+				<% end %>
+	    </div>
+	  </li>
+	</ul>
+</div>
+
+

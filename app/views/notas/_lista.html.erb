@@ -1,0 +1,63 @@
+
+
+
+<%- @websites.each_with_index do |website,i| -%>
+	<div class="btn-group" data-toggle="buttons">
+	    <label class="label well well-small">
+					<%= check_box_tag "#{website.nombre}_activador", nil, false, {:onchange => "return mostrar('#{website.nombre}');"} %>
+					<%= website.nombre %>
+					
+	    </label>
+	</div>
+
+<% end %>
+</div>
+
+
+<table class="table-bordered">
+	<tr>
+			<%- @websites.each_with_index do |website,i| -%>
+				<th id="<%= website.nombre %>_titulo" style="display:none;"><%= website.nombre %></th>
+			<% end %>
+	</tr>
+	<tr>
+		
+		<%- @websites.each_with_index do |website,i| -%>
+			<td id="<%= website.nombre %>" style="display:none;">
+				<div style="overflow:scroll; height:400px;">
+					<table class="table table-condensed table-striped table-hover">
+
+						<% case action_name %>
+						<% when "paso1" %>
+							<%- @notas = website.notas.creadas_hoy.sin_resumen -%>
+						<% else %>
+							<%- @notas = website.notas.creadas_hoy.validas.sin_resumen -%>
+						<% end %>
+
+						<%- @notas.each do |nota| -%>
+							<% @nota = nota %>
+							<tr><td><%= render :partial => 'notas/detalle' %></td></tr>
+						<% end %>
+					</table>
+				</div>
+			</td>
+		<% end %>		
+		
+	</tr>
+</table>
+
+
+<script type="text/javascript" charset="utf-8">
+
+	function mostrar(website){
+		if ($('#'+website+'_activador').is(':checked')) { 
+			$('#'+website).show()
+			$('#'+website+'_titulo').show()
+			}else{
+				$('#'+website).hide()
+				$('#'+website+'_titulo').hide()
+				}
+		return false;
+	}
+
+</script>
