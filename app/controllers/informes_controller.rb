@@ -209,15 +209,15 @@ class InformesController < ApplicationController
   # GET /informes/1
   # GET /informes/1.json
   def show
-    @informe = Informe.find(params[:id])
+    @informe = Informe.where(:id => params[:id]).limit(1).first
+    @resumenes = Resumen.where(:informe_id => @informe.id).order(:orden)
     @resumenes = Resumen.where(:informe_id => @informe.id)
-    temas = Tema.joins(:resumenes).where('resumenes.informe_id >= ?', @informe.id)
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)
-    
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @informe }
-    end
+    temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
+    @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
+    @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
+
   end
 
   # GET /informes/new
@@ -250,10 +250,35 @@ class InformesController < ApplicationController
 
   # GET /informes/1/edit
   def edit
-    @informe = Informe.find(params[:id])
-    @resumenes = Resumen.where(:informe_id => @informe.id)
-    temas = Tema.joins(:resumenes).where('resumenes.informe_id >= ?', @informe.id)
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas).group(:id)    
+    @titulo = "Editar Informe"
+    @informe = Informe.where(:id => params[:id]).limit(1).first
+    @resumenes = Resumen.where(:informe_id => @informe.id).order(:orden)
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
+
+    @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
+    @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
+    # 
+    # @titulo = "Completar Informe"
+    # @informe = Informe.where(:id => params[:id]).limit(1).first
+    # @informe.autor = "Dirección de Seguimiento de la Información Electoral"
+    # @informe.tema = "AGENDA TEMÁTICA DE MEDIOS"
+    # @informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
+    # 
+    # @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    # @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    # temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    # @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    # @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
+    # 
+    # @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
+    # @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)    
+    # 
+    
+    
+    
   end
 
   # POST /informes
@@ -287,8 +312,7 @@ class InformesController < ApplicationController
   # PUT /informes/1
   # PUT /informes/1.json
   def update
-
-    resumenes_ids = params[:resumenes_ids].split if params[:resumenes_ids]
+    resumenes_ids = params[:resumenes_ids] if params[:resumenes_ids]
     @informe = Informe.find(params[:id])      
     respond_to do |format|
       if @informe.update_attributes(params[:informe])
@@ -301,8 +325,9 @@ class InformesController < ApplicationController
             end
           end
         end
-        format.html { redirect_to @informe, notice: 'Informe was successfully updated.' }
-        format.json { head :no_content }
+        flash[:success] = 'Informe Actualizado.'
+        format.html { redirect_to @informe }
+        format.json { }
       else
         format.html { render action: "edit" }
         format.json { render json: @informe.errors, status: :unprocessable_entity }

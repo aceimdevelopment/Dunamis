@@ -23,4 +23,5 @@ class HomeController < ApplicationController
     reset_session
     redirect_to :action => "index", :controller => "home"
   end
+  
 end

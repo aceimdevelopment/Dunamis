@@ -81,8 +81,9 @@
 											<% case action_name %>
 											<% when "paso1" %>
 												<%# etiq = nota.valida? ? "success" : "info" %>
-												<%= check_box_tag "notas_validas_ids[]", nota.id, nota.valida? %>
-												<span class="label label-info">
+												
+												<span class="btn">
+													<%= check_box_tag "notas_validas_ids[]", nota.id, nota.valida?, {:class => "btn"} %>
 													<%= nota.valida? ? "Inluido" : "Incluir" %>
 												</span>
 												

@@ -1,125 +1,89 @@
-<%= @mensaje %>
-<% if @mensaje %>
-	<div class="alert <%= @tipo_alerta %>">
-	  <button type="button" class="close" data-dismiss="alert">&times;</button>
-	  <h4>Mensaje:</h4>
-	  <%= @mensaje %>
-	</div>
-<% end %>
-
 <%= form_for @informe, :html => { :class => 'form-horizontal' } do |f| %>
-  <div class="control-group">
-    <%= f.label :fecha, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.date_select :fecha, :class => 'date_select' %>
-    </div>
-  </div>
 		
-	<div class ="well">
+	<div class ="well well-small">
 		<div style = "text-align:center;">
-			<strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong>
-			<strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong>
-			<% fecha = @informe.fecha ? @informe.fecha : Date.today %>
-			<strong><h6><%= fecha.strftime('%A, %d de %B de %Y')%></h6></strong>
-			<strong><h6 style = "background-color: black; color: white;">MONITOREO DE MEDIOS (de 10:00am a 04:00pm)</h6></strong>				
+			<p>
+				<%= f.text_field :autor, :class => 'text_field span5', :required => true, :style => 'text-align:center;' %>
+			</p>
+			<!-- <strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong> -->
+			<!-- <strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong> -->
+			<p>
+				<%= f.text_field :tema, :class => 'text_field span4', :required => true, :style => 'text-align:center;' %>
+			</p>
+			<p>
+				<% fecha = @informe.fecha ? @informe.fecha : Date.today %>
+				<!-- <strong><h6><%# fecha.strftime('%A, %d de %B de %Y')%></h6></strong> -->
+				<%= f.date_select :fecha, {:style => "width:60px;"}, {:required => true, :class => 'date_select span2'} %>
+			</p>
+			<strong>
+				<h6 style = "background-color: black; color: white; height:40px; padding-top:10px;">
+					<!-- MONITOREO DE MEDIOS (de 10:00am a 04:00pm) -->
+					<%= f.text_field :titulo, :class => 'text_field span5', :required => true, :style => 'text-align:center;'%>
+					<%# f.text_field :titulo, :value => "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)", :class=> "span5" %> 
+				</h6>
+			</strong>				
 		</div>
 		
-    <%= f.text_area :resumen, :cols => 12, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :style => "height:100px;"%>
+    <%= f.text_area :resumen, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :required => true, :style => "height:100px;"%>
 		<% @resumenes.collect do |r| %>
 			<%= hidden_field_tag "resumenes_ids[]", r.id %> 
 		<% end %>
-		
-	  <div class="form-actions">
-	    <%= f.submit nil, :class => 'btn btn-primary' %>
+		</br>
+		</br>
+	  <div class="form-actions-online" style = "text-align: right">
+	    <%= f.submit 'Completar informe', :class => 'btn btn-primary' %>
 	    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
 	                informes_path, :class => 'btn' %>
 	  </div>
 	</div>
 <% end %>
-		
-		<div class ="well">
-			<table border="0" cellspacing="5" cellpadding="5">
-				<tr><td>
-					<%= form_tag url_for(:controller => 'resumenes', :action => 'unir'), :method => 'get' do %>
-						<% disabled = (action_name == 'edit') ? "disabled" : "enabled"%>
-						
-						<div style='text-align:right;'>
-							<%= submit_tag "unir", {:class => "btn btn-success", :disabled => disabled} %>
-						</div>
-						<% @asuntos.each do |asunto| %>
 
-							<% temas = asunto.temas %>
-							<% if temas.count > 0 %> 
-								</br>
-								<dd><em><strong><%= asunto.nombre %></strong></em></dd>
-								</br>
-								<ul>
-									<% temas.each do |tema| %>
-										<% resumenes_final = @resumenes.where(:tema_id => tema.id) %>
-										<% if resumenes_final.count > 0 %> 
-										<li style = 'display:block;'>
-											<dd><u><%= tema.nombre %>:</u></dd>
-												<% resumenes_final.each do |resumen| %>
-													<p>
-														<%= hidden_field_tag "informe_id", @informe.id %> 
-														<%# hidden_field_tag "resumenes_ids[]", resumen.id %> 
-														<!-- <input type="checkbox" id="inlineCheckbox1" value="option1" > unir														 -->
+<div class="alert alert-info" style="text-align:center;">
+		<a class="close" data-dismiss="alert">&#215;</a>
+		<strong>Total de notas compiladas:</strong>
+		<span class="badge"><%= @resumenes.count %></span>
+</div>
 
-														<dd style="text-align:justify;"><strong><%= resumen.vocero.nombre %>: </strong>
-														<%= resumen.contenido %>
-														<%- if resumen.notas %>
-															<%- resumen.notas.each do |nota| -%>
-																| <%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-															<% end %>
-														<% end %>
-														<% if sub_resumenes = resumen.resumenes %>
-															<%- sub_resumenes.each do |sub_resumen| -%>
-																<%= link_to "separar", {:controller => 'resumenes', :action => 'separar', :id => sub_resumen.id,  :informe_id => @informe.id },  {:class => 'btn btn-mini'} %>
-																<strong><%= "/ #{sub_resumen.vocero.nombre}:" if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </strong>
-																<%= resumen.contenido %>
-																<%- if resumen.notas %>
-																	<%- resumen.notas.each do |nota| -%>
-																		<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %> |
-																	<% end %>
-																<% end %>
-																	
-															<% end %>
+<div class ="well well-small">
+	<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td>
+				<% @asuntos.each do |asunto| %>
+					<% temas = asunto.temas %>
 
-														<% end %>
-														
-														</dd>
-														<div style = "text-align: right;background-color: #ddd; padding: 5px;">	
-															<%= link_to t('.edit', :default => t("helpers.links.edit")),
-										                      {:controller => 'resumenes', :action => 'paso2', :id => resumen.id}, {:class => 'btn btn-mini', :style => 'align:rigth;'} %>
-															<span class="label label-success">
-																<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
-																unir
-															</span>
-															<!-- <button type="button" class="btn btn-primary" data-toggle="button" value="option1">unir</button>	 -->
-														</div>
-													</p>	
+					<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
+					<% if temas.count > 0 %>
+						</br>
+
+						<dd><u><%= asunto.nombre %></u>
+								<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
+								<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>								
+						</dd>
+
+						</br>
+						<ul>
+							<% temas.each do |tema| %>
+								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
+								<% if resumenes_final.count > 0 %> 
+									<li style = 'display:block;'>
+										<dd style = 'background-color: #ddd;'><strong><em><%= tema.nombre %></em></strong></dd>
+										<div class="well well-small">
+											<% resumenes_final.each_with_index do |resumen, i| %>
+												<% if resumen.resumen_id.nil? %>
+													<div class="well justificar" style="padding: 5px; margin: 5px; text-align:justify;">
+														<% resumen.orden = i+1 if resumen.orden.nil? %>
+														<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+													</div>
 												<% end %>
-											</li>
-										<% end %>	
-									<% end %>
-								</ul>
+											<% end %>
+										</div>
+									</li>
+								<% end %>
 							<% end %>
-						<% end %>
+						</ul>
 					<% end %>
-				</td></tr>
-			</table>
-	</div>
-
-
-<script type="text/javascript" charset="utf-8">
-	function unir(id){
-		// $("#"+id).hide();
-		unir_resumenes_ids = $('.unir_resumenes_ids_').text
-		$.post("/resumenes/unir?unir_resumenes_ids="+unir_resumenes_ids);
-		// $.post("/resumenes/update/"+resumen_id+"?nota_id="+id+">");
-		location.reload();
-		return false;
-	}
-	$().button('toggle')
-</script>
+				<% end %>
+		</td></tr>
+	</table>
+</div>
 

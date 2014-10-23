@@ -60,6 +60,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$('.dropdown-toggle').dropdown()
 	$('.tooltip').tooltip()
+	$('.nav-tabs').button()
 });
 	
 

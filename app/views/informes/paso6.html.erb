@@ -31,7 +31,7 @@
 		</br>
 		</br>
 	  <div class="form-actions-online" style = "text-align: right">
-	    <%= f.submit nil, :class => 'btn btn-primary' %>
+	    <%= f.submit 'Completar informe', :class => 'btn btn-primary' %>
 	    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
 	                informes_path, :class => 'btn' %>
 	  </div>
@@ -55,11 +55,9 @@
 					<% if temas.count > 0 %>
 						</br>
 
-						<dd style = 'background-color: #ddd;'><u><%= asunto.nombre %></u>
-							<% if (controller_name=="informes" and action_name=="paso5") %>
+						<dd><u><%= asunto.nombre %></u>
 								<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
 								<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>								
-							<% end %>
 						</dd>
 
 						</br>
