@@ -1,27 +1,21 @@
-
-
-
-<%- @websites.each_with_index do |website,i| -%>
-	<div class="btn-group" data-toggle="buttons">
-	    <label class="label well well-small">
+<div class="row-fluid">
+	<%- @websites.each_with_index do |website,i| -%>
+	    <label class="label label-info" style="font-size:80%;">
 					<%= check_box_tag "#{website.nombre}_activador", nil, false, {:onchange => "return mostrar('#{website.nombre}');"} %>
 					<%= website.nombre %>
-					
 	    </label>
-	</div>
-
-<% end %>
+	<% end %>
 </div>
-
+<%- total_notas = 0 -%>
 
 <table class="table-bordered">
-	<tr>
+	<tr class="info">
 			<%- @websites.each_with_index do |website,i| -%>
 				<th id="<%= website.nombre %>_titulo" style="display:none;"><%= website.nombre %></th>
 			<% end %>
 	</tr>
 	<tr>
-		
+
 		<%- @websites.each_with_index do |website,i| -%>
 			<td id="<%= website.nombre %>" style="display:none;">
 				<div style="overflow:scroll; height:400px;">
@@ -33,10 +27,10 @@
 						<% else %>
 							<%- @notas = website.notas.creadas_hoy.validas.sin_resumen -%>
 						<% end %>
-
+						<%- total_notas += @notas.count %>
 						<%- @notas.each do |nota| -%>
 							<% @nota = nota %>
-							<tr><td><%= render :partial => 'notas/detalle' %></td></tr>
+							<tr class="contenido"><td><%= render :partial => 'notas/detalle' %></td></tr>
 						<% end %>
 					</table>
 				</div>
@@ -46,7 +40,7 @@
 	</tr>
 </table>
 
-
+<%= total_notas %>
 <script type="text/javascript" charset="utf-8">
 
 	function mostrar(website){
@@ -60,4 +54,17 @@
 		return false;
 	}
 
+
+	$(".voceros").select2({
+		formatResult: format,
+		formatSelection: format,
+		escapeMarkup: function(m) { return m; }
+	});
+
+
+	function detalle(nota_id){
+		if ($('#contenido_nota'+nota_id).css("display") == "none") { $('#contenido_nota'+nota_id).show();}
+		else{$('#contenido_nota'+nota_id).hide();}
+		return false;
+	}
 </script>

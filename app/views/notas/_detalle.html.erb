@@ -7,8 +7,31 @@
 	    <div class="media-body">
 	      <b class="media-heading"><%= @nota.fecha_publicacion %> : <%= @nota.titulo.to_s[0..100] %></b>
 	      <% unless @nota.contenido.blank? %>
-					<%# @nota.contenido %>
+					<%= @nota.contenido %>
 				<% end %>
+				
+				<% case action_name %>
+				<% when "paso1" %>
+					<%# etiq = nota.valida? ? "success" : "info" %>
+					
+					<span class="btn">
+						<%= check_box_tag "notas_validas_ids[]", @nota.id, @nota.valida?, {:class => "btn"} %>
+						<%= @nota.valida? ? "Inluido" : "Incluir" %>
+					</span>
+					
+					<%# , :onclick => "return pintar_fondo('#{nota.id}');" %>
+					
+				<% when "paso3" %>
+					<%= link_to "/#{controller_name}/invalidar/#{@nota.id}?resumen_id=#{@resumen.id}&action_name=#{action_name}", :resumen_id => @resumen.id, :class => 'btn btn-mini btn-danger', :data => {:confirm => '¿Esta Seguro?', :method => 'delete'} do %>
+						<i class='icon-trash icon-black'></i>
+					<% end %>
+					|
+					<%= link_to ("/wizard/agregar_nota?website_name=#{website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
+						<%= content_tag(:i, "", class: "icon-arrow-up icon-white") %> 
+					<% end %>
+				<% end %>
+				
+				
 	    </div>
 	  </li>
 	</ul>

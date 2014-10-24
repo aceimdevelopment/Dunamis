@@ -1,2 +1,12 @@
-<%# "(Actualizacido Hasta: #{Nota.last.updated_at})" if @websites.first.notas %>
+
+<%= form_tag(:action => "#{action_name}_guardar") do %>
+
+<% if action_name == "paso1" %>
+	<div class="well well-small" style="text-align: right;">
+		<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
+	</div>
+<% end %>
+<%= render :partial => 'resumenes/filtro_lista'%>
 <%= render :partial => 'notas/lista' %>
+
+<% end %>
