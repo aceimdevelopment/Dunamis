@@ -1,0 +1,37 @@
+<%# form_tag do -%>
+	<!-- <div> -->
+		<p>
+			<%= text_field_tag 'filtro', nil ,{:onkeyup => "return filtrar()", :placeholder=>"Filtrar..."}%>
+			<a id="text" style="color:grey;"></a>
+		</p>
+		<%# link_to "",  {:class => 'btn btn-success', :onclick => "return filtrar()"} do %>
+		<!-- <a class="btn btn-success" onclick="return filtrar()">
+			<i class="icon-filter icon-white"></i>
+		</a> -->
+		<%# end %>	
+	<!-- </div> -->
+<%# end -%>
+
+
+<script type="text/javascript" charset="utf-8">
+	function filtrar() {
+		var filtro = document.getElementById("filtro").value.toLowerCase();
+		// filtro = filtro.value.toLowerCase();
+		// var trs = document.getElementsByTagName("tr");
+		var texto = "";
+		var texto2 = ""
+		$("table.notas .row-fluid").each(function(){
+			var temp = $(this).text().toLowerCase();
+			if (temp.match(filtro) == null) {
+				$(this).parent().parent().hide();
+				texto = texto + temp;
+			}else {
+				$(this).parent().parent().show();
+				texto2 = texto2 + temp;
+			}
+			
+		});
+		document.getElementById("text").innerHTML = filtro;
+		return false;
+		}
+</script>

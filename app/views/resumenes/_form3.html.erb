@@ -3,31 +3,6 @@
 	<%= hidden_field_tag "website_activa", "#{@website_activa}" %>
 	<%= hidden_field_tag "id", @resumen.id %>
 	
-		<% if action_name.eql? "paso3" %>
-			<div class="control-group">
-			  <%= label :compiladas, "Notas Agregadas a este vocero:", :class => 'control-label' if @resumen.notas.count > 0 %>
-			  <div class="controls">
-			    <%- @notas = @resumen.notas.order "updated_at DESC" -%>
-					<%- @notas.each do |nota| %>
-						<%= link_to nota.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>						
-						<%= link_to ("/wizard/desagregar_nota?website_name=#{nota.website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
-							<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %> 
-						<% end %>
-						|
-					<% end %>
-			  </div>
-			</div>
-		<% elsif action_name.eql? "paso2" %>
-		  <div class="control-group">
-			  <%= label :compiladas, "Voceros con Notas:", :class => 'control-label' if @resumenes.count > 0 %>
-			  <div class="controls">
-					<%- @resumenes.each do |resumen| %>
-						<%= link_to resumen.descripcion_corta, "/#{controller_name}/paso3/#{resumen.id}", {:class => 'btn btn-link toltip', :data => {:toggle => "tooltip", :placement => "top", "original-title" => "#{resumen.descripcion}"}} %>
-					<% end %>
-			  </div>
-			</div>
-		<% end %>
-
 	<div class="control-group">
 	  <%# f.label "Seleccione:", :class => 'control-label' %>
 	  <div class="controls">
@@ -50,15 +25,30 @@
 				<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, { :class => 'selects2', :style => 'width: 50%;'} %>
 			</div>
 		<% end %>
-		
-		<div class="controls">
-			<% if action_name.eql? "paso3" %>
-				</br>
-		    <div class="controls">
-		      <%= f.text_area :contenido, :class => 'text_area', :style => "width: 95%; height: 120px;", :placeholder=>"Contenido..." %>
-		    </div>
-			<% end %>
-		</div>
+
+		<% if action_name.eql? "paso3" %>
+			
+	    <%- @notas = @resumen.notas.order "updated_at DESC" -%>
+			
+			<div class="controls well well-small">
+					<%- @notas.each_with_index do |nota,i| %>
+					<%= link_to nota.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>						
+					<%= link_to ("/wizard/desagregar_nota?website_name=#{nota.website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
+						<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %> 
+					<% end %>
+					<%= (i+1 < @notas.count) ? "|" : "" %>
+				<% end %>
+			</div>	
+				<%= f.text_area :contenido, :class => 'text_area', :style => "width: 98%; height: 120px;", :placeholder=>"Contenido..." %>
+		<% elsif action_name.eql? "paso2" %>
+			<div class="controls well well-small">
+			  <%= label :compiladas, "#{@resumenes.count } Resúmenes agregados:", :class => 'control-label' if @resumenes.count > 0 %>
+
+				<%- @resumenes.each do |resumen| %>
+					<%= link_to resumen.descripcion_corta, "/#{controller_name}/paso3/#{resumen.id}", {:class => 'btn btn-link toltip', :data => {:toggle => "tooltip", :placement => "top", "original-title" => "#{resumen.descripcion}"}} %>
+				<% end %>
+		  </div>
+		<% end %>
 	</div>
 	
 	<div class="form-actions-small">

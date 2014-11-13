@@ -40,6 +40,6 @@ class Resumen < ActiveRecord::Base
   end
   
   def descripcion_corta
-    "#{descripcion[0..30]}..."
+    descripcion ? "#{descripcion[0..30]}..." : "buu"
   end
 end

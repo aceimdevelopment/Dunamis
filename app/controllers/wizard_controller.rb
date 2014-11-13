@@ -4,6 +4,18 @@ class WizardController < ApplicationController
     @websites = Website.all
     @titulo = "Paso 1 > Seleccione Notas"
     #manejo de website activa mediante el uso de la sesion
+    @total_notas = 0
+  	@websites.each {|website| @total_notas += website.notas.creadas_hoy.count}    
+    @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
+    
+    @accion = "paso1"
+  end
+
+  def paso1_vertical
+    
+    @websites = Website.all
+    @titulo = "Paso 1 > Seleccione Notas"
+    #manejo de website activa mediante el uso de la sesion
     @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     
     @accion = "paso1"
@@ -63,6 +75,7 @@ class WizardController < ApplicationController
   end
   
   def paso3
+    @titulo = "Paso 3 > Unifique Notas"
     @url = params[:url] if params[:url]
     #manejo de website activa mediante el uso de la sesion
     # @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
@@ -141,7 +154,7 @@ class WizardController < ApplicationController
       resumen.contenido = "#{resumen.contenido} | #{nota.titulo}"
       session[:website_activa] = params[:website_name]
       if nota.save and resumen.save
-        flash[:success] = " Nota agregada al resumen actual" 
+        flash[:success] = "#{resumen.notas.count} Notas Agregadas a este resumen" 
         redirect_to :action => "paso3/#{resumen.id}"
       else
         flash[:alert] = "No se puedo agregar la nota"

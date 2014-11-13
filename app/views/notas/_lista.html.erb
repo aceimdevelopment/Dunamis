@@ -1,59 +1,57 @@
-<div class="row-fluid">
-	<%- @websites.each_with_index do |website,i| -%>
-	    <label class="label label-info" style="font-size:80%;">
-					<%= check_box_tag "#{website.nombre}_activador", nil, false, {:onchange => "return mostrar('#{website.nombre}');"} %>
-					<%= website.nombre %>
-	    </label>
-	<% end %>
-</div>
-<%- total_notas = 0 -%>
+<p>Total: <b><%= @total_notas %> Notas</b></p>
+<%= render :partial => 'panel_website' if action_name.eql? 'paso1' %>
 
+<% display = (action_name.eql? 'paso1') ? 'none' : '' %>
 <table class="table-bordered">
 	<tr class="info">
 			<%- @websites.each_with_index do |website,i| -%>
-				<th id="<%= website.nombre %>_titulo" style="display:none;"><%= website.nombre %></th>
+				<%- contador_notas = website.notas.creadas_hoy %>
+				<%- contador_notas = (action_name.eql? 'paso1') ? contador_notas.sin_resumen.count : contador_notas.validas.sin_resumen.count %>
+				<% if contador_notas > 0 %>
+					<th id="<%= website.nombre %>_titulo" style="display:<%= display %>; background:skyblue;">
+						<%= website.nombre %>
+						<span class="badge badge-inverse"><%= contador_notas %></span>
+					</th>
+				<% end %>
+			
 			<% end %>
 	</tr>
 	<tr>
 
 		<%- @websites.each_with_index do |website,i| -%>
-			<td id="<%= website.nombre %>" style="display:none;">
-				<div style="overflow:scroll; height:400px;">
-					<table class="table table-condensed table-striped table-hover">
 
-						<% case action_name %>
-						<% when "paso1" %>
-							<%- @notas = website.notas.creadas_hoy.sin_resumen -%>
-						<% else %>
-							<%- @notas = website.notas.creadas_hoy.validas.sin_resumen -%>
-						<% end %>
-						<%- total_notas += @notas.count %>
-						<%- @notas.each do |nota| -%>
-							<% @nota = nota %>
-							<tr class="contenido"><td><%= render :partial => 'notas/detalle' %></td></tr>
-						<% end %>
-					</table>
-				</div>
-			</td>
-		<% end %>		
-		
+			<%- @notas = website.notas.creadas_hoy %>
+			<%- @notas = (action_name.eql? 'paso1') ? @notas.sin_resumen : @notas.validas.sin_resumen %>
+
+			<% if @notas.count > 0 %>	
+				<td id="<%= website.nombre %>" style="display:<%= display %>;">
+					<div style="overflow:scroll; height:400px;">
+						<table class="table table-condensed table-striped table-hover notas">
+							<%- @notas.each do |nota| -%>
+								<% @nota = nota %>
+									<%= render :partial => 'notas/detalle' %>
+							<% end %>
+						</table>
+					</div>
+				</td>
+			<% end %>	
+		<% end %>
 	</tr>
 </table>
 
-<%= total_notas %>
 <script type="text/javascript" charset="utf-8">
 
-	function mostrar(website){
-		if ($('#'+website+'_activador').is(':checked')) { 
-			$('#'+website).show()
-			$('#'+website+'_titulo').show()
+	$(document).ready(function(){
+	  $("table.notas .row-fluid").click(function(){
+			var checkbox = $(this).find(':checkbox');
+			checkbox.click();
+			if(checkbox.is(':checked')) {  
+				$(this).parent().parent().addClass('success');
 			}else{
-				$('#'+website).hide()
-				$('#'+website+'_titulo').hide()
-				}
-		return false;
-	}
-
+				$(this).parent().parent().removeClass('success');
+			}
+	   });
+	});
 
 	$(".voceros").select2({
 		formatResult: format,
@@ -61,10 +59,4 @@
 		escapeMarkup: function(m) { return m; }
 	});
 
-
-	function detalle(nota_id){
-		if ($('#contenido_nota'+nota_id).css("display") == "none") { $('#contenido_nota'+nota_id).show();}
-		else{$('#contenido_nota'+nota_id).hide();}
-		return false;
-	}
 </script>

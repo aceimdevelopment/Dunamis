@@ -1,40 +1,60 @@
-<div class="row-fluid">
-	<ul class="media-list">
-	  <li class="media">
-	    <a class="pull-right" href="#">
-	      <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/png;" style="width: 64px; height: 64px;">
-	    </a>
-	    <div class="media-body">
-	      <b class="media-heading"><%= @nota.fecha_publicacion %> : <%= @nota.titulo.to_s[0..100] %></b>
-	      <% unless @nota.contenido.blank? %>
-					<%= @nota.contenido %>
-				<% end %>
+<% clase = @nota.valida? ? "success" : "" %>
+<tr class= "<%= clase %>">
+	<td>	
+	<div class="row-fluid" >
+		<ul class="media-list">
+		  <li class="media">
+		    <div class="media-body">
+				<!-- <p> -->
+					<% case action_name %>
+					<% when "paso1" %>
+					
+						<%= check_box_tag "notas_validas_ids[]", @nota.id, @nota.valida?, {:class => "btn", :style => "display:none;"} %>
 				
-				<% case action_name %>
-				<% when "paso1" %>
-					<%# etiq = nota.valida? ? "success" : "info" %>
-					
-					<span class="btn">
-						<%= check_box_tag "notas_validas_ids[]", @nota.id, @nota.valida?, {:class => "btn"} %>
-						<%= @nota.valida? ? "Inluido" : "Incluir" %>
-					</span>
-					
-					<%# , :onclick => "return pintar_fondo('#{nota.id}');" %>
-					
-				<% when "paso3" %>
-					<%= link_to "/#{controller_name}/invalidar/#{@nota.id}?resumen_id=#{@resumen.id}&action_name=#{action_name}", :resumen_id => @resumen.id, :class => 'btn btn-mini btn-danger', :data => {:confirm => '¿Esta Seguro?', :method => 'delete'} do %>
-						<i class='icon-trash icon-black'></i>
+					<% when "paso3" %>
+						<%= link_to "/#{controller_name}/invalidar/#{@nota.id}?resumen_id=#{@resumen.id}&action_name=#{action_name}", :resumen_id => @resumen.id, :class => 'btn btn-mini btn-danger', :data => {:confirm => '¿Esta Seguro?', :method => 'delete'} do %>
+							<i class='icon-trash icon-black'></i>
+						<% end %>
+						|
+						<%= link_to ("/wizard/agregar_nota?website_name=#{website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
+							<%= content_tag(:i, "", class: "icon-arrow-up icon-white") %> 
+						<% end %>
 					<% end %>
-					|
-					<%= link_to ("/wizard/agregar_nota?website_name=#{website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
-						<%= content_tag(:i, "", class: "icon-arrow-up icon-white") %> 
+
+		      <b class="media-heading">
+						<%= @nota.fecha_publicacion %> : <%= @nota.titulo.to_s[0..100] %>
+					</b>
+					<%- unless @nota.imagen.blank? -%>
+						<a class="pull-right">
+							<%= image_tag @nota.imagen, :title => "imagen", :class => "media-object img-rounded", :style => 'max-width: 120px; max-height:120px;'%>
+				  	</a>
 					<% end %>
-				<% end %>
-				
-				
-	    </div>
-	  </li>
-	</ul>
-</div>
+			    <% unless @nota.contenido.blank? %>
+						<div id="contenido_nota<%=@nota.id%>" class="contenido_nota" style = "display: none;">							
+							<%= @nota.contenido %>
+						</div>
+					<% end %>
+		    </div>
+		  </li>
+		</ul>
+	</div>
+	<div >
+		<%= link_nota @nota %>
+		<%= link_to "detalle", " ", {:class => 'btn btn-mini', :onclick => "return detalle('#{@nota.id}')"} unless @nota.contenido.blank? %>			
+	</div>
+</td></tr>
 
 
+<script type="text/javascript" charset="utf-8">
+
+	function detalle(nota_id){
+		if ($('#contenido_nota'+nota_id).css("display") == "none") { 
+			$('#contenido_nota'+nota_id).show();
+			$(this).hide;
+
+			}
+		else{$('#contenido_nota'+nota_id).hide();}
+		return false;
+	}
+	
+</script>

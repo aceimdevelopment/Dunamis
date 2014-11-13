@@ -1,0 +1,24 @@
+<div class="row-fluid">
+	<%- @websites.each_with_index do |website,i| -%>
+
+			    <label class="label well well-small" style="font-size:80%;witdth:100%;">
+							<%= check_box_tag "#{website.nombre}_activador", nil, false, {:onchange => "return mostrar('#{website.nombre}');"} %>
+							<%= website.nombre %>
+			    </label>
+
+	<% end %>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+	function mostrar(website){
+		if ($('#'+website+'_activador').is(':checked')) { 
+			$('#'+website).show()
+			$('#'+website+'_titulo').show()
+			}else{
+				$('#'+website).hide()
+				$('#'+website+'_titulo').hide()
+				}
+		return false;
+	}
+</script>
