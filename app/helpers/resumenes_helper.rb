@@ -25,11 +25,11 @@ module ResumenesHelper
   end
   
   def crud_botones resumen, url=nil # Agregan los botones de editar y eliminar resumen
-    
-    mensaje = "<a href='/resumenes/#{resumen.id}?url=#{url}' class='btn btn-mini btn-danger' data-confirm='¿Esta Seguro?' data-method='delete' rel='nofollow'>
+    url_val = url.nil? ? "" : "?url=#{url}"
+    mensaje = "<a href='/resumenes/#{resumen.id}#{url_val}' class='btn btn-mini btn-danger' data-confirm='¿Esta Seguro?' data-method='delete' rel='nofollow'>
     						<i class='icon-trash icon-black'></i>
     </a> | "
-    mensaje += "<a href='/wizard/paso3/#{resumen.id}?url=#{url}' class='btn btn-mini btn-info'>
+    mensaje += "<a href='/wizard/paso3/#{resumen.id}#{url_val}' class='btn btn-mini btn-info'>
     						<i class='icon-edit icon-black'></i>
     </a>"
     return mensaje

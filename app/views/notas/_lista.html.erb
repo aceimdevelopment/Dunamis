@@ -1,14 +1,15 @@
-<p>Total: <b><%= @total_notas %> Notas</b></p>
-<%= render :partial => 'panel_website' if action_name.eql? 'paso1' %>
+<%- paso1 = action_name.eql? 'paso1' -%>
+<p class= 'label label-info'><b><%= @total_notas %> <%= "Nota".pluralize(@total_notas) %> <%= "Disponible".pluralize(@total_notas) %></b></p>
+<%= render :partial => 'panel_website' if paso1 %>
 
-<% display = (action_name.eql? 'paso1') ? 'none' : '' %>
+<% display = paso1 ? 'display:none;' : '' %>
 <table class="table-bordered">
 	<tr class="info">
 			<%- @websites.each_with_index do |website,i| -%>
 				<%- contador_notas = website.notas.creadas_hoy %>
-				<%- contador_notas = (action_name.eql? 'paso1') ? contador_notas.sin_resumen.count : contador_notas.validas.sin_resumen.count %>
+				<%- contador_notas = paso1 ? contador_notas.sin_resumen.count : contador_notas.validas.sin_resumen.count %>
 				<% if contador_notas > 0 %>
-					<th id="<%= website.nombre %>_titulo" style="display:<%= display %>; background:skyblue;">
+					<th id="<%= website.nombre %>_titulo" style="<%= display %> background:skyblue;">
 						<%= website.nombre %>
 						<span class="badge badge-inverse"><%= contador_notas %></span>
 					</th>
@@ -24,11 +25,12 @@
 			<%- @notas = (action_name.eql? 'paso1') ? @notas.sin_resumen : @notas.validas.sin_resumen %>
 
 			<% if @notas.count > 0 %>	
-				<td id="<%= website.nombre %>" style="display:<%= display %>;">
-					<div style="overflow:scroll; height:400px;">
+				<td id="<%= website.nombre %>" style="<%= display %>">
+					<div style="overflow:scroll; max-height:400px;">
 						<table class="table table-condensed table-striped table-hover notas">
 							<%- @notas.each do |nota| -%>
 								<% @nota = nota %>
+								<% @website = website %>
 									<%= render :partial => 'notas/detalle' %>
 							<% end %>
 						</table>
@@ -39,19 +41,23 @@
 	</tr>
 </table>
 
-<script type="text/javascript" charset="utf-8">
+<% if paso1 %>
+	<script type="text/javascript" charset="utf-8">
 
-	$(document).ready(function(){
-	  $("table.notas .row-fluid").click(function(){
-			var checkbox = $(this).find(':checkbox');
-			checkbox.click();
-			if(checkbox.is(':checked')) {  
-				$(this).parent().parent().addClass('success');
-			}else{
-				$(this).parent().parent().removeClass('success');
-			}
-	   });
-	});
+		$(document).ready(function(){
+		  $("table.notas .row-fluid").click(function(){
+				var checkbox = $(this).find(':checkbox');
+				checkbox.click();
+				if(checkbox.is(':checked')) {  
+					$(this).parent().parent().addClass('success');
+				}else{
+					$(this).parent().parent().removeClass('success');
+				}
+		   });
+		});
+	</script>
+<% else %>
+<script type="text/javascript" charset="utf-8">
 
 	$(".voceros").select2({
 		formatResult: format,
@@ -59,4 +65,6 @@
 		escapeMarkup: function(m) { return m; }
 	});
 
-</script>
+</script>  
+
+<% end %>

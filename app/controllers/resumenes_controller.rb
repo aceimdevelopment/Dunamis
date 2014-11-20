@@ -180,6 +180,41 @@ class ResumenesController < ApplicationController
     end
     redirect_to :controller => 'informes', :action => "paso2"
   end  
+
+  def paso2b
+    @accion = "update"
+    @resumen = Resumen.find(params[:id])
+    @websites = Website.all
+    @vocero = Vocero.new
+    @tema = Tema.new    
+  end
+  
+
+  def fusionar
+    # Esta función es irreversible. Ingluir mensaje de alerta y confirmación en 
+    if unir_resumenes_ids = params[:unir_resumenes_ids]
+      primer_id = unir_resumenes_ids.first
+      r1 = Resumen.find(primer_id)
+      unir_resumenes_ids.shift
+      unir_resumenes_ids.each do |id|
+        r2 = Resumen.find id
+        r2.informe_id = nil
+        
+        r2.notas.each do |nota|
+          nota.resumen_id = r1.id
+        end
+        r1.titulo += r2.titulo
+        r1.contenido += r2.contenido
+        r2.destroy
+        if r1.save 
+          flash[:success] = "Fusión Completada Satisfactoriamente" 
+        else
+          flash[:alert] = "Error al Intentar Fusón" 
+        end
+      end
+    end
+    redirect_to :controller => 'informes', :action => "paso2"
+  end
   
   def ordenar
     orden_resumen = params[:orden_resumenes]

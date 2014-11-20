@@ -11,16 +11,6 @@ class WizardController < ApplicationController
     @accion = "paso1"
   end
 
-  def paso1_vertical
-    
-    @websites = Website.all
-    @titulo = "Paso 1 > Seleccione Notas"
-    #manejo de website activa mediante el uso de la sesion
-    @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
-    
-    @accion = "paso1"
-  end
-
   def paso1_guardar
     if params[:notas_validas_ids]
       params[:notas_validas_ids].each do |nota_id|
@@ -45,9 +35,14 @@ class WizardController < ApplicationController
     end
     @resumen.vocero_id = params[:vocero_id] if params[:vocero_id]
     # @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
-    @resumenes = Resumen.creados_hoy.sin_informe
+    @resumenes = Resumen.creados_hoy.sin_informe.order "updated_at DESC"
     @vocero = Vocero.new
     @websites = Website.all
+
+    @total_notas = 0
+  	@websites.each {|website| @total_notas += website.notas.creadas_hoy.validas.sin_resumen.count}
+    flash[:notice] = "No hay notas pendientes por agregar a resumenes" if @total_notas.eql? 0
+
     # Manejo de website activa mediante el uso de la sesion
     @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
   end
@@ -82,6 +77,9 @@ class WizardController < ApplicationController
     # session[:website_activa] = @websites.first.nombre if session[:website_activa].nil?
     @resumen = Resumen.find(params[:id])
     @websites = Website.all
+    @total_notas = 0
+  	@websites.each {|website| @total_notas += website.notas.creadas_hoy.validas.sin_resumen.count}  
+    flash[:notice] = "No hay notas pendientes por agregar a resumenes" if @total_notas.eql? 0
     @vocero = Vocero.new
   end
 
@@ -103,7 +101,7 @@ class WizardController < ApplicationController
 
     respond_to do |format|
       if @resumen.update_attributes(params[:resumen])
-        flash[:success] = "Resumen generado correctamente"
+        flash[:success] = "#{Resumen.creados_hoy.sin_informe.count} Resumenes agregados"
         if params[:url]
           format.html { redirect_to params[:url]}
         else

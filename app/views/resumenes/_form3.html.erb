@@ -1,74 +1,106 @@
-
+<!-- Inicio de Form para resúmenes -->
 <%= form_for @resumen, :url=>{:action => "#{action_name}_guardar"},  :html => { :class => 'well well-small form-actions' } do |f| %>
 	<%= hidden_field_tag "website_activa", "#{@website_activa}" %>
 	<%= hidden_field_tag "id", @resumen.id %>
-	
-	<div class="control-group">
-	  <%# f.label "Seleccione:", :class => 'control-label' %>
-	  <div class="controls">
 
-	    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}, :onChange => "return mostrar_edit();"} %>
-			<%= hidden_field_tag 'url', @url if @url %>
-			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :id => 'boton_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
-				<%= content_tag(:i, "", class: "icon-edit icon-white") %>
-				<%= content_tag(:i, "", class: "icon-user icon-white") %>
-			<% end %>
+	<!-- Gestión de Vocero (Selección, Agregación y Edición) -->
+			
+			<% if @total_notas > 0 %>
+				<div class="control-group">
+			    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}, :onChange => "return mostrar_edit();"} %>
+					<%= hidden_field_tag 'url', @url if @url %>
+					<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :id => 'boton_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
+						<%= content_tag(:i, "", class: "icon-edit icon-white") %>
+						<%= content_tag(:i, "", class: "icon-user icon-white") %>
+					<% end %>
 								
-			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
-				<%= content_tag(:i, "", class: "icon-plus icon-white") %>
-				<%= content_tag(:i, "", class: "icon-user icon-white") %>
+					<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
+						<%= content_tag(:i, "", class: "icon-plus icon-white") %>
+						<%= content_tag(:i, "", class: "icon-user icon-white") %>
+					<% end %>
+				</div>
 			<% end %>
-		</div>
-		
+			
+			
+		<!-- Carga de resumen si existe dentro del tema -->
 		<% if @resumen.tema_id? %>
 			<div class="controls">
 				<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, { :class => 'selects2', :style => 'width: 50%;'} %>
 			</div>
 		<% end %>
 
-		<% if action_name.eql? "paso3" %>
-			
-	    <%- @notas = @resumen.notas.order "updated_at DESC" -%>
-			
-			<div class="controls well well-small">
-					<%- @notas.each_with_index do |nota,i| %>
-					<%= link_to nota.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>						
-					<%= link_to ("/wizard/desagregar_nota?website_name=#{nota.website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
-						<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %> 
-					<% end %>
-					<%= (i+1 < @notas.count) ? "|" : "" %>
-				<% end %>
-			</div>	
-				<%= f.text_area :contenido, :class => 'text_area', :style => "width: 98%; height: 120px;", :placeholder=>"Contenido..." %>
-		<% elsif action_name.eql? "paso2" %>
-			<div class="controls well well-small">
-			  <%= label :compiladas, "#{@resumenes.count } Resúmenes agregados:", :class => 'control-label' if @resumenes.count > 0 %>
+		<!-- Carga de resúmenes o notas registradas if existen -->
 
-				<%- @resumenes.each do |resumen| %>
-					<%= link_to resumen.descripcion_corta, "/#{controller_name}/paso3/#{resumen.id}", {:class => 'btn btn-link toltip', :data => {:toggle => "tooltip", :placement => "top", "original-title" => "#{resumen.descripcion}"}} %>
-				<% end %>
-		  </div>
+		<% case action_name %>
+		<% when 'paso2' %>
+			<% if @resumenes.count > 0 %>
+				<div class="control-group well well-small contenedor_notas_resumenes">
+						<table class="table-condensed table-striped table-hover contenido_nota" style="width:100%;">
+							<tbody>
+								<%- @resumenes.each do |resumen| %>
+									<tr class='info'><td><%= notas_estructuradas resumen %></td></tr>
+								<% end %>
+							</tbody>
+						</table>
+				</div>
+			<% end %>
+		
+			
+		<% when 'paso3' %>
+			<%- @notas = @resumen.notas.order "updated_at DESC" -%>
+			<div class="control-group">
+				<%= f.text_area :contenido, :class => 'text_area', :style => "width: 98%; height: 120px;", :placeholder=>"Contenido..." %>
+			</div>
+			<% if @notas.count > 0 %>
+				<div class="control-group well well-small contenedor_notas_resumenes">
+						<table class="table-condensed table-striped table-hover contenido_nota" style="width:100%;">
+							<tbody>
+								<%- @notas.each_with_index do |nota,i| %>
+								<tr class='info'> 
+									<td><b><%= nota.website.nombre %></b></td>
+									<td><%= link_to nota.titulo.truncate(100, :omission => "..."), nota.url, {:class => 'btn btn-link contenido_nota', :target => '_blank'} %></td>
+									<td>
+										<%= link_to ("/wizard/desagregar_nota?website_name=#{nota.website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
+											<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %>
+										<% end %>
+										|
+										<%= link_to "/wizard/invalidar/#{nota.id}?resumen_id=#{@resumen.id}&action_name=#{action_name}", :resumen_id => @resumen.id, :class => 'btn btn-mini btn-danger', :data => {:confirm => '¿Esta Seguro?', :method => 'delete'} do %>
+										<%= content_tag(:i, "", class: "icon-trash icon-black") %>
+										<% end %>
+
+									</td>
+								</tr>
+								<% end %>
+							</tbody>
+						</table>
+				</div>
+			<% end %>
 		<% end %>
-	</div>
+
+
+		<!-- Wizard_nav de form -->
 	
-	<div class="form-actions-small">
-		<table border="0" style="width: 100%;">
-			<tr>
-				<td>
-					<%- if action_name.eql? "paso2" %>
-						<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso1"}, :class => 'btn'%>
-					<% elsif  action_name.eql? "paso3"%>
-						<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso2/#{@resumen.id}"}, :class => 'btn'%>
+		<div class="form-actions-small">
+			<table border="0" style="width: 100%;">
+				<tr>
+					<td>
+						<% case action_name %>
+						<% when "paso2" %>
+							<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso1"}, :class => 'btn'%>
+						<% when "paso3" %>
+							<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso2/#{@resumen.id}"}, :class => 'btn'%>
+						<% end %>
+					</td>
+					<% if @total_notas > 0 or (action_name.eql? 'paso3') %>
+						<td >
+							<div style="text-align: right;">
+								<%= f.submit "Guardar", :class => 'btn btn-primary'%>
+							</div>
+						</td>
 					<% end %>
-				</td>
-				<td >
-					<div style="text-align: right;">
-						<%= f.submit "Siguiente", :class => 'btn btn-primary'%>
-					</div>
-				</td>
-			</tr>
-		</table>
-	</div>
+				</tr>
+			</table>
+		</div>
 
 <% end %>
 

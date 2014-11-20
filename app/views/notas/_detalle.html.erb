@@ -12,13 +12,15 @@
 						<%= check_box_tag "notas_validas_ids[]", @nota.id, @nota.valida?, {:class => "btn", :style => "display:none;"} %>
 				
 					<% when "paso3" %>
+					
 						<%= link_to "/#{controller_name}/invalidar/#{@nota.id}?resumen_id=#{@resumen.id}&action_name=#{action_name}", :resumen_id => @resumen.id, :class => 'btn btn-mini btn-danger', :data => {:confirm => '¿Esta Seguro?', :method => 'delete'} do %>
 							<i class='icon-trash icon-black'></i>
 						<% end %>
 						|
-						<%= link_to ("/wizard/agregar_nota?website_name=#{website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
+						<%= link_to ("/wizard/agregar_nota?website_name=#{@website.nombre}&nota_id=#{@nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
 							<%= content_tag(:i, "", class: "icon-arrow-up icon-white") %> 
 						<% end %>
+					
 					<% end %>
 
 		      <b class="media-heading">

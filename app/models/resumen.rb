@@ -31,15 +31,13 @@ class Resumen < ActiveRecord::Base
   end
 
   def descripcion
-    descripcion = "#{vocero.nombre}:" if vocero
-    descripcion += " - #{tema.nombre}" if tema
-    
-    descripcion += contenido if contenido
-    # "#{vocero.nombre}: #{tema.nombre} #{"/ " + contenido[0..20] + "..." if contenido}"
-    return descripcion
+    aux = ""
+    aux += "#{tema.nombre} - " if tema
+    aux += contenido if contenido
+
   end
   
   def descripcion_corta
-    descripcion ? "#{descripcion[0..30]}..." : "buu"
+    (descripcion.eql? "-") ? "Sin descripcion" : "#{descripcion[0..100]}..."
   end
 end

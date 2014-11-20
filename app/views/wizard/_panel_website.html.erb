@@ -1,8 +1,8 @@
 <div class="row-fluid">
 	<%- @websites.each_with_index do |website,i| -%>
 
-			    <label class="label well well-small" style="font-size:80%;witdth:100%;">
-							<%= check_box_tag "#{website.nombre}_activador", nil, false, {:onchange => "return mostrar('#{website.nombre}');"} %>
+			    <label class="label well well-small" style="font-size:80%;" id= "label_<%= website.nombre %>">
+							<%= check_box_tag "#{website.nombre}_activador", nil, false, {:onchange => "return mostrar('#{website.nombre}');", :style => 'display:none;'} %>
 							<%= website.nombre %>
 			    </label>
 
@@ -12,13 +12,17 @@
 <script type="text/javascript" charset="utf-8">
 
 	function mostrar(website){
-		if ($('#'+website+'_activador').is(':checked')) { 
-			$('#'+website).show()
-			$('#'+website+'_titulo').show()
-			}else{
-				$('#'+website).hide()
-				$('#'+website+'_titulo').hide()
-				}
+		
+		activador = $('#'+website+'_activador');
+		if (activador.is(':checked')) { 
+			$('#'+website).show();
+			$('#'+website+'_titulo').show();
+			activador.parent().addClass('label-success');
+		}else{
+			$('#'+website).hide();
+			$('#'+website+'_titulo').hide();
+			activador.parent().removeClass('label-success');
+		}
 		return false;
 	}
 </script>
