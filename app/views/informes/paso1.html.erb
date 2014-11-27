@@ -5,14 +5,9 @@
 		<%= link_to "Siguiente", {:action => @accion}, :class => 'btn btn-primary pull-right', :style=>"text-align: right;", :type => "submit"%>
 	</div>
 <% end %>
-<div class='row'>
-	<ul class="thumbnails">
 
-		<%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>
-		
-		<%= render :partial => 'resumenes_con_tema' if @resumenes_con_tema.count > 0 %>
-	</ul>	
-</div>	
+<%= render :partial => 'resumenes_con_tema' if @resumenes_con_tema.count > 0 %>
+<%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>			
 	
 <!-- Modal de Tema -->
 <div id="tema_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

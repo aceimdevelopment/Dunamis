@@ -26,7 +26,7 @@
 
 			<% if @notas.count > 0 %>	
 				<td id="<%= website.nombre %>" style="<%= display %>">
-					<div style="overflow:scroll; max-height:400px;">
+					<div class=contenido_scroll>
 						<table class="table table-condensed table-striped table-hover notas">
 							<%- @notas.each do |nota| -%>
 								<% @nota = nota %>

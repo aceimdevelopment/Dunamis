@@ -28,6 +28,15 @@
 	margin-top: 42px;
 	
 }
+.contenido_scroll{
+	overflow:scroll; 
+	max-height:400px;
+}
+
+.contenido_scroll_200{
+	overflow:scroll; 
+	max-height:200px;
+}
 
 .contenido_nota{
 text-align: justify;

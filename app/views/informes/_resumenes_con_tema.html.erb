@@ -1,11 +1,9 @@
-
-<li class="span7">
   <div class="thumbnail">
 		<div class="caption">
 			<h3>Resúmenes con Temas Asignados</h3>
 		</div>
 		<% if @asuntos %>
-			<div class ="well">
+			<div class ="well contenido_scroll_200">
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr><td>
 						<% @asuntos.each do |asunto| %>
@@ -31,7 +29,7 @@
 																</dd>												
 																<div style = "text-align: right;background-color: #ddd; padding: 5px;">
 																	<%= link_to ("/informes/desagregar_resumen/#{resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
-																		<%= content_tag(:i, "", class: "icon-arrow-left icon-black") %> 
+																		<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %> 
 																	<% end %>
 
 																</div>
@@ -50,4 +48,3 @@
 			</div>
 		<% end %>
   </div>
-</li>
