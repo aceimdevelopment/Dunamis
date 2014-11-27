@@ -2,7 +2,7 @@ desc "Importa las notas de las Websites"
 task :importar_notas_website => :environment do
   puts 'Iniciando Barrido...'
   # Nota.delete_all (["resumen_id IS ? AND created_at < ?", nil, Date.today])
-  # puts 'Borrando notas anteriores a hoy...'
+  puts 'Borrando notas anteriores a hoy...'
   while true do
     puts "Inicio Vuelta: <#{DateTime.now}>"
     Website.all.each do |website|
