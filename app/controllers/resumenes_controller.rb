@@ -164,6 +164,7 @@ class ResumenesController < ApplicationController
   def unir
     # informe = Informe.find params[:informe_id] 
     if unir_resumenes_ids = params[:unir_resumenes_ids]
+      flash[:alert] = "Debe Seleccionar al menos un par de resumenes" if unir_resumenes_ids.count.eql? 1
       primer_id = unir_resumenes_ids.first
       r1 = Resumen.find(primer_id)
       unir_resumenes_ids.shift
@@ -177,6 +178,8 @@ class ResumenesController < ApplicationController
           flash[:alert] = "Error al Intentar unir" 
         end
       end
+    else
+      flash[:alert] = "Debe Seleccionar al menos un par de resumenes" 
     end
     redirect_to :controller => 'informes', :action => "paso2"
   end  
@@ -192,28 +195,30 @@ class ResumenesController < ApplicationController
 
   def fusionar
     # Esta función es irreversible. Ingluir mensaje de alerta y confirmación en 
-    if unir_resumenes_ids = params[:unir_resumenes_ids]
-      primer_id = unir_resumenes_ids.first
+    if fusionar_resumenes_ids = params[:fusionar_resumenes_ids]
+      flash[:alert] = "Debe Seleccionar al menos un par de resumenes" if fusionar_resumenes_ids.count.eql? 1
+      primer_id = fusionar_resumenes_ids.first
       r1 = Resumen.find(primer_id)
-      unir_resumenes_ids.shift
-      unir_resumenes_ids.each do |id|
+      fusionar_resumenes_ids.shift
+      fusionar_resumenes_ids.each do |id|
         r2 = Resumen.find id
-        r2.informe_id = nil
-        
         r2.notas.each do |nota|
           nota.resumen_id = r1.id
+          nota.save
         end
-        r1.titulo += r2.titulo
-        r1.contenido += r2.contenido
+        r1.titulo += r2.titulo if r1.titulo
+        r1.contenido += " #{r2.contenido}" if r1.contenido
         r2.destroy
         if r1.save 
           flash[:success] = "Fusión Completada Satisfactoriamente" 
         else
-          flash[:alert] = "Error al Intentar Fusón" 
+          flash[:alert] = "Error al Intentar Fusión" 
         end
       end
+    else
+      flash[:alert] = "Debe Seleccionar al menos un par de resumenes" 
     end
-    redirect_to :controller => 'informes', :action => "paso2"
+    redirect_to :controller => 'informes', :action => "paso2b"
   end
   
   def ordenar

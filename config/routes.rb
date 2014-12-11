@@ -47,6 +47,7 @@ Dunamis::Application.routes.draw do
       get 'enviar_por_correo'
       get 'paso1'
       get 'paso2'
+      get 'paso2b'
       get 'paso3'
       get 'paso4'
       get 'paso5'

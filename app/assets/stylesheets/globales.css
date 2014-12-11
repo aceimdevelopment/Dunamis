@@ -15,6 +15,8 @@
 
 .centrar {text-align: center;}
 
+.derecha {text-align: right;}
+
 .contenedor_notas_resumenes{
 	overflow:scroll; 
 	max-height:150px; 
@@ -26,6 +28,9 @@
 	background-repeat: no-repeat;
 	height: 70px;
 	margin-top: 42px;
+	margin-bottom: 10px;
+	border-bottom: solid 1px #eee;
+	
 	
 }
 .contenido_scroll{
@@ -42,4 +47,9 @@
 text-align: justify;
 font-size: 11px;
 font-family: verdana;
+}
+
+.asunto_tema_titulo{
+	background-color: #ddd;
+	padding-left: 10px;
 }

@@ -24,7 +24,7 @@
 			</strong>				
 		</div>
 		
-    <%= f.text_area :resumen, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :required => true, :style => "height:100px;"%>
+    <%= f.text_area :resumen, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :required => true, :autofocus => true, :placeholder => "Resumen del informe…", :style => "height:100px;"%>
 		<% @resumenes.collect do |r| %>
 			<%= hidden_field_tag "resumenes_ids[]", r.id %> 
 		<% end %>
@@ -32,58 +32,76 @@
 		</br>
 	  <div class="form-actions-online" style = "text-align: right">
 	    <%= f.submit 'Completar informe', :class => 'btn btn-primary' %>
-	    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-	                informes_path, :class => 'btn' %>
+	    <%= link_to t('.atras', :default => t("helpers.links.atrás")),
+	                {:action => "paso5/#{@informe.id}"}, :class => 'btn' %>
 	  </div>
 	</div>
 <% end %>
 
 <div class="alert alert-info" style="text-align:center;">
 		<a class="close" data-dismiss="alert">&#215;</a>
-		<strong>Total de notas compiladas:</strong>
+		<strong>Total de resúmenes compilados:</strong>
 		<span class="badge"><%= @resumenes.count %></span>
 </div>
 
 <div class ="well well-small">
-	<table border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>
-				<% @asuntos.each do |asunto| %>
-					<% temas = asunto.temas %>
 
-					<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
-					<% if temas.count > 0 %>
-						</br>
+		<% if ((action_name=="paso4" or action_name=="paso5" or action_name=="paso6")  and controller_name=="informes") %>
+			<%= hidden_field_tag :id, @informe.id %>
+		<% end %>
 
-						<dd><u><%= asunto.nombre %></u>
-								<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
-								<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>								
-						</dd>
+		<% @asuntos.each do |asunto| %>
+			<% temas = asunto.temas %>
 
-						</br>
-						<ul>
-							<% temas.each do |tema| %>
-								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
-								<% if resumenes_final.count > 0 %> 
-									<li style = 'display:block;'>
-										<dd style = 'background-color: #ddd;'><strong><em><%= tema.nombre %></em></strong></dd>
-										<div class="well well-small">
-											<% resumenes_final.each_with_index do |resumen, i| %>
-												<% if resumen.resumen_id.nil? %>
-													<div class="well justificar" style="padding: 5px; margin: 5px; text-align:justify;">
-														<% resumen.orden = i+1 if resumen.orden.nil? %>
-														<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-													</div>
-												<% end %>
+			<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
+			<% if temas.count > 0 %>
+				
+				<div class='asunto_tema_titulo'><u><%= asunto.nombre %></u>
+					<% if (controller_name=="informes" and action_name=="paso5") %>
+						<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
+						<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>
+						
+						<span class="label label-success pull-right">
+							<%= number_field_tag "orden_asuntos[#{asunto.id}]", (@informe_asunto.orden if @informe_asunto) , :in => 1...@informes_asuntos.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
+						<span>
+					<% end %>							
+				</div>
+				<div class='well well-small'>
+					<ul>
+						<% temas.each do |tema| %>
+							<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
+							<% if resumenes_final.count > 0 %> 
+								<li style = 'display:block;'>
+									<div class = 'asunto_tema_titulo'><strong><em><%= tema.nombre %></em></strong></div>
+									<div class="well well-small">
+										<% resumenes_final.each_with_index do |resumen, i| %>
+											<% if resumen.resumen_id.nil? %>
+												<div class="well justificar" style="padding: 2px; margin: 2px;">
+													<% resumen.orden = i+1 if resumen.orden.nil? %>
+													<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+												</div>
 											<% end %>
-										</div>
-									</li>
-								<% end %>
-							<% end %>
-						</ul>
-					<% end %>
-				<% end %>
-		</td></tr>
-	</table>
+										<% end %>
+									</div>
+								</li>
+							<% end %>	
+						<% end %>
+					</ul>
+				</div>	
+			<% end %>
+		<% end %>
+
 </div>
+
+
+
+
+
+
+
+
+
+
+
+<%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>
 

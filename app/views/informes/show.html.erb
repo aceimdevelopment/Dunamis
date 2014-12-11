@@ -1,9 +1,7 @@
 <%- model_class = Informe -%>
 <div class="page-header">
-	<%= link_to t('Ver Informer', :default => t("helpers.links.back")),
-              informes_path, :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_informe_path(@informe), :class => 'btn' %>	
+	<%= link_to t('Lista de Informes'), informes_path, :class => 'btn'  %>
+  <%= link_to t('editar'),{:action => "paso6/#{@informe.id}"}, :class => 'btn btn-info' %>
   <%= link_to t('enviar por correo'),
               {:controller => 'informes', :action => "enviar_por_correo/#{@informe.id}" }, :class => 'btn btn-success'  %>	
 </div>

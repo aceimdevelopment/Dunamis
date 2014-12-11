@@ -49,6 +49,17 @@ class InformesController < ApplicationController
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @informe = Informe.where(:id => params[:id]).limit(1).first if params[:id]
   end
+
+  def paso2b #unir Resumenes
+    @titulo = "Fusionar Resumenes"
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    @informe = Informe.where(:id => params[:id]).limit(1).first if params[:id]
+  end
+
+
   
   def paso3 #Ordenar entre temas
     @titulo = "Ordenar entre Temas"
@@ -100,21 +111,49 @@ class InformesController < ApplicationController
 
 
   def paso6
+
+    # SI HAY INFORME HAY QUE CARGAR LOS RESUMENES Y CORREGIR ORDEN DE ASUNTO Y TEMA. como en el paso 5
     @titulo = "Completar Informe"
     @informe = Informe.where(:id => params[:id]).limit(1).first
     @informe.autor = "Dirección de Seguimiento de la Información Electoral"
     @informe.tema = "AGENDA TEMÁTICA DE MEDIOS"
     @informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
+    # OJO QUEDÉ AQUI. SI HAY INFORME HAY QUE CARGAR LOS RESUMENES Y CORREGIR ORDEN DE ASUNTO Y TEMA
+    # @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    # @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    # temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    # @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    # @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
+    # 
+    # @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
+    # @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
 
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
-    @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
+
+    # session[:compilando_informe_id] = nil
+
+
+
+
 
     @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
     @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
-    # session[:compilando_informe_id] = nil
+    
+    if @informes_asuntos.count < 1
+      inicializar_orden_asuntos(@informe.id)
+      @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
+    end
+    
+    @titulo = "Ordenar Temas entre Asunto"
+    
+    @resumenes = @informe.resumenes.order(:orden)
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema if @resumenes.count < 1#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
+    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today) if temas_id.count < 1
+    
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
+
   end
 
 

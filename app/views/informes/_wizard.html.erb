@@ -1,9 +1,12 @@
 <% case action_name %>
 <% when "paso2" %>
 	<% @atras = "paso1" %>
+	<% @siguiente = "paso2b" %>
+<% when "paso2b" %>
+	<% @atras = "paso2" %>
 	<% @siguiente = "paso3" %>
 <% when "paso3" %>
-	<% @atras = "paso2" %>
+	<% @atras = "paso2b" %>
 	<% @siguiente = "paso4" %>
 <% when "paso4" %>
 	<% @atras = "paso3" %>
