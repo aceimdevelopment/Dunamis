@@ -4,6 +4,8 @@
 			    <label class="label well well-small" style="font-size:80%;" id= "label_<%= website.nombre %>">
 							<%= check_box_tag "#{website.nombre}_activador", nil, false, {:onchange => "return mostrar('#{website.nombre}');", :style => 'display:none;'} %>
 							<%= website.nombre %>
+							<%- contador_notas = website.notas.creadas_hoy %>
+							(<%= contador_notas.count %>)
 			    </label>
 
 	<% end %>

@@ -42,7 +42,6 @@ Dunamis::Application.routes.draw do
   
 
   resources :informes do
-    
     collection do
       get 'enviar_por_correo'
       get 'paso1'
@@ -53,6 +52,7 @@ Dunamis::Application.routes.draw do
       get 'paso5'
       get 'paso6'
       post 'agregar'
+      get 'paso3_guardar'
       post 'desagregar_resumen'
     end
     resources :resumenes

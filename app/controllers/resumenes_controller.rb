@@ -152,13 +152,20 @@ class ResumenesController < ApplicationController
     resumen = Resumen.find params[:id]
     if resumen
       resumen.resumen_id = nil
+      resumen.informe_id = params[:informe_id] if params[:informe_id]
       if resumen.save
         flash[:info] = "Separación completada" 
       else
         flash[:alert] = "Error al intentar separar los resumenes" 
       end
     end
-    redirect_to :controller => 'informes', :action => "paso2"
+
+    if params[:informe_id]
+      redirect_to :controller => 'informes', :action => "paso2/#{params[:informe_id]}"
+    else
+      redirect_to :controller => 'informes', :action => "paso2"
+    end
+
   end
   
   def unir
@@ -181,7 +188,13 @@ class ResumenesController < ApplicationController
     else
       flash[:alert] = "Debe Seleccionar al menos un par de resumenes" 
     end
-    redirect_to :controller => 'informes', :action => "paso2"
+    
+    if params[:id]
+      redirect_to :controller => 'informes', :action => "paso2/#{params[:id]}"
+    else
+      redirect_to :controller => 'informes', :action => "paso2"
+    end
+    
   end  
 
   def paso2b
@@ -218,7 +231,13 @@ class ResumenesController < ApplicationController
     else
       flash[:alert] = "Debe Seleccionar al menos un par de resumenes" 
     end
-    redirect_to :controller => 'informes', :action => "paso2b"
+    
+    if params[:id]
+      redirect_to :controller => 'informes', :action => "paso2b/#{params[:id]}"
+    else
+      redirect_to :controller => 'informes', :action => "paso2b"
+    end
+    
   end
   
   def ordenar
@@ -232,7 +251,12 @@ class ResumenesController < ApplicationController
         flash[:success] = "Notas ordenadas de correctamente"
       end
     end
-    redirect_to :controller => 'informes', :action => "paso3"
+    if params[:id]
+      redirect_to :controller => 'informes', :action => "paso3/#{params[:id]}"
+    else
+      redirect_to :controller => 'informes', :action => "paso3"
+    end
+    
   end
   
   # DELETE /resumenes/1

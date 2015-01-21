@@ -17,7 +17,9 @@
 				<% @proceso = 'ordenar_asuntos' %>
 			<% end %>
 			<%= form_tag url_for(:controller => @controlador, :action => @proceso), :method => 'post' do %>
-				<%# hidden_field_tag "informe_id", @informe.id %> 
+				<%# hidden_field_tag "informe_id", @informe.id %>
+				<%# @informe.id %>
+				<%# @informe.resumenes.count %>
 				<% if ((action_name=="paso2" or action_name=="paso3" or action_name=="paso2b" or action_name=="paso4" or action_name=="paso5")  and controller_name=="informes") %>
 					<div class= 'derecha'>
 						<% if action_name=="paso2b" %>
@@ -28,7 +30,7 @@
 					</div>
 				<% end %>
 
-				<% if ((action_name=="paso4" or action_name=="paso5" or action_name=="paso6")  and controller_name=="informes") %>
+				<% if ((@informe)  and controller_name=="informes") %>
 					<%= hidden_field_tag :id, @informe.id %>
 				<% end %>
 				<% @asuntos.each do |asunto| %>
@@ -50,7 +52,7 @@
 						<div class='well well-small'>
 							<ul>
 								<% temas.each do |tema| %>
-									<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
+									<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id).order(:orden) %>
 									<% if resumenes_final.count > 0 %> 
 										<li style = 'display:block;'>
 											<div class = 'asunto_tema_titulo'><strong><em><%= tema.nombre %></em></strong>
@@ -67,7 +69,11 @@
 													<% if resumen.resumen_id.nil? %>
 														<div class="well justificar" style="padding: 2px; margin: 2px;">
 															<% resumen.orden = i+1 if resumen.orden.nil? %>
-															<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+															<% if @informe %>
+																<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}/#{@informe.id}", @informe.id %>
+															<% else %>
+																<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+															<% end %>
 															<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso2b" or action_name=="paso3") %>
 																<% case action_name %>
 																<% when "paso2" %>

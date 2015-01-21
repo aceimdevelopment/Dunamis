@@ -21,7 +21,7 @@
 
 		<%- @websites.each_with_index do |website,i| -%>
 
-			<%- @notas = website.notas.creadas_hoy %>
+			<%- @notas = website.notas.creadas_hoy.order('created_at DESC') %>
 			<%- @notas = (action_name.eql? 'paso1') ? @notas.sin_resumen : @notas.validas.sin_resumen %>
 
 			<% if @notas.count > 0 %>	

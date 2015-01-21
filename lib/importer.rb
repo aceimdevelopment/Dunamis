@@ -50,8 +50,73 @@ module Importer
      end
     
   end
-  
+
+
+
+
   def self.import_notas_globovision
+    website = Website.find_by_nombre("globovision")
+    puts website.nombre
+    # Eliminando las notas no asociadas a algun resumen
+    # website.eliminar_notas_irrelevantes
+    
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website.url
+
+    # Buscamos todos los posibles tipos de notas
+    notas = index.search ".first_A"
+    notas += index.search ".first_post"
+        
+    notas.each_with_index do |nota,i|
+      titulo = nota.search("h3").text
+      url = (nota.attr "href") unless nota.blank?
+      imagen = nota.search "img"
+      imagen = imagen.attr "src" unless imagen.blank?
+      imagen = imagen.text
+      nota_local = Nota.new
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
+      nota_local.url = url
+      nota_local.website_id = website.id
+      nota_local.tipo_nota_id = 1
+      nota_local.imagen = imagen
+      nota_local.save      
+    end  
+    
+    notas = index.search ".T_post"
+
+    notas.each_with_index do |nota,i|
+      # buscamos el título
+      titulo = nota.search("h1 a")
+      titulo = nota.search("h2 a") if titulo.blank?
+      titulo = nota.search("h3 a") if titulo.blank?
+      # titulo = nota.search(".sumariovideo a") if titulo.blank?
+      titulo = nota.search("a") if titulo.blank?
+      # buscamos url de la Nota
+      url = (titulo.attr "href").value unless titulo.blank?
+      # Título en texto plano
+      titulo = (titulo.attr "title").value unless titulo.blank?
+      titulo = titulo.text if titulo.blank?
+      #buscamos fecha      
+      fecha = nota.search(".date_c").text
+      # Buscamos imagen
+      imagen = nota.search "img"
+      imagen = imagen.attr "src" unless imagen.blank?
+      imagen = imagen.text      
+      #Creamos nota local y transferimos      
+      nota_local = Nota.new
+      nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
+      nota_local.fecha_publicacion = fecha
+      nota_local.url = url
+      nota_local.website_id = website.id
+      nota_local.tipo_nota_id = 1
+      nota_local.imagen = imagen
+      nota_local.save
+    end
+  end
+
+
+  
+  def self.import_notas_globovision_old
 
     website = Website.find_by_nombre("globovision")
     puts website.nombre
@@ -293,17 +358,19 @@ module Importer
     # website.eliminar_notas_irrelevantes
     
     # Se Carga la Pagina Principal del WebSite
-    index = cargar_website website.url
-    
+    index = cargar_website website.url    
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".MainNews li"
+    
+    # Notas adicionales
+    index = cargar_website "#{website.url}/politica"
+    notas += index.search ".MainNews li"
+    
     # notas += index.search ".MainNews.MoreSummary "
     notas.each do |nota|
       # Se buscan titulos (<a></a>) y contenidos
       titulo = nota.search "h1 a"
-      # contenido = nota.search ".contenidoVit"
-      # unless contenido.blank? && titulo.blank?
-        # Si la Nota tiene titulo y contenido
+      
       href = titulo.attr "href"
       url = "#{website.url}#{(href).value}" if href
       titulo = titulo.text
@@ -311,7 +378,7 @@ module Importer
       fecha = fecha[0] if fecha.count > 1
       fecha = fecha.text if fecha
       contenido = nota.search "p"
-      
+      # Se cargan la imagen
       imagen = nota.search ".Photo"
       
       unless imagen.blank? and not imagen.search ".full-frame"
@@ -319,14 +386,6 @@ module Importer
         imagen = imagen[16...imagen.length-1]
         imagen = "#{website.url}#{imagen}" unless imagen.blank?
       end
-      # puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"              
-      # puts "Titulo: #{titulo}\n"
-      # puts "Url: #{url}\n"
-      # puts "Fecha: #{fecha}\n"
-      # puts "Contenido: #{contenido}\n"
-      # puts "Imágen: #{imagen}\n"
-
-
       # Se guarda la nota_local      
       nota_local = Nota.new
       nota_local.titulo = titulo.gsub(/[\t\n\r]/, '')
@@ -337,8 +396,9 @@ module Importer
       nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
       nota_local.save
-
     end
+
+
 
   end  
 
@@ -773,13 +833,16 @@ module Importer
     
     # Se Buscan las Todas las Notas de la Web
     notas = index.search ".categorypanel"
+    notas += index.search ".slide"
     # notas += index.search ".thumbsup-image"
     
     notas.each do |nota|
       # Se buscan titulos (<a></a>) y contenidos
       titulo = nota.search "h2 a"
-        
+      titulo = nota.search "h1 a" if titulo.blank?
+
       contenido = nota.search ".excerpt"
+      contenido = nota.search ".slideDes" if contenido.blank?
       contenido = contenido.text
 
       # Buscamos imagenes
@@ -791,7 +854,11 @@ module Importer
       href = titulo.attr "href" unless titulo.blank?
       url = "#{(href).value}" if href
       titulo = titulo.text
-      
+      puts "==================================="
+      puts "titulo: #{titulo}"
+      puts "url: #{url}"
+      puts "contenido: #{contenido}"
+      puts "==================================="      
       
       # buscamos Fechas # Nohay Fechas
       # fecha = nota.search(".timestamp")
@@ -809,7 +876,14 @@ module Importer
       nota_local.website_id = website.id
       nota_local.tipo_nota_id = 1
       nota_local.imagen = imagen
-      nota_local.save
+      
+      begin
+          nota_local.save      
+      rescue Exception => ex
+        puts "Error al intenter guardar: #{ex}"
+      end
+      
+      
       
       # PROPUESTA DE VALIDAR URL
       # nota_local = website.notas.find_by_url url

@@ -7,15 +7,17 @@ class InformesController < ApplicationController
   def agregar
     resumen = Resumen.find(params[:id])
     resumen.tema_id = params[:resumen][:tema_id]
+    resumen.informe_id = params[:informe_id] if params[:informe_id]
 
     if resumen.save
       flash[:success] = "Resumen agregado" 
     else
       flash[:alert] = "Disculpe, el resumen no pudo ser agregado"
     end
+    url = params[:accion]
+    url +=  "/#{params[:informe_id]}" if params[:informe_id]
+    redirect_to :action => url
     
-    redirect_to :action => params[:accion]
-      
   end
   
   def desagregar_resumen
@@ -32,63 +34,99 @@ class InformesController < ApplicationController
 
 
   def paso1 #Agrupar por Tema
-    @titulo = "Asignar Tema"
-    @resumenes_con_tema = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+
+    if params[:id]
+      @informe = Informe.where(:id => params[:id]).limit(1).first
+      @resumenes_con_tema = @informe.resumenes
+      temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
+    else
+      @resumenes_con_tema = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+      temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+
+    end
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
+    @titulo = "Asignar Tema"
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
     @tema = Tema.new
-    @informe = Informe.where(:id => params[:id]).limit(1).first if params[:id]
   end
   
   def paso2 #unir Resumenes
+    
+    if params[:id]
+      @informe = Informe.where(:id => params[:id]).limit(1).first
+      @resumenes = @informe.resumenes
+      temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
+    else
+      @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+      temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+
+    end    
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
     @titulo = "Unir Resumenes"
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
-    @informe = Informe.where(:id => params[:id]).limit(1).first if params[:id]
+    @tema = Tema.new
   end
 
   def paso2b #unir Resumenes
+
+    if params[:id]
+      @informe = Informe.where(:id => params[:id]).limit(1).first
+      @resumenes = @informe.resumenes
+      temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
+    else
+      @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+      temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    end
     @titulo = "Fusionar Resumenes"
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
-    @informe = Informe.where(:id => params[:id]).limit(1).first if params[:id]
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
   end
 
 
   
   def paso3 #Ordenar entre temas
-    @titulo = "Ordenar entre Temas"
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema.order("orden ASC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    
+    if params[:id]
+      @informe = Informe.where(:id => params[:id]).limit(1).first
+      @resumenes = @informe.resumenes
+      temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
+    else
+      @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+      temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    end
+    
+    @titulo = "Ordenar resúmenes dentro de los Temas"
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
-    @informe = Informe.where(:id => params[:id]).limit(1).first if params[:id]
-    # Después de aqui los pasos o procesos son dependientes del informe
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    @tema = Tema.new
   end
   
-  def paso4
-    unless params[:id]
-      @informe = Informe.new
-      @informe.save!
-      inicializar_orden_temas(@informe.id)
-      # session[:compilando_informe_id] = @informe.id
-    else
-      @informe = Informe.where(:id => params[:id]).limit(1).first
-    end
+  def paso3_guardar
+    @informe = Informe.new
+    @informe.save!
+    inicializar_orden_temas(@informe.id)
+    @resumenes = Resumen.creados_hoy.sin_informe.con_tema
+    @resumenes.each{|resumen| resumen.informe_id = @informe.id; resumen.save}
+    redirect_to :action => "paso4/#{@informe.id}"
+  end
+  
+  # Después de aqui los pasos o procesos son dependientes del informe
 
+  def paso4
+
+    @informe = Informe.where(:id => params[:id]).limit(1).first
+    @resumenes = @informe.resumenes
+    temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
+        
+    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
     @titulo = "Ordenar Temas entre Asunto"
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema.order("orden ASC")#.order("vocero_id DESC")
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
-    @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
+
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema
+    @tema = Tema.new
   end
-  
+
+
   def paso5
     @informe = Informe.where(:id => params[:id]).limit(1).first
 
@@ -100,13 +138,13 @@ class InformesController < ApplicationController
       @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
     end
     
-    @titulo = "Ordenar Temas entre Asunto"
-    @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+    @titulo = "Ordenar Asuntos"
+    @resumenes = @informe.resumenes
     @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
+    temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
-    
+    @tema = Tema.new
   end
 
 
@@ -118,22 +156,6 @@ class InformesController < ApplicationController
     @informe.autor = "Dirección de Seguimiento de la Información Electoral"
     @informe.tema = "AGENDA TEMÁTICA DE MEDIOS"
     @informe.titulo = "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)"
-    # OJO QUEDÉ AQUI. SI HAY INFORME HAY QUE CARGAR LOS RESUMENES Y CORREGIR ORDEN DE ASUNTO Y TEMA
-    # @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
-    # @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
-    # temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
-    # @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
-    # @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
-    # 
-    # @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
-    # @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
-
-
-    # session[:compilando_informe_id] = nil
-
-
-
-
 
     @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
     @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
@@ -143,8 +165,6 @@ class InformesController < ApplicationController
       @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
     end
     
-    @titulo = "Ordenar Temas entre Asunto"
-    
     @resumenes = @informe.resumenes.order(:orden)
     @resumenes = Resumen.creados_hoy.sin_informe.con_tema if @resumenes.count < 1#.order("vocero_id DESC")
     @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
@@ -153,7 +173,7 @@ class InformesController < ApplicationController
     
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
-
+    @tema = Tema.new
   end
 
 
@@ -188,7 +208,9 @@ class InformesController < ApplicationController
 
 
   def inicializar_orden_asuntos(informe_id)
-    temas_hoy = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today).uniq
+    # temas_hoy = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today).uniq
+    temas_hoy = Tema.joins(:resumenes).where('resumenes.informe_id = ?', informe_id).uniq
+    # temas_hoy = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today).uniq    
     asuntos = Asunto.joins(:temas).where('temas.id' => temas_hoy).uniq
     
     
@@ -217,7 +239,7 @@ class InformesController < ApplicationController
 
   
   def index
-    @informes = Informe.all
+    @informes = Informe.order('created_at DESC')
     
     if params[:mensaje] 
       @mensaje = params[:mensaje]
@@ -235,12 +257,11 @@ class InformesController < ApplicationController
   end
 
   def enviar_por_correo
-    @informe = Informe.find(params[:id])
-
-    if InformeMailer.enviar_informe(@informe).deliver
+    begin
+      InformeMailer.enviar_informe(params[:id]).deliver
       flash[:success] = 'Correo Enviado Satisfactoriamente'
-    else
-      flash[:error] = 'El informe no pude ser enviado por correo'
+    rescue Exception => ex
+      puts "Error al intenter guardar: #{ex}"
     end
     redirect_to :action => 'index'
   end
@@ -249,13 +270,13 @@ class InformesController < ApplicationController
   # GET /informes/1.json
   def show
     @informe = Informe.where(:id => params[:id]).limit(1).first
-    @resumenes = Resumen.where(:informe_id => @informe.id).order(:orden)
-    @resumenes = Resumen.where(:informe_id => @informe.id)
+    @resumenes = @informe.resumenes.order(:orden)
+
     temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
     @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
-    @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)
+    @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)    
 
   end
 
@@ -380,8 +401,13 @@ class InformesController < ApplicationController
   # DELETE /informes/1.json
   def destroy
     @informe = Informe.find(params[:id])
-    @informe.destroy
-
+    @informe.resumenes.each { |resumen| resumen.destroy}
+    
+    @informe.informes_temas.each{|it| it.destroy}
+    @informe.informes_asuntos.each{|ia| ia.destroy}
+    
+    flash[:success] = 'Informe completamente eliminado del sistema.' if @informe.destroy
+    
     respond_to do |format|
       format.html { redirect_to informes_url }
       format.json { head :no_content }

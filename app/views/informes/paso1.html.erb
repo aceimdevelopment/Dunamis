@@ -1,7 +1,7 @@
 <% if (@resumenes_sin_tema.count <= 0 and @resumenes_con_tema.count > 0) %>
 	<div class='well'>
 		<% @accion = "paso2" %>
-		<%= @accion += "/#{@informe.id}" if @informe%>
+		<% @accion += "/#{@informe.id}" if @informe%>
 		<%= link_to "Siguiente", {:action => @accion}, :class => 'btn btn-primary pull-right', :style=>"text-align: right;", :type => "submit"%>
 	</div>
 <% end %>
@@ -9,17 +9,6 @@
 <%= render :partial => 'resumenes_con_tema' if @resumenes_con_tema.count > 0 %>
 <%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>			
 	
-<!-- Modal de Tema -->
-<div id="tema_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header">
-    <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Nuevo Tema</h3>
-  </div>
-  <div class="modal-body">
-    <%= render 'temas/form' %>
-    
-  </div>
-</div>
 
 <!-- Javascript -->
 <script type="text/javascript" charset="utf-8">

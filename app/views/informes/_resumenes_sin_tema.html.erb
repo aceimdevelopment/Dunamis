@@ -15,6 +15,7 @@
 
 											<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
 											<%= form_for resumen, :url=>{:action => "agregar/#{resumen.id}", :accion => action_name} do |f| %>
+												<%= hidden_field_tag "informe_id", @informe.id if @informe %>
 												<div style = "text-align: right;background-color: #ddd; padding: 5px;">
 													<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
 
@@ -38,6 +39,17 @@
 		<% end %>
 
   </div>
+
+	<div id="tema_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">Nuevo Tema</h3>
+	  </div>
+	  <div class="modal-body">
+	    <%= render :partial => 'temas/form' %>
+
+	  </div>
+	</div>
 
 <!-- Javascript -->
 

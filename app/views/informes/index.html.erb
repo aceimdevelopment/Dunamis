@@ -1,7 +1,3 @@
-<%- model_class = Informe -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
-</div>
 
 <% if @mensaje %>
 	<div class="alert <%= @tipo_alerta %>">
@@ -11,29 +7,32 @@
 	</div>
 <% end %>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_informe_path,
+<%= link_to 'Nuevo Informe','informes/paso1',
             :class => 'btn btn-primary' %>
 <% if @informes.count > 0 %>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%=t '.created_at', :default => t("helpers.created_at") %></th>
-      <th style = 'width:560px'>Resumen del informe</th>
+			<th style='width:4%'>ids</th>
+      <th style='width:10%'><%=t '.created_at', :default => t("helpers.created_at") %></th>
+      <th style = 'width:60%'>Resumen del informe</th>
+			<th style='width:4%'>Cant. Resum.</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @informes.each do |informe| %>
       <tr>
-        <td><%=l informe.created_at %></td>
+				<td><%= informe.id %></td>
+        <td>Hace <%= distance_of_time_in_words(Time.now, informe.created_at) %></td>
         <td style = 'text-align:justify;'><%= informe.resumen %></td>
+				<td style = 'text-align:justify;'><%= informe.resumenes.count %></td>
         <td>
 					<%= link_to informe_path(informe), {:class => 'btn btn-mini'} do %>
 						<i class="icon-trash icon-eye-open"></i>	
 					<% end %>
 
-					<%= link_to edit_informe_path(informe), {:class => 'btn btn-mini btn-info'} do %>
+					<%= link_to "informes/paso6/#{informe.id}", {:class => 'btn btn-mini btn-info'} do %>
 						<i class="icon-trash icon-edit"></i>
 					<% end %>
 
