@@ -261,7 +261,8 @@ class InformesController < ApplicationController
       InformeMailer.enviar_informe(params[:id]).deliver
       flash[:success] = 'Correo Enviado Satisfactoriamente'
     rescue Exception => ex
-      puts "Error al intenter guardar: #{ex}"
+      puts "Error al intenter enviar: #{ex}"
+      flash[:success] = "Error al intenter enviar: #{ex}"
     end
     redirect_to :action => 'index'
   end
