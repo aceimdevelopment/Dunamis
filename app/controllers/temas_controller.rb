@@ -1,6 +1,7 @@
 class TemasController < ApplicationController
   # GET /temas
   # GET /temas.json
+  before_filter :filtro_logueado  
   def index
     @temas = Tema.all
 

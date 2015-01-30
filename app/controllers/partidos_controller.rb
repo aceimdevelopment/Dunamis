@@ -1,6 +1,7 @@
 class PartidosController < ApplicationController
   # GET /partidos
   # GET /partidos.json
+  before_filter :filtro_logueado
   def index
     @partidos = Partido.all
 

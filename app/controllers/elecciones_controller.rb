@@ -1,6 +1,7 @@
 class EleccionesController < ApplicationController
   # GET /elecciones
   # GET /elecciones.json
+  before_filter :filtro_logueado
   def index
     @elecciones = Eleccion.all
 

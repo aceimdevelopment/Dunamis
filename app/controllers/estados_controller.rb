@@ -1,6 +1,7 @@
 class EstadosController < ApplicationController
   # GET /estados
   # GET /estados.json
+  before_filter :filtro_logueado
   def index
     @estados = Estado.all
 

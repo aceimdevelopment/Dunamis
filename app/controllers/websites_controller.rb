@@ -1,6 +1,7 @@
 class WebsitesController < ApplicationController
   # GET /websites
   # GET /websites.json
+  before_filter :filtro_logueado
   def index
     @websites = Website.all
 

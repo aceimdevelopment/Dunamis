@@ -1,6 +1,7 @@
 class TiposCargosController < ApplicationController
   # GET /tipos_cargos
   # GET /tipos_cargos.json
+  before_filter :filtro_logueado
   def index
     @tipos_cargos = TipoCargo.all
 

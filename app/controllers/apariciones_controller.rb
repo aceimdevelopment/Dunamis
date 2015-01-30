@@ -1,7 +1,8 @@
 class AparicionesController < ApplicationController
   # GET /apariciones
   # GET /apariciones.json
-
+  before_filter :filtro_logueado
+  
   require 'importer'
   
   def index

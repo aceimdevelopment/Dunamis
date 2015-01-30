@@ -1,6 +1,7 @@
 class TiposWebnotasController < ApplicationController
   # GET /tipos_webnotas
   # GET /tipos_webnotas.json
+  before_filter :filtro_logueado
   def index
     @tipos_webnotas = TipoWebnota.all
 

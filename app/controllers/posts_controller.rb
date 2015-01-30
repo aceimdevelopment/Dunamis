@@ -1,6 +1,7 @@
 class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
+  before_filter :filtro_logueado
   def index
     @posts = Post.all
 

@@ -2,6 +2,7 @@
 class ResumenesController < ApplicationController
   # GET /resumenes
   # GET /resumenes.json
+  before_filter :filtro_logueado  
   def index
     @resumenes = Resumen.all
 

@@ -1,6 +1,7 @@
 class CunasController < ApplicationController
   # GET /cunas
   # GET /cunas.json
+  before_filter :filtro_logueado  
   require 'importer'
   def index
     @cunas = Cuna.all

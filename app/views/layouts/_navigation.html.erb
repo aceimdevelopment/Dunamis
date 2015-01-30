@@ -7,8 +7,8 @@
 			<span class="icon-bar"></span>
 			</a>
 			
-      <div class="container-fluid nav-collapse">
-				<% if true #session[:usuario] %>
+      <div class="nav-collapse">
+				<% if session[:usuario] %>
         	<ul class="nav">
 		      	<li><%= link_to image_tag("cne_logo.png", :border => 0), 'http://www.cne.gov.ve', :class => 'brand', :target => '_blank' %></li>
 			      <li><%= link_to 'Inicio', root_path, :class => 'brand' %></li>
@@ -55,47 +55,26 @@
 					    </ul>
 					  </li>
         	</ul>
-					<div class= "pull-right">
-						<%# link_to "Cerrar Sesión", :controller => "home", :action=> "cerrar_sesion" %>
+					<div class= "pull-right" style="padding-top:10px;">
+						<p class="mute"> 
+							<%= session[:usuario].nombre %>	/
+							<%= link_to "Cerrar Sesión", :controller => "home", :action=> "cerrar_sesion" %>
+						</p>
 					</div>
 					
 				<% else %>
-				<ul class="nav">
-	      	<li><% link_to image_tag("cne_logo.png", :border => 0), 'http://www.cne.gov.ve', :class => 'brand', :target => '_blank' %></li>
+      	<ul class="nav row">
+	      	<li><%= link_to image_tag("cne_logo.png", :border => 0), 'http://www.cne.gov.ve', :class => 'brand', :target => '_blank' %></li>
       	</ul>
-				<div class= "pull-right">
+				<div class="pull-right" style="padding-top:8px;">
 					<%= link_to "Iniciar Sesión", "", :data => {:toggle => 'modal'}, :onclick => "return $('#iniciar_sesion').modal();", :style=> "text" %>
 				</div>
-				<% end %>
-					
+
+				<% end %>					
 
       </div>
     </div>
   </div>
-</div>
-
-<!-- Modal -->
-<div id="iniciar_sesion" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-header" id="titulo">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="myModalLabel">Iniciar Sesión</h3>
-  </div>
-	<form action="validar">
-  	<div class="modal-body">
-	    <fieldset>
-	      <div class="clearfix">
-	        <input type="text" placeholder="Usuario" name="usuario[nombre_sesion]" required="required">
-	      </div>
-	      <div class="clearfix">
-	        <input type="password" placeholder="Contraseña" name="usuario[contrasena]" required="required">
-	      </div>
-	    </fieldset>
-  	</div>
-	  <div class="modal-footer">
-	    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
-	    <button class="btn primary" type="submit">Entrar</button>
-	  </div>
-	</form>
 </div>
 
 <script type="text/javascript" charset="utf-8">

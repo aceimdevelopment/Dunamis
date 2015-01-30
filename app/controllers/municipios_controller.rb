@@ -1,6 +1,7 @@
 class MunicipiosController < ApplicationController
   # GET /municipios
   # GET /municipios.json
+  before_filter :filtro_logueado  
   def index
     @municipios = Municipio.all
 

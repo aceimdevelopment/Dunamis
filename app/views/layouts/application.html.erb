@@ -18,9 +18,10 @@
 	<%= render 'layouts/banner' %>
   <%= render 'layouts/navigation' %>
   <%= render 'layouts/header' %>
-  <div class="container-fluid">
+	<%= render 'layouts/sesion' unless session[:usuario] %>
+
 		<%= render 'layouts/messages' %>
 		<%= yield %>
-  </div>
+
 </body>
 </html>

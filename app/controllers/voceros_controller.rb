@@ -1,6 +1,7 @@
 class VocerosController < ApplicationController
   # GET /voceros
   # GET /voceros.json
+  before_filter :filtro_logueado
   def index
     @voceros = Vocero.all
 

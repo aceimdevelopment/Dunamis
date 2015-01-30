@@ -1,6 +1,7 @@
 class NotasController < ApplicationController
   # GET /notas
   # GET /notas.json
+  before_filter :filtro_logueado  
   def index
     @notas = Nota.all
 

@@ -1,6 +1,8 @@
 class AsuntosController < ApplicationController
   # GET /asuntos
   # GET /asuntos.json
+  before_filter :filtro_logueado
+  
   def index
     @asuntos = Asunto.all
 

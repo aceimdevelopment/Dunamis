@@ -1,6 +1,7 @@
 class CandidatosController < ApplicationController
   # GET /candidatos
   # GET /candidatos.json
+  before_filter :filtro_logueado
   def index
     @candidatos = Candidato.all
 

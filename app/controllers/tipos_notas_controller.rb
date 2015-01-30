@@ -1,6 +1,7 @@
 class TiposNotasController < ApplicationController
   # GET /tipos_notas
   # GET /tipos_notas.json
+  before_filter :filtro_logueado
   def index
     @tipos_notas = TipoNota.all
 
