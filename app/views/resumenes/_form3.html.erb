@@ -32,7 +32,7 @@
 			</div>
 		<% end %>
 
-		<!-- Carga de resúmenes o notas registradas if existen -->
+		<!-- Carga de resúmenes o notas registradas si existen -->
 
 		<% case action_name %>
 		<% when 'paso2' %>
@@ -97,6 +97,7 @@
 					<% if @total_notas > 0 or (action_name.eql? 'paso3') %>
 						<td >
 							<div style="text-align: right;">
+								<%= link_to "Cambiar Selección Websites", :action => "cambiar_seleccion_websites" %> ||
 								<%= f.submit "Guardar", :class => 'btn btn-primary'%>
 							</div>
 						</td>

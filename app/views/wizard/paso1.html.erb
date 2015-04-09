@@ -1,15 +1,21 @@
-<div style="position: absolute;top: 175px;left: 180px;">
-<%= render :partial => 'resumenes/filtro_lista'%>	
-</div>
+<% unless session[:website_selecionada] %>
+	<%= render :partial => 'seleccionar_website' %>	
+<% else %>
+	<div style="position: absolute;top: 175px;left: 180px;">
+	<%= render :partial => 'resumenes/filtro_lista'%>	
+	</div>
+  	
+	<%= form_tag(:action => "#{action_name}_guardar") do %>
 
-<%= form_tag(:action => "#{action_name}_guardar") do %>
-
-	<% if action_name == "paso1" %>
-		<div class="well well-small" style="text-align: right;">
-			<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
-		</div>
+		<% if action_name == "paso1" %>
+			<div class="well well-small" style="text-align: right;">
+				<%= link_to "Cambiar Selección Websites", :action => "cambiar_seleccion_websites" %> ||
+				<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
+			</div>
+		<% end %>
+	
+		<%= render :partial => 'notas/lista' %>
+	
 	<% end %>
-	
-	<%= render :partial => 'notas/lista' %>
-	
 <% end %>
+

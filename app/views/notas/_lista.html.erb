@@ -2,14 +2,15 @@
 <p class= 'label label-info'><b><%= @total_notas %> <%= "Nota".pluralize(@total_notas) %> <%= "Disponible".pluralize(@total_notas) %></b></p>
 <%= render :partial => 'panel_website' if paso1 %>
 
-<% display = paso1 ? 'display:none;' : '' %>
+
 <table class="table-bordered">
 	<tr class="info">
 			<%- @websites.each_with_index do |website,i| -%>
 				<%- contador_notas = website.notas.creadas_hoy %>
 				<%- contador_notas = paso1 ? contador_notas.sin_resumen.count : contador_notas.validas.sin_resumen.count %>
-				<% if contador_notas > 0 %>
-					<th id="<%= website.nombre %>_titulo" style="<%= display %> background:skyblue;">
+				<% seleccionada = website.usuario_id.eql?(session[:usuario].id) %>
+				<% if (contador_notas > 0) %>
+					<th id="<%= website.nombre %>_titulo" style="background:skyblue; <%= 'display:none;' unless seleccionada %>">
 						<%= website.nombre %>
 						<span class="badge badge-inverse"><%= contador_notas %></span>
 					</th>
@@ -21,13 +22,15 @@
 
 		<%- @websites.each_with_index do |website,i| -%>
 
+			<% seleccionada = website.usuario_id.eql?(session[:usuario].id) %>
+
 			<%- @notas = website.notas.creadas_hoy.order('created_at DESC') %>
 			<%- @notas = (action_name.eql? 'paso1') ? @notas.sin_resumen : @notas.validas.sin_resumen %>
 
-			<% if @notas.count > 0 %>	
-				<td id="<%= website.nombre %>" style="<%= display %>">
+			<% if @notas.count > 0 %>
+				<td id="<%= website.nombre %>" style="<%= 'display:none;' unless seleccionada %>">
 					<div class=contenido_scroll>
-						<table class="table table-condensed table-striped table-hover notas">
+						<table class="table table-condensed table-striped table-hover notas<%= ' seleccionada' if seleccionada %>">
 							<%- @notas.each do |nota| -%>
 								<% @nota = nota %>
 								<% @website = website %>
@@ -36,7 +39,8 @@
 						</table>
 					</div>
 				</td>
-			<% end %>	
+			<% end %>
+			
 		<% end %>
 	</tr>
 </table>
@@ -45,7 +49,7 @@
 	<script type="text/javascript" charset="utf-8">
 
 		$(document).ready(function(){
-		  $("table.notas .row-fluid").click(function(){
+		  $("table.seleccionada .row-fluid").click(function(){
 				var checkbox = $(this).find(':checkbox');
 				checkbox.click();
 				if(checkbox.is(':checked')) {  
@@ -56,15 +60,17 @@
 		   });
 		});
 	</script>
+
 <% else %>
-<script type="text/javascript" charset="utf-8">
 
-	$(".voceros").select2({
-		formatResult: format,
-		formatSelection: format,
-		escapeMarkup: function(m) { return m; }
-	});
+	<script type="text/javascript" charset="utf-8">
 
-</script>  
+		$(".voceros").select2({
+			formatResult: format,
+			formatSelection: format,
+			escapeMarkup: function(m) { return m; }
+		});
+
+	</script>  
 
 <% end %>

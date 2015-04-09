@@ -13,6 +13,16 @@
 
 ActiveRecord::Schema.define(:version => 20140627155030) do
 
+  create_table "INFORMES", :force => true do |t|
+    t.date     "fecha"
+    t.text     "resumen"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "titulo"
+    t.string   "autor"
+    t.string   "tema"
+  end
+
   create_table "apariciones", :id => false, :force => true do |t|
     t.integer  "cuna_id",    :null => false
     t.datetime "momento",    :null => false
@@ -112,16 +122,6 @@ ActiveRecord::Schema.define(:version => 20140627155030) do
   end
 
   add_index "estados", ["nombre"], :name => "index_estados_on_nombre", :unique => true
-
-  create_table "informes", :force => true do |t|
-    t.date     "fecha"
-    t.text     "resumen"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.string   "titulo"
-    t.string   "autor"
-    t.string   "tema"
-  end
 
   create_table "informes_asuntos", :force => true do |t|
     t.integer  "informe_id", :null => false
@@ -306,6 +306,7 @@ ActiveRecord::Schema.define(:version => 20140627155030) do
     t.text     "logo"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.integer  "usuario_id"
   end
 
 end

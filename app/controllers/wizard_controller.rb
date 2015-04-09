@@ -1,8 +1,42 @@
+# encoding: utf-8
 class WizardController < ApplicationController
-  # before_filter :filtro_logueado
   before_filter :filtro_logueado
+  def cambiar_seleccion_websites
+    session[:website_selecionada] = nil
+    redirect_to :action => 'paso1'
+  end
+
+
+  def asignar_websites
+    websites_seleccionadas = params[:websites]
+    
+    @websites = Website.where(:id => websites_seleccionadas.values)
+    error_ocupada = ""
+    
+    @websites.each do |w|
+      error_ocupada += "#{w.usuario.nombre} ya tomó la página #{w.nombre}. //" if (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?))
+    end
+    
+    unless error_ocupada.eql? ""
+      flash[:alert] = error_ocupada
+    else
+      Website.all.each do |w|        
+        if websites_seleccionadas.include? w.nombre
+          w.usuario_id = session[:usuario].id
+        else
+          w.usuario_id = nil if w.usuario_id.eql? session[:usuario].id
+        end
+        w.save
+      end
+      flash[:success] = "Selección guardada" 
+      session[:website_selecionada] = true
+    end
+    redirect_to :action => 'paso1'
+  end
+
   def paso1
     @websites = Website.all
+    @websites_disponibles = Website.all.delete_if{|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
     @titulo = "Paso 1 > Seleccione Notas"
     #manejo de website activa mediante el uso de la sesion
     @total_notas = 0

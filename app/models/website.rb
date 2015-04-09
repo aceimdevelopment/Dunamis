@@ -2,6 +2,9 @@
 class Website < ActiveRecord::Base
   attr_accessible :descripcion, :logo, :nombre, :url
 
+  belongs_to :usuario
+  accepts_nested_attributes_for :usuario
+
   has_many :notas
   accepts_nested_attributes_for :notas
 
@@ -11,8 +14,6 @@ class Website < ActiveRecord::Base
   def descripcion_con_notas
     "#{descripcion}-#{(notas.creadas_hoy).count}"
   end
-  
-  
   
   def eliminar_notas_irrelevantes
     notas.each { |nota| nota.destroy unless nota.resumen_id }

@@ -1,0 +1,35 @@
+<!-- Modal -->
+<div id="seleccionar_website" class="modal" tabindex="-1">
+  <div class="modal-header">
+    <h3>Seleccione Sitios Web a barrer: </h3>
+  </div>
+	<%= form_tag(:action => "asignar_websites") do %>
+	  <div class="modal-body">
+			<%- @websites_disponibles.each do |website| %>
+				<%- seleccionada = website.usuario_id.eql?(session[:usuario].id) -%>
+				<label class= "label well well-small <%= 'label-success' if seleccionada %>" id= "label_<%= website.nombre %>">
+					<%= check_box_tag "websites[#{website.nombre}]", website.id, seleccionada, {:onchange => "return marcar('#{website.nombre}');"} %>
+					<%= website.nombre %>
+				</label>
+
+			<% end %>
+	  </div>
+	  <div class="modal-footer">
+	    <%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disable_with => "Cargando..." %>
+	  </div>
+	<% end %>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+	function marcar(website){
+		marcador = $('#websites_'+website);
+
+		if (marcador.is(':checked')) {
+			marcador.parent().addClass('label-success');
+		}else{
+			marcador.parent().removeClass('label-success');
+		}
+		return false;
+	}
+</script>
