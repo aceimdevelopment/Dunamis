@@ -8,7 +8,7 @@
 			<%- @websites_disponibles.each do |website| %>
 				<%- seleccionada = website.usuario_id.eql?(session[:usuario].id) -%>
 				<label class= "label well well-small <%= 'label-success' if seleccionada %>" id= "label_<%= website.nombre %>">
-					<%= check_box_tag "websites[#{website.nombre}]", website.id, seleccionada, {:onchange => "return marcar('#{website.nombre}');"} %>
+					<%= check_box_tag "websites[#{website.nombre}]", website.id, seleccionada, {:onchange => "return marcar('#{website.nombre}');", :style => 'display:none;'} %>
 					<%= website.nombre %>
 				</label>
 
