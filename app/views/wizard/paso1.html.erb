@@ -9,7 +9,7 @@
 
 		<% if action_name == "paso1" %>
 			<div class="well well-small" style="text-align: right;">
-				<%= link_to "Cambiar Selección Websites", :action => "cambiar_seleccion_websites" %> ||
+				<%= link_to "Cambiar Selección Websites", {:action => "cambiar_seleccion_websites"}, {:class => "btn btn-info btn-mini"} %> ||
 				<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
 			</div>
 		<% end %>

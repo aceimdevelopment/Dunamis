@@ -3,7 +3,7 @@ class NotasController < ApplicationController
   # GET /notas.json
   before_filter :filtro_logueado  
   def index
-    @notas = Nota.all
+    @notas = Nota.limit(100).order('created_at ASC')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -25,9 +25,9 @@ class NotasController < ApplicationController
   # GET /notas/new
   # GET /notas/new.json
   def new
+    @modal = false
     @nota = Nota.new
-    @tipo_nota = TipoNota.all
-    @website = Website.all
+    @websites = Website.all
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @nota }
@@ -44,15 +44,37 @@ class NotasController < ApplicationController
   def create
     @nota = Nota.new(params[:nota])
 
-    respond_to do |format|
-      if @nota.save
-        format.html { redirect_to @nota, notice: 'Nota was successfully created.' }
-        format.json { render json: @nota, status: :created, location: @nota }
+    if params[:modal]
+      if @nota.save 
+        flash[:notice] = 'Nota creada correctamente.'
+        # format.json { render json: @nota, status: :created, location: @nota }
       else
+        flash[:alert] = ""
+        @nota.errors.full_messages.each do |msg|
+          flash[:alert] += msg
+        end
+        # format.json { render json: @nota.errors, status: :unprocessable_entity }
+      end
+      redirect_to params[:modal]
+    else
+      if @nota.save
+        flash[:notice] = 'Nota creada correctamente.'
+        redirect_to :back
+        # format.json { render json: @nota, status: :created, location: @nota }
+      else
+        @modal = false
+        # @tipo_nota = TipoNota.all
+        @websites = Website.all
+        flash[:alert] = ""
+        @nota.errors.full_messages.each do |msg|
+          flash[:alert] += msg
+        end
+        
         format.html { render action: "new" }
         format.json { render json: @nota.errors, status: :unprocessable_entity }
       end
     end
+
   end
 
   # PUT /notas/1

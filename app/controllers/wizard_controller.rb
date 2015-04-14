@@ -72,6 +72,7 @@ class WizardController < ApplicationController
     # @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @resumenes = Resumen.creados_hoy.sin_informe.order "updated_at DESC"
     @vocero = Vocero.new
+    @nota = Nota.new
     @websites = Website.all
 
     @total_notas = 0
@@ -111,6 +112,7 @@ class WizardController < ApplicationController
     # @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     # session[:website_activa] = @websites.first.nombre if session[:website_activa].nil?
     @resumen = Resumen.find(params[:id])
+    @nota = Nota.new    
     @websites = Website.all
     @total_notas = 0
   	@websites.each {|website| @total_notas += website.notas.creadas_hoy.validas.sin_resumen.count}  
