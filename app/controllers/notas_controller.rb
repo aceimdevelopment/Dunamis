@@ -44,7 +44,7 @@ class NotasController < ApplicationController
   def create
     @nota = Nota.new(params[:nota])
 
-    if params[:modal]
+    if params[:url]
       if @nota.save 
         flash[:notice] = 'Nota creada correctamente.'
         # format.json { render json: @nota, status: :created, location: @nota }
@@ -55,7 +55,7 @@ class NotasController < ApplicationController
         end
         # format.json { render json: @nota.errors, status: :unprocessable_entity }
       end
-      redirect_to params[:modal]
+      redirect_to params[:url]
     else
       if @nota.save
         flash[:notice] = 'Nota creada correctamente.'

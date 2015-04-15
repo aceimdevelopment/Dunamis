@@ -68,7 +68,11 @@ class WizardController < ApplicationController
     else
       @resumen = Resumen.find(params[:id])
     end
-    @resumen.vocero_id = params[:vocero_id] if params[:vocero_id]
+    if params[:vocero_id]
+      @resumen.vocero_id = params[:vocero_id] 
+      # ("holaslas?vocero_id=57?vocero_id=58".first
+    end   
+      
     # @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
     @resumenes = Resumen.creados_hoy.sin_informe.order "updated_at DESC"
     @vocero = Vocero.new
@@ -112,6 +116,7 @@ class WizardController < ApplicationController
     # @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     # session[:website_activa] = @websites.first.nombre if session[:website_activa].nil?
     @resumen = Resumen.find(params[:id])
+    @resumen.vocero_id = params[:vocero_id] if params[:vocero_id]
     @nota = Nota.new    
     @websites = Website.all
     @total_notas = 0

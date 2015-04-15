@@ -46,9 +46,11 @@
   <div class="form-actions">
 		<%= f.submit nil, :class => 'btn btn-primary', data: { :disable_with => "Por favor espere..." } %>
 
+		<%= hidden_field_tag 'url', @url if @url %>
+
 		<% unless params[:controller].eql? 'voceros' %>
-			<%= hidden_field_tag 'controlador', params[:controller] %>
-			<%= hidden_field_tag  'accion', params[:action] %>
+			<%# hidden_field_tag 'controlador', params[:controller] %>
+			<%# hidden_field_tag  'accion', params[:action] %>
     	<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 "", :class => 'btn', :data => {:dismiss => 'modal'} %>
 		<% else %>

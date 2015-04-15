@@ -7,13 +7,13 @@
 	<p><%= image_tag @vocero.foto, :title => "foto", :class => "img-rounded", :style => 'width: 150px; height:150px; padding:10px 0 0 40px;'%></p>
 		
   <dt><strong><%= model_class.human_attribute_name(:organizacion_id) %>:</strong></dt>
-  <dd><%= @vocero.organizacion.nombre %></dd>
+  <dd><%= @vocero.organizacion ? @vocero.organizacion.nombre : 'Sin registro' %></dd>
   <dt><strong><%= model_class.human_attribute_name(:nombre) %>:</strong></dt>
   <dd><%= @vocero.nombre %></dd>
   <dt><strong><%= model_class.human_attribute_name(:descripcion) %>:</strong></dt>
   <dd><%= @vocero.descripcion %></dd>
   <dt><strong>Cargo Actual:</strong></dt>
-  <dd><%= @vocero.tipo_cargo.nombre %></dd>
+  <dd><%=  @vocero.tipo_cargo ? @vocero.tipo_cargo.nombre : 'Sin Registro' %></dd>
 
 </dl>
 
