@@ -6,8 +6,29 @@ module ResumenesHelper
     # Se agregan los botones de editar y eliminar resumen
     mensaje = ""
     mensaje += crud_botones resumen, url unless (controller_name=="informes" and (action_name=="paso4" or action_name=="show"))
-    mensaje += " <strong> #{resumen.vocero.nombre} </strong>"
-    mensaje += resumen.contenido if resumen.contenido
+    if resumen.vocero.nombre.downcase.eql? 'otro'
+      vocero, contenido = resumen.contenido.split(":")
+      vocero, contenido = resumen.contenido.split(",") if (vocero.blank? or contenido.blank?)
+      if (vocero.blank? or contenido.blank?)
+        vocero = resumen.vocero.nombre
+        contenido = resumen.contenido
+      end
+      resumen.contenido = contenido
+    else
+      vocero = resumen.vocero.nombre
+    end
+    mensaje += " <strong>#{vocero}</strong>" 
+    # resumen.contenido = resumen.contenido[1..resumen.contenido.size-1]
+    # mensaje += "<strong><#{resumen.contenido[1]}></strong>"
+    if resumen.contenido
+      resumen.contenido = resumen.contenido.squeeze
+      if resumen.contenido[0].eql? '"' or resumen.contenido[1].eql? '"'
+        resumen.contenido = ": " + resumen.contenido
+      else
+        resumen.contenido = ", " + resumen.contenido
+      end
+      mensaje += resumen.contenido
+    end
     mensaje += enlaces_notas resumen 
 		sub_resumenes = resumen.resumenes
 		sub_resumenes.each do |sub_resumen|

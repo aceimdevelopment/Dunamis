@@ -8,35 +8,43 @@ class WizardController < ApplicationController
 
 
   def asignar_websites
-    websites_seleccionadas = params[:websites]
     
-    @websites = Website.where(:id => websites_seleccionadas.values)
-    error_ocupada = ""
+    if websites_seleccionadas = params[:websites]
     
-    @websites.each do |w|
-      error_ocupada += "#{w.usuario.nombre} ya tomó la página #{w.nombre}. //" if (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?))
-    end
+      @websites = Website.where(:id => websites_seleccionadas.values)
+      error_ocupada = ""
     
-    unless error_ocupada.eql? ""
-      flash[:alert] = error_ocupada
-    else
-      Website.all.each do |w|        
-        if websites_seleccionadas.include? w.nombre
-          w.usuario_id = session[:usuario].id
-        else
-          w.usuario_id = nil if w.usuario_id.eql? session[:usuario].id
-        end
-        w.save
+      @websites.each do |w|
+        error_ocupada += "#{w.usuario.nombre} ya tomó la página #{w.nombre}. //" if (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?))
       end
-      flash[:success] = "Selección guardada" 
-      session[:website_selecionada] = true
+    
+      unless error_ocupada.eql? ""
+        flash[:alert] = error_ocupada
+      else
+        Website.all.each do |w|        
+          if websites_seleccionadas.include? w.nombre
+            w.usuario_id = session[:usuario].id
+          else
+            w.usuario_id = nil if w.usuario_id.eql? session[:usuario].id
+          end
+          w.save
+        end
+        flash[:success] = "Selección guardada"
+      end
     end
-    redirect_to :action => 'paso1'
+    session[:website_selecionada] = true
+    
+    # if params[:url]
+    #   redirect_to params[:url]
+    # else
+      redirect_to :action => 'paso1'
+    # end
   end
 
   def paso1
+    # Website.limpiar_usuario session[:usuario].id if session[:website_selecionada].blank?
     @websites = Website.all
-    @websites_disponibles = Website.all.delete_if{|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
+    @websites_disponibles = Website.all.delete_if {|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
     @titulo = "Paso 1 > Seleccione Notas"
     #manejo de website activa mediante el uso de la sesion
     @total_notas = 0
@@ -61,6 +69,7 @@ class WizardController < ApplicationController
   end
   
   def paso2
+    @websites_disponibles = Website.all.delete_if {|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
     @titulo = "Paso 2 > Seleccione Vocero"
     # params[:mensaje] = nil
     unless params[:id]
@@ -112,6 +121,7 @@ class WizardController < ApplicationController
   def paso3
     @titulo = "Paso 3 > Unifique Notas"
     @url = params[:url] if params[:url]
+    @websites_disponibles = Website.all.delete_if {|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
     #manejo de website activa mediante el uso de la sesion
     # @website_activa = session[:website_activa] ? session[:website_activa] : @websites.first.nombre
     # session[:website_activa] = @websites.first.nombre if session[:website_activa].nil?

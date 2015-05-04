@@ -7,22 +7,24 @@
 	<%= (hidden_field_tag 'url', @url) if @url %>
 
 	<!-- Gestión de Vocero (Selección, Agregación y Edición) -->
-			
-			<% if @total_notas > 0 %>
-				<div class="control-group">
-			    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}, :onChange => "return mostrar_edit();"} %>
-					
-					<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :id => 'boton_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
-						<%= content_tag(:i, "", class: "icon-edit icon-white") %>
-						<%= content_tag(:i, "", class: "icon-user icon-white") %>
-					<% end %>
-								
-					<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
-						<%= content_tag(:i, "", class: "icon-plus icon-white") %>
-						<%= content_tag(:i, "", class: "icon-user icon-white") %>
-					<% end %>
-				</div>
-			<% end %>
+	
+	<% if @total_notas > 0 %>
+		<div class="control-group">
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}, :onChange => "return mostrar_edit();"} %>
+			<b class='tooltip-btn' data_toggle='tooltip' title='Editar Vocero' >
+				<%= link_to (""), { :role => 'button',:class => 'btn btn-info btn-mini', :id => 'boton_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
+					<%= content_tag(:i, "", class: "icon-edit icon-white") %>
+					<%= content_tag(:i, "", class: "icon-user icon-white") %>
+				<% end %>
+			</b>
+			<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nuevo Vocero' >
+				<%= link_to (""), { :role => 'button', :class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
+					<%= content_tag(:i, "", class: "icon-plus icon-white") %>
+					<%= content_tag(:i, "", class: "icon-user icon-white") %>
+				<% end %>
+			</b>
+		</div>
+	<% end %>
 			
 			
 		<!-- Carga de resumen si existe dentro del tema -->
@@ -89,7 +91,7 @@
 					<td>
 						<% case action_name %>
 						<% when "paso2" %>
-							<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso1"}, :class => 'btn'%>
+							<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso1"}, :class => 'btn', :title => 'Atrás' %>
 						<% when "paso3" %>
 							<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso2/#{@resumen.id}"}, :class => 'btn'%>
 						<% end %>
@@ -97,11 +99,21 @@
 					<% if @total_notas > 0 or (action_name.eql? 'paso3') %>
 						<td >
 							<div style="text-align: right;">
-								<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#nota_nuevo').modal();"} do %>
-									<%= content_tag(:i, "", class: "icon-plus icon-white") %>
-									Nueva Nota
-								<% end %> ||
-								<%= link_to "Cambiar Selección Websites", {:action => "cambiar_seleccion_websites"}, {:class => "btn btn-info btn-mini"} %> ||
+								<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nueva Nota' >
+									<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini ', :data => {:toggle => 'modal'}, :onclick => " $('#nota_nuevo').modal();"} do %>
+										<%= content_tag(:i, "", class: "icon-plus icon-white") %>
+										<%= content_tag(:i, "", class: "icon-file icon-white") %>
+									<% end %>
+								</b>
+ 								||
+								<b class='tooltip-btn' data_toggle='tooltip' title='Cambiar Selección de Websites'>
+									<%= link_to (""), { :role => 'button',:class => 'btn btn-info btn-mini ', :data => {:toggle => 'modal'}, :onclick => " $('#seleccionar_website').modal();"} do %>
+									<%# link_to "", {:href => "/wizard/cambiar_seleccion_websites", :class => 'btn btn-info btn-mini'}, { :role => 'button', :data => {:toggle => 'modal'}} do %>
+										<%= content_tag(:i, "", class: "icon-edit icon-white") %>
+										<%= content_tag(:i, "", class: "icon-list icon-white") %>
+									<% end %>
+								</b>
+
 								<%= f.submit "Guardar", :class => 'btn btn-primary'%>
 							</div>
 						</td>
@@ -113,33 +125,10 @@
 <% end %>
 
 
-
-
-	<div id="vocero_editar" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
- 		<div class="modal-header">
-   		<button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
-   		<h3 id="myModalLabel">Editar Vocero</h3>
- 		</div>
- 		<div class="modal-body">
-			<form accept-charset="UTF-8" action="/voceros/update/1" class="form-horizontal" id="edit_vocero" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="lrMM0/5jvr8Nxb2Dv4IFME7xQM3W0kTPcky2c8BT4D8="></div>
-
-				<div class="control-group">
-    			<label class="control-label" for="vocero_nombre">Nombre</label>
-    			<div class="controls">
-      			<input autofocus="autofocus" class="input-medium" id="vocero_nombre" name="vocero[nombre]" placeholder="nombre…" required="required" size="30" type="text">
-    			</div>
-  			</div>
-  			<div class="form-actions">
-					<input class="btn btn-primary" data-disable-with="Por favor espere..." name="commit" type="submit" value="Editar Vocero">
-
-					<input id="controlador" name="controlador" type="hidden" value="wizard">
-					<input id="accion" name="accion" type="hidden" value="paso2">
-    			<a href="" class="btn" data-dismiss="modal">Cancelar</a>
-  			</div>
-			</form>
-		</div>
-	</div>
+	<%= render 'voceros/editar_vocero_modal' %>
+	
 	<%- @url = request.original_url %>
+	<%= render :partial => 'seleccionar_website', :@url => @url %>
 	<div id="nota_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	 <div class="modal-header">
 	   <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
@@ -159,15 +148,11 @@
    </div>
    <div class="modal-body">
      <%= render 'voceros/form', :@url => @url %>
-     
    </div>
 	</div>
 
 
 <script type="text/javascript" charset="utf-8">
-	$(document).ready(function() {
-		$('.toltip').tooltip();
-	});
 
 
 	function format(vocero) {
@@ -202,4 +187,8 @@
 		location.reload();
 		return false;
 	}
+	
+	$(document).ready(function() {
+		$('.tooltip-btn').tooltip();
+	});
 </script>

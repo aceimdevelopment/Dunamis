@@ -1,7 +1,8 @@
+
 <% unless session[:website_selecionada] %>
 	<%= render :partial => 'seleccionar_website' %>	
 <% else %>
-	<div style="position: absolute;top: 175px;left: 180px;">
+	<div >
 	<%= render :partial => 'resumenes/filtro_lista'%>	
 	</div>
   	
@@ -9,7 +10,13 @@
 
 		<% if action_name == "paso1" %>
 			<div class="well well-small" style="text-align: right;">
-				<%= link_to "Cambiar Selección Websites", {:action => "cambiar_seleccion_websites"}, {:class => "btn btn-info btn-mini"} %> ||
+				<b class='tooltip-btn' data_toggle='tooltip' title='Cambiar Selección de Websites'>
+					<%= link_to "", {:href => "/wizard/cambiar_seleccion_websites", :class => 'btn btn-info btn-mini'}, { :role => 'button', :data => {:toggle => 'modal'}} do %>
+						<%= content_tag(:i, "", class: "icon-edit icon-white") %>
+						<%= content_tag(:i, "", class: "icon-list icon-white") %>
+					<% end %>
+				</b>
+				||
 				<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
 			</div>
 		<% end %>
@@ -19,3 +26,8 @@
 	<% end %>
 <% end %>
 
+<script type="text/javascript" charset="utf-8">	
+	$(document).ready(function() {
+		$('.tooltip-btn').tooltip();
+	});
+</script>

@@ -42,6 +42,7 @@ class NotasController < ApplicationController
   # POST /notas
   # POST /notas.json
   def create
+    params[:nota][:contenido] = params[:nota][:contenido].squeeze 
     @nota = Nota.new(params[:nota])
 
     if params[:url]

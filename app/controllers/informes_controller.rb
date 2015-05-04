@@ -360,6 +360,8 @@ class InformesController < ApplicationController
             resumen.save
           end
         end
+        Website.limpiar_todos_usuarios
+        session[:website_selecionada] = nil
         flash[:success] = 'Informe creado Satisfactoriamente.'
         format.html { redirect_to @informe }
         format.json { render json: @informe, status: :created, location: @informe }
@@ -386,6 +388,8 @@ class InformesController < ApplicationController
             end
           end
         end
+        # Website.all.each{|w| w.usuario_id = nil; w.save}
+        # session[:website_selecionada] = nil
         flash[:success] = 'Informe Actualizado.'
         format.html { redirect_to @informe }
         format.json { }

@@ -1,5 +1,7 @@
 <%- paso1 = action_name.eql? 'paso1' -%>
-<p class= 'label label-info'><b><%= @total_notas %> <%= "Nota".pluralize(@total_notas) %> <%= "Disponible".pluralize(@total_notas) %></b></p>
+<p class= 'label label-info'><b><%= @total_notas %> <%= "Nota".pluralize(@total_notas) %> <%= "Disponible".pluralize(@total_notas) %></b>
+		<%= render :partial => 'resumenes/filtro_lista' if not paso1%>
+</p>
 <%= render :partial => 'panel_website' if paso1 %>
 
 

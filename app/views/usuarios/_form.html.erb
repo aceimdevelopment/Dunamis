@@ -1,33 +1,33 @@
 <%= form_for @usuario, :html => { :class => 'form-horizontal' } do |f| %>
   <div class="control-group">
-    <%= f.label :nombre, :class => 'control-label' %>
+    <%= f.label "Nombre y Apellido:", :class => 'control-label' %>
     <div class="controls">
-			<%= f.text_field :nombre, :class => 'text_field', :autofocus => "autofocus", :placeholder => "nombre…", :required => true %>
+			<%= f.text_field :nombre, :class => 'text_field', :autofocus => true, :placeholder => "Nombre…", :required => true %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :nombre_sesion, :class => 'control-label' %>
+    <%= f.label "Nombre de Sesión:", :class => 'control-label' %>
     <div class="controls">
-			<%= f.text_field :nombre_sesion, :class => 'text_field', :placeholder => "nombre_sesion…", :required => true %>
+			<%= f.text_field :nombre_sesion, :class => 'text_field', :placeholder => "Nombre Sesión…", :required => true %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :contrasena, :class => 'control-label' %>
+    <%= f.label "Contraseña:", :class => 'control-label' %>
     <div class="controls">
-      <%= f.password_field :contrasena, :class => 'text_field', :placeholder => "contraseña…", :required => true %>
+      <%= f.password_field :contrasena, :class => 'text_field', :placeholder => "Contraseña…", :required => true %>
     </div>
   </div>
   <div class="control-group">
-    <%= f.label "confirmación", :class => 'control-label' %>
+    <%= f.label "Confirmación:", :class => 'control-label' %>
     <div class="controls">
-      <%= f.password_field :contrasena_confirmation, :class => 'text_field', :placeholder => "confirmación de contraseña…", :required => true %>
+      <%= f.password_field :contrasena_confirmation, :class => 'text_field', :placeholder => "Confirmar Contraseña…", :required => true %>
     </div>
   </div>
 
   <div class="control-group">
-    <%= f.label "correo electrónico", :class => 'control-label' %>
+    <%= f.label "correo Electrónico:", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :correo, :class => 'text_field', :placeholder => "correo electrónico…", :required => true %>
+      <%= f.text_field :correo, :class => 'text_field', :placeholder => "Correo Electrónico…", :required => true %>
     </div>
   </div>
 

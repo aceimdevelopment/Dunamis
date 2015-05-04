@@ -1,6 +1,10 @@
 <!-- Modal -->
-<div id="seleccionar_website" class="modal" tabindex="-1">
+<% @hide = @url ? "hide fade" : "" %>
+<div id="seleccionar_website" class="modal <%= @hide %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
+		<% if @url %>
+			<button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+		<% end %>
     <h3>Seleccione Sitios Web a barrer: </h3>
   </div>
 	<%= form_tag(:action => "asignar_websites") do %>
@@ -14,6 +18,7 @@
 
 			<% end %>
 	  </div>
+		<%= hidden_field_tag 'url', @url if @url %>
 	  <div class="modal-footer">
 	    <%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disable_with => "Cargando..." %>
 	  </div>

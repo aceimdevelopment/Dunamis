@@ -41,7 +41,13 @@
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+		<% if @url %>
+			<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+              "", :class => 'btn', :data => {:dismiss => 'modal'} %>
+  	<% else %>
+  	  
+    	<%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 notas_path, :class => 'btn' %>
+		<% end %>
   </div>
 <% end %>

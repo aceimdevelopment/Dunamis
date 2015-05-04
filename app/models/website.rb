@@ -10,6 +10,14 @@ class Website < ActiveRecord::Base
 
   has_many :tipos_webnotas
   accepts_nested_attributes_for :tipos_webnotas
+
+  def self.limpiar_usuario usuario_id
+    Website.all.each{|w| w.usuario_id = nil if (w.usuario_id.eql? usuario_id) ; w.save}
+  end
+
+  def self.limpiar_todos_usuarios
+    Website.all.each{|w| w.usuario_id = nil; w.save}
+  end
   
   def descripcion_con_notas
     "#{descripcion}-#{(notas.creadas_hoy).count}"
