@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140627155030) do
+ActiveRecord::Schema.define(:version => 20150518161720) do
 
   create_table "INFORMES", :force => true do |t|
     t.date     "fecha"
@@ -213,11 +213,12 @@ ActiveRecord::Schema.define(:version => 20140627155030) do
     t.text     "contenido"
     t.integer  "vocero_id"
     t.integer  "informe_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "tema_id"
     t.integer  "resumen_id"
     t.integer  "orden"
+    t.string   "otro_vocero"
   end
 
   add_index "resumenes", ["informe_id"], :name => "index_resumenes_on_informe_id"
@@ -244,6 +245,12 @@ ActiveRecord::Schema.define(:version => 20140627155030) do
   end
 
   add_index "tipos", ["nombre"], :name => "index_tipos_on_nombre", :unique => true
+
+  create_table "tipos_alertas", :force => true do |t|
+    t.string   "descripcion"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "tipos_cargos", :force => true do |t|
     t.text     "nombre"

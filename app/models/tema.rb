@@ -9,6 +9,9 @@ class Tema < ActiveRecord::Base
   
   has_many :informes_temas
   accepts_nested_attributes_for :informes_temas
+
+  has_many :alertas
+  accepts_nested_attributes_for :alertas
   
   # has_and_belongs_to_many :informes, :join_table => "informes_temas"
   

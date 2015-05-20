@@ -97,6 +97,7 @@ class WizardController < ApplicationController
   end
 
   def paso2_guardar
+    1/0
     #manejo de website activa mediante el uso de la sesion
     session[:website_activa] = params[:website_activa]
     

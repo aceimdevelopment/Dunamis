@@ -1,0 +1,110 @@
+<%= form_for @alerta , :html => { :class => 'form-horizontal' }  do |f| %>
+
+  <% if @alerta.errors.any? %>
+    <div id="alert fade in alert-error">
+      <h2><%= pluralize(@alerta.errors.count, "error impide") %> realizar el registro:</h2>
+
+      <ul>
+      <% @alerta.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :fecha, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.date_select :fecha, {},{:class => 'span1', :required => true} %>
+	  	<span class="help-inline">*</span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :contenido, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :contenido, :class => 'text_field', :required => true %>
+	  	<span class="help-inline">*</span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :resumen, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :resumen, :class => 'text_area span3', :size => '5x5', :required => true %>
+	  	<span class="help-inline">*</span>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :tema_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, { :class => 'selects2 span3'} %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :tipo_alerta_id, :class => 'control-label' %>
+    <div class="controls">
+		<%= f.collection_select :tipo_alerta_id, @tipos_alertas, :id, :descripcion, {:prompt => "Tipo de Alerta"}, {:required => true, :class => "selects2 span3"} %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :vocero_id, :class => 'control-label' %>
+    <div class="controls">
+			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'selects2 span3'} %>
+		
+    </div>
+  </div>
+  <div class="form-actions">
+		<%= link_to 'Regresar', alertas_path, :class => 'btn' %>
+    ||
+		<%= f.submit nil, :class => 'btn btn-primary', data: { :disable_with => "Por favor espere..." } %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript" charset="utf-8">
+
+
+	function format(vocero) {
+	    return vocero.text;
+	}
+	$("#resumen_vocero_id").select2({
+	    formatResult: format,
+	    formatSelection: format,
+	    escapeMarkup: function(m) { return m; }
+	});
+	
+	function mostrar_edit(){
+		document.getElementById("boton_vocero").style.display="";
+		return false;
+	}
+	
+	function form_editar_vocero(){
+		
+		var vocero_selected = $("#resumen_vocero_id");
+
+		// document.getElementById("vocero_nombre").value = vocero_selected.text();
+		
+		if (vocero_selected.val()==39) {
+			$('#otro_vocero').show('slow');
+		}
+		
+		document.getElementById("edit_vocero").action="/voceros/update/"+vocero_selected.val();
+		$('#vocero_editar').modal();
+		return false;
+	}
+	
+	function eliminar_nota(nota_id, resumen_id){
+		$.post('/notas/update/'+nota_id+"?resumen_id=-1");
+		$.post("/resumenes/update/"+resumen_id+"?nota_id="+nota_id+"&borrar_nota_en_contenido=1");
+		location.reload();
+		return false;
+	}
+	
+	$(document).ready(function() {
+		$('.tooltip-btn').tooltip();
+	});
+</script>

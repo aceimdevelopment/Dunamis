@@ -1,0 +1,31 @@
+<h1>Lista de alertas</h1>
+
+<table class = 'table  table-striped table-bordered table-hover'>
+  <tr>
+    <th>Fecha</th>
+    <th>Contenido</th>
+    <th>Resumen</th>
+    <th>Temas</th>
+    <th>Tipos alertas</th>
+    <th>Voceros</th>
+    <th>Opciones</th>
+  </tr>
+
+<% @alertas.each do |alerta| %>
+  <tr>
+    <td><%= alerta.fecha %></td>
+    <td><%= alerta.contenido %></td>
+		<td><%= alerta.resumen %></td>
+    <td><%= alerta.tema.full_descripcion %></td>
+    <td><%= alerta.tipo_alerta.descripcion.capitalize %></td>
+    <td><%= "#{alerta.vocero.nombre} - #{alerta.vocero.descripcion if alerta.vocero.descripcion}"  %></td>
+    <td><%= link_to 'Show', alerta %>
+    |<%= link_to 'Edit', edit_alerta_path(alerta) %>
+    |<%= link_to 'Destroy', alerta, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'Nueva Alerta', new_alerta_path, :class => 'btn btn-primary' %>

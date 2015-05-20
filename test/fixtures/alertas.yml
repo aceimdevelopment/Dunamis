@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  fecha: 2015-05-18
+  contenido: MyText
+  temas_id: 1
+  tipos_alertas_id: MyString
+  voceros_id: MyString
+
+two:
+  fecha: 2015-05-18
+  contenido: MyText
+  temas_id: 1
+  tipos_alertas_id: MyString
+  voceros_id: MyString

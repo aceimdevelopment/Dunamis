@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Fecha:</b>
+  <%= @alerta.fecha %>
+</p>
+
+<p>
+  <b>Contenido:</b>
+  <%= @alerta.contenido %>
+</p>
+
+<p>
+  <b>Temas:</b>
+  <%= @alerta.tema.full_descripcion %>
+</p>
+
+<p>
+  <b>Tipos alertas:</b>
+  <%= @alerta.tipo_alerta.descripcion.capitalize %>
+</p>
+
+<p>
+  <b>Voceros:</b>
+  <%= "#{@alerta.vocero.nombre} - #{@alerta.vocero.descripcion if @alerta.vocero.descripcion}" %>
+</p>
+
+
+<%= link_to 'Edit', edit_alerta_path(@alerta) %> |
+<%= link_to 'Back', alertas_path %>

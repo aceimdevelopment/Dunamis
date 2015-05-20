@@ -1,0 +1,25 @@
+
+<div id="vocero_editar" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+ 		<button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+ 		<h3 id="myModalLabel">Editar Vocero</h3>
+	</div>
+	<div class="modal-body">
+		<form accept-charset="UTF-8" action="/voceros/update/1" class="form-horizontal" id="edit_vocero" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="✓"><input name="authenticity_token" type="hidden" value="lrMM0/5jvr8Nxb2Dv4IFME7xQM3W0kTPcky2c8BT4D8="></div>
+
+			<div class="control-group">
+  			<label class="control-label" for="vocero_nombre">Nombre</label>
+  			<div class="controls">
+    			<input autofocus="autofocus" class="input-medium" id="vocero_nombre" name="vocero[nombre]" placeholder="nombre…" required="required" size="30" type="text">
+  			</div>
+			</div>
+			<div class="form-actions">
+				<input class="btn btn-primary" data-disable-with="Por favor espere..." name="commit" type="submit" value="Editar Vocero">
+
+				<input id="controlador" name="controlador" type="hidden" value="wizard">
+				<input id="accion" name="accion" type="hidden" value="paso2">
+  			<a href="" class="btn" data-dismiss="modal">Cancelar</a>
+			</div>
+		</form>
+	</div>
+</div>

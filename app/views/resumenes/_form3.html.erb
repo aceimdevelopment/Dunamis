@@ -10,13 +10,23 @@
 	
 	<% if @total_notas > 0 %>
 		<div class="control-group">
-	    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:placeholder => "Seleccione Vocero"}, :onChange => "return mostrar_edit();"} %>
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:onChange => "$('#boton_editar_vocero').show('slow');"}} %>
 			<b class='tooltip-btn' data_toggle='tooltip' title='Editar Vocero' >
-				<%= link_to (""), { :role => 'button',:class => 'btn btn-info btn-mini', :id => 'boton_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
+				<%= link_to (""), { :role => 'button',:class => 'btn btn-info btn-mini', :id => 'boton_editar_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
 					<%= content_tag(:i, "", class: "icon-edit icon-white") %>
 					<%= content_tag(:i, "", class: "icon-user icon-white") %>
 				<% end %>
 			</b>
+			
+			<b class='tooltip-btn' data_toggle='tooltip' title='Vocero Inusual'>
+				<%= f.text_field :otro_vocero, :class => 'input-medium', :placeholder => "nombre del otro vocero…", :style => 'display:none' %>
+				<%= link_to (""), { :role => 'button', :class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "	incluir_vocero_inusual();"} do %>
+					<%= content_tag(:i, "", class: "icon-user icon-white") %>
+					<%= content_tag(:i, "", class: 'icon-question-sign icon-white') %>					
+				<% end %>
+			</b>
+
+
 			<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nuevo Vocero' >
 				<%= link_to (""), { :role => 'button', :class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
 					<%= content_tag(:i, "", class: "icon-plus icon-white") %>
@@ -154,6 +164,10 @@
 
 <script type="text/javascript" charset="utf-8">
 
+	function incluir_vocero_inusual() {
+		$('#resumen_otro_vocero').show('slow');
+		$('#resumen_vocero_id').removeAttr('required');
+	}
 
 	function format(vocero) {
 	    return vocero.text;
@@ -165,8 +179,9 @@
 	});
 	
 	function mostrar_edit(){
-		document.getElementById("boton_vocero").style.display="";
-		return false;
+		// document.getElementById("boton_vocero").style.display="";
+		$('#boton_vocero').show('slow');
+		// return false;
 	}
 	
 	function form_editar_vocero(){
@@ -175,6 +190,9 @@
 
 		// document.getElementById("vocero_nombre").value = vocero_selected.text();
 		
+		// if (vocero_selected.val()==39) {
+		// 	$('#otro_vocero').show('slow');
+		// }
 		
 		document.getElementById("edit_vocero").action="/voceros/update/"+vocero_selected.val();
 		$('#vocero_editar').modal();

@@ -1,6 +1,10 @@
 Dunamis::Application.routes.draw do
 
   
+  resources :alertas
+
+  resources :tipos_alertas
+
   resources :usuarios
 
   resources :partidos

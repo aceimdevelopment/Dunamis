@@ -1,0 +1,23 @@
+<h1>Listing tipos_alertas</h1>
+
+<table>
+  <tr>
+    <th>Descripcion</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @tipos_alertas.each do |tipo_alerta| %>
+  <tr>
+    <td><%= tipo_alerta.descripcion %></td>
+    <td><%= link_to 'Show', tipo_alerta %></td>
+    <td><%= link_to 'Edit', edit_tipo_alerta_path(tipo_alerta) %></td>
+    <td><%= link_to 'Destroy', tipo_alerta, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Tipo alerta', new_tipo_alerta_path %>

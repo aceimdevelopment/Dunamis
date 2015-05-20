@@ -1000,7 +1000,7 @@ module Importer
     begin
       return agente.get(url)
     rescue Exception => ex
-      return nil
+      return ex
     end
   end
 
