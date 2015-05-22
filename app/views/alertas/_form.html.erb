@@ -51,18 +51,41 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :vocero_id, :class => 'control-label' %>
-    <div class="controls">
+		<%= f.label :vocero_id, :class => 'control-label' %>
+		<div class='controls'>
 			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'selects2 span3'} %>
-		
-    </div>
+		</div>
+		<div class='controls'>
+			<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nuevo Vocero' >
+				<%= link_to (""), { :role => 'button', :class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
+					<%= content_tag(:i, "", class: "icon-plus icon-white") %>
+					<%= content_tag(:i, "", class: "icon-user icon-white") %>
+				<% end %>
+			</b>
+		</div>
   </div>
+
   <div class="form-actions">
 		<%= link_to 'Regresar', alertas_path, :class => 'btn' %>
     ||
 		<%= f.submit nil, :class => 'btn btn-primary', data: { :disable_with => "Por favor espere..." } %>
   </div>
 <% end %>
+
+
+<%= render 'voceros/editar_vocero_modal' %>
+
+<%- @url = request.original_url %>
+
+<div id="vocero_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal-header">
+   <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+   <h3 id="myModalLabel">Nuevo Vocero</h3>
+ </div>
+ <div class="modal-body">
+   <%= render 'voceros/form', :@url => @url %>
+ </div>
+</div>
 
 
 <script type="text/javascript" charset="utf-8">

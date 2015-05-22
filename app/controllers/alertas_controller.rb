@@ -29,6 +29,7 @@ class AlertasController < ApplicationController
     @tipos_alertas = TipoAlerta.all
     
     @voceros = Vocero.all
+    @vocero = Vocero.new
 
     respond_to do |format|
       format.html # new.html.erb

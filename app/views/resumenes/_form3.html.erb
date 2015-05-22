@@ -9,8 +9,8 @@
 	<!-- Gestión de Vocero (Selección, Agregación y Edición) -->
 	
 	<% if @total_notas > 0 %>
-		<div class="control-group">
-	    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :data => {:onChange => "$('#boton_editar_vocero').show('slow');"}} %>
+		<div class="control-group form-inline">
+	    <%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :onChange => "incluir_vocero_inusual();"} %>
 			<b class='tooltip-btn' data_toggle='tooltip' title='Editar Vocero' >
 				<%= link_to (""), { :role => 'button',:class => 'btn btn-info btn-mini', :id => 'boton_editar_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
 					<%= content_tag(:i, "", class: "icon-edit icon-white") %>
