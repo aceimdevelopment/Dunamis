@@ -39,7 +39,12 @@
   <div class="control-group">
     <%= f.label :tema_id, :class => 'control-label' %>
     <div class="controls">
-	  <%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, { :class => 'selects2 span3'} %>
+		  <%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, { :class => 'selects2 span3'} %>
+
+			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
+				<i class="icon-plus icon-white"></i>
+				<i class="icon-th-list icon-white"></i>
+			<% end %>
     </div>
   </div>
 
@@ -49,6 +54,12 @@
 		<%= f.collection_select :tipo_alerta_id, @tipos_alertas, :id, :descripcion, {:prompt => "Tipo de Alerta"}, {:required => true, :class => "selects2 span3"} %>
     </div>
   </div>
+
+<!-- 	<div class="btn-group" data-toggle="buttons-radio">
+	  <button type="button" class="btn btn-primary">Left</button>
+	  <button type="button" class="btn btn-primary">Middle</button>
+	  <button type="button" class="btn btn-primary">Right</button>
+	</div> -->
 
   <div class="control-group">
 		<%= f.label :vocero_id, :class => 'control-label' %>
@@ -85,6 +96,17 @@
  <div class="modal-body">
    <%= render 'voceros/form', :@url => @url %>
  </div>
+</div>
+
+<div id="tema_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Nuevo Tema</h3>
+  </div>
+  <div class="modal-body">
+    <%= render :partial => 'temas/form' %>
+
+  </div>
 </div>
 
 

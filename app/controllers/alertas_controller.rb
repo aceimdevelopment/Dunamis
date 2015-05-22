@@ -27,7 +27,7 @@ class AlertasController < ApplicationController
     @alerta = Alerta.new
     
     @tipos_alertas = TipoAlerta.all
-    
+    @tema = Tema.new
     @voceros = Vocero.all
     @vocero = Vocero.new
 
