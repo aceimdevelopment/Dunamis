@@ -55,16 +55,11 @@
     </div>
   </div>
 
-<!-- 	<div class="btn-group" data-toggle="buttons-radio">
-	  <button type="button" class="btn btn-primary">Left</button>
-	  <button type="button" class="btn btn-primary">Middle</button>
-	  <button type="button" class="btn btn-primary">Right</button>
-	</div> -->
-
   <div class="control-group">
 		<%= f.label :vocero_id, :class => 'control-label' %>
 		<div class='controls'>
-			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'selects2 span3'} %>
+			<%# f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'selects2 span3'} %>
+			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :nombre, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'span3'} %>
 		</div>
 		<div class='controls'>
 			<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nuevo Vocero' >
