@@ -1,3 +1,4 @@
+# encoding: utf-8
 class AlertasController < ApplicationController
   # GET /alertas
   # GET /alertas.json
@@ -40,6 +41,10 @@ class AlertasController < ApplicationController
   # GET /alertas/1/edit
   def edit
     @alerta = Alerta.find(params[:id])
+    @tipos_alertas = TipoAlerta.all
+    @tema = Tema.new
+    @voceros = Vocero.all
+    @vocero = Vocero.new
   end
 
   # POST /alertas
@@ -52,6 +57,15 @@ class AlertasController < ApplicationController
         format.html { redirect_to @alerta, notice: 'Alerta registrada.' }
         format.json { render json: @alerta, status: :created, location: @alerta }
       else
+        @tipos_alertas = TipoAlerta.all
+        @tema = Tema.new
+        @voceros = Vocero.all
+        @vocero = Vocero.new
+        flash[:alert] = ""
+        @alerta.errors.full_messages.each do |msg|
+          flash[:alert] += msg
+        end
+        
         format.html { render action: "new" }
         format.json { render json: @alerta.errors, status: :unprocessable_entity }
       end
@@ -65,9 +79,13 @@ class AlertasController < ApplicationController
 
     respond_to do |format|
       if @alerta.update_attributes(params[:alerta])
-        format.html { redirect_to @alerta, notice: 'Alerta was successfully updated.' }
+        format.html { redirect_to @alerta, notice: 'Alerta actualizada correctamente.' }
         format.json { head :no_content }
       else
+        @tipos_alertas = TipoAlerta.all
+        @tema = Tema.new
+        @voceros = Vocero.all
+        @vocero = Vocero.new
         format.html { render action: "edit" }
         format.json { render json: @alerta.errors, status: :unprocessable_entity }
       end
@@ -79,7 +97,7 @@ class AlertasController < ApplicationController
   def destroy
     @alerta = Alerta.find(params[:id])
     @alerta.destroy
-
+    flash[:alert] = "La alerta ha sido eliminada"
     respond_to do |format|
       format.html { redirect_to alertas_url }
       format.json { head :no_content }

@@ -14,4 +14,6 @@ class Alerta < ActiveRecord::Base
   :class_name => 'Vocero',
   :foreign_key => ['vocero_id']
 
+  validates_uniqueness_of :contenido
+
 end

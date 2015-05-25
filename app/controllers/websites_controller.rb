@@ -45,7 +45,7 @@ class WebsitesController < ApplicationController
 
     respond_to do |format|
       if @website.save
-        format.html { redirect_to @website, notice: 'Website was successfully created.' }
+        format.html { redirect_to @website, notice: 'Website creada correctamente.' }
         format.json { render json: @website, status: :created, location: @website }
       else
         format.html { render action: "new" }

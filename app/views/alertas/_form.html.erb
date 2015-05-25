@@ -1,23 +1,40 @@
 <%= form_for @alerta , :html => { :class => 'form-horizontal' }  do |f| %>
 
-  <% if @alerta.errors.any? %>
-    <div id="alert fade in alert-error">
-      <h2><%= pluralize(@alerta.errors.count, "error impide") %> realizar el registro:</h2>
-
-      <ul>
-      <% @alerta.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
   <div class="control-group">
     <%= f.label :fecha, :class => 'control-label' %>
     <div class="controls">
       <%= f.date_select :fecha, {},{:class => 'span1', :required => true} %>
 	  	<span class="help-inline">*</span>
     </div>
+  </div>
+
+
+  <div class="control-group">
+    <%= f.label :tema_id, :class => 'control-label' %>
+    <div class="controls">
+		  <%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, { :class => 'selects2 span3'} %>
+
+			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
+				<i class="icon-plus icon-white"></i>
+				<i class="icon-th-list icon-white"></i>
+			<% end %>
+    </div>
+  </div>
+
+
+  <div class="control-group">
+		<%= f.label :vocero_id, :class => 'control-label' %>
+		<div class='controls'>
+			<%# f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'selects2 span3'} %>
+			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :nombre, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'select2 span3'} %>
+
+			<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nuevo Vocero' >
+				<%= link_to (""), { :role => 'button', :class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
+					<%= content_tag(:i, "", class: "icon-plus icon-white") %>
+					<%= content_tag(:i, "", class: "icon-user icon-white") %>
+				<% end %>
+			</b>
+		</div>
   </div>
 
   <div class="control-group">
@@ -37,39 +54,12 @@
   </div>
 
   <div class="control-group">
-    <%= f.label :tema_id, :class => 'control-label' %>
-    <div class="controls">
-		  <%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, { :class => 'selects2 span3'} %>
-
-			<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
-				<i class="icon-plus icon-white"></i>
-				<i class="icon-th-list icon-white"></i>
-			<% end %>
-    </div>
-  </div>
-
-  <div class="control-group">
     <%= f.label :tipo_alerta_id, :class => 'control-label' %>
     <div class="controls">
 		<%= f.collection_select :tipo_alerta_id, @tipos_alertas, :id, :descripcion, {:prompt => "Tipo de Alerta"}, {:required => true, :class => "selects2 span3"} %>
     </div>
   </div>
 
-  <div class="control-group">
-		<%= f.label :vocero_id, :class => 'control-label' %>
-		<div class='controls'>
-			<%# f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'selects2 span3'} %>
-			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :nombre, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'select2 span3'} %>
-		</div>
-		<div class='controls'>
-			<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nuevo Vocero' >
-				<%= link_to (""), { :role => 'button', :class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
-					<%= content_tag(:i, "", class: "icon-plus icon-white") %>
-					<%= content_tag(:i, "", class: "icon-user icon-white") %>
-				<% end %>
-			</b>
-		</div>
-  </div>
 
   <div class="form-actions">
 		<%= link_to 'Regresar', alertas_path, :class => 'btn' %>

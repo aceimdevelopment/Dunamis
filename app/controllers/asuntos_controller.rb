@@ -46,7 +46,7 @@ class AsuntosController < ApplicationController
 
     respond_to do |format|
       if @asunto.save
-        format.html { redirect_to @asunto, notice: 'Asunto was successfully created.' }
+        format.html { redirect_to @asunto, notice: 'Asunto creado satisfactoriamente.' }
         format.json { render json: @asunto, status: :created, location: @asunto }
       else
         format.html { render action: "new" }

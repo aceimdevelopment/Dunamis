@@ -19,9 +19,20 @@
     <td><%= alerta.tema.full_descripcion %></td>
     <td><%= alerta.tipo_alerta.descripcion.capitalize %></td>
     <td><%= "#{alerta.vocero.nombre} - #{alerta.vocero.descripcion if alerta.vocero.descripcion}"  %></td>
-    <td><%= link_to 'Show', alerta %>
-    |<%= link_to 'Edit', edit_alerta_path(alerta) %>
-    |<%= link_to 'Destroy', alerta, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <!-- <td><%# link_to 'Ver', alerta %>
+    |<%# link_to 'Editar', edit_alerta_path(alerta) %>
+    |<%# link_to 'Eliminar', alerta, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+
+    <td>
+      <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                  edit_alerta_path(alerta), :class => 'btn btn-mini' %>
+      <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                  alerta_path(alerta),
+                  :method => :delete,
+                  :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => '¿Estas seguro de esta acción?')) },
+                  :class => 'btn btn-mini btn-danger' %>
+    </td>
+
   </tr>
 <% end %>
 </table>
