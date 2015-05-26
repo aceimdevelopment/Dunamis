@@ -18,10 +18,13 @@ class Vocero < ActiveRecord::Base
     foto = "#{Rails.root}/images/sin_foto.png" if foto.blank? 
   end
   
+  def nombre_descripcion
+    "#{nombre} - #{descripcion}"
+  end
   def descripcion_completa
     
     # foto = asset_path 'sin_foto.png' if foto.blank?
-    "<img class='flag' src='#{foto}' style='max-width: 30px; max-height:30px;' alt=''/> <span>#{nombre} - #{descripcion}</span>"
+    "<img class='flag' src='#{foto}' style='max-width: 30px; max-height:30px;' alt=''/> <span>#{nombre_descripcion}</span>"
   end   
   
   

@@ -2,7 +2,7 @@
 class InformesController < ApplicationController
   # GET /informes
   # GET /informes.json
-
+  before_filter :filtro_logueado
   
   def agregar
     resumen = Resumen.find(params[:id])

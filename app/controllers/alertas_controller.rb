@@ -2,6 +2,7 @@
 class AlertasController < ApplicationController
   # GET /alertas
   # GET /alertas.json
+  before_filter :filtro_logueado
   def index
     @alertas = Alerta.all
 

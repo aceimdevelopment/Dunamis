@@ -6,7 +6,6 @@ class WizardController < ApplicationController
     redirect_to :action => 'paso1'
   end
 
-
   def asignar_websites
     
     if websites_seleccionadas = params[:websites]
