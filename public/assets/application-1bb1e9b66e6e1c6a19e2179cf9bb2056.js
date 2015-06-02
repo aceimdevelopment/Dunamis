@@ -1,1 +1,0 @@
-$(function(){$("select").select2()}),$(document).ready(function(){return $("#organizacion_estado_id").change(function(){var e=$(this).val();$.get("update_municipios_select?estado_id="+e,function(e){$("#municipioSelectDiv").html(e)})})});

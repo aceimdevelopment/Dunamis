@@ -26,8 +26,14 @@
   <div class="control-group">
 		<%= f.label :vocero_id, :class => 'control-label' %>
 		<div class='controls'>
-			<%# f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'selects2 span3'} %>
-			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :nombre_descripcion, {:prompt => "Vocero"}, {:required => true, :data => {:onChange => "return mostrar_edit();"}, :class => 'select2 span3'} %>
+			<%# f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :onChange => "mostrar_edit();", :class => 'selects2 span3'} %>
+			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :nombre_descripcion, {:prompt => "Vocero"}, {:required => true, :onChange => "return mostrar_edit();", :class => 'selects2 span3'} %>
+			<b class='tooltip-btn' data_toggle='tooltip' title='Editar Vocero' >
+				<%= link_to (""), { :role => 'button',:class => 'btn btn-info btn-mini', :id => 'boton_editar_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
+					<%= content_tag(:i, "", class: "icon-edit icon-white") %>
+					<%= content_tag(:i, "", class: "icon-user icon-white") %>
+				<% end %>
+			</b>
 
 			<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nuevo Vocero' >
 				<%= link_to (""), { :role => 'button', :class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#vocero_nuevo').modal();"} do %>
@@ -111,8 +117,8 @@
 	});
 	
 	function mostrar_edit(){
-		document.getElementById("boton_vocero").style.display="";
-		return false;
+		// document.getElementById("boton_editar_vocero").style.display="inline-block";
+		$('#boton_editar_vocero').show('slow');
 	}
 	
 	function form_editar_vocero(){
@@ -125,7 +131,7 @@
 			$('#otro_vocero').show('slow');
 		}
 		
-		document.getElementById("edit_vocero").action="/voceros/update/"+vocero_selected.val();
+		document.getElementById("boton_editar_vocero").action="/voceros/update/"+vocero_selected.val();
 		$('#vocero_editar').modal();
 		return false;
 	}
@@ -139,5 +145,6 @@
 	
 	$(document).ready(function() {
 		$('.tooltip-btn').tooltip();
+		$(".selects2").select2();
 	});
 </script>

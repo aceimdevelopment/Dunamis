@@ -43,7 +43,7 @@
 // });
 
 $(function(){
-  $(".selects2").select2();
+  
 });
 
 
@@ -58,9 +58,10 @@ $(document).ready(function() {
 
 // Dropdown display menu bar
 $(document).ready(function() {
-	$('.dropdown-toggle').dropdown()
-	$('.tooltip').tooltip()
-	$('.nav-tabs').button()
+	$(".selects2").select2();
+	$('.dropdown-toggle').dropdown();
+	$('.tooltip').tooltip();
+	$('.nav-tabs').button();
 });
 	
 

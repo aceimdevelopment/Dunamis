@@ -1,1 +1,0 @@
-$(document).ready(function(){$("select").select2()}),$(function(){$("select").select2()}),$(function(){return $("#organizacion_estado_id").change(function(){return alert("Casas")})});
