@@ -1,0 +1,1 @@
+$(function(){}),$(document).ready(function(){return $("#organizacion_estado_id").change(function(){var t=$(this).val();$.get("controller/update_municipios_select.html?estado_id="+t,function(t){$("#municipioSelectDiv").html(t)})})}),$(document).ready(function(){$(".selects2").select2(),$(".dropdown-toggle").dropdown(),$(".tooltip").tooltip(),$(".nav-tabs").button()});
