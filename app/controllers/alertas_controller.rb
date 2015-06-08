@@ -4,7 +4,7 @@ class AlertasController < ApplicationController
   # GET /alertas.json
   before_filter :filtro_logueado
   def index
-    @alertas = Alerta.all
+    @alertas = Alerta.order('fecha DESC')
 
     respond_to do |format|
       format.html # index.html.erb
