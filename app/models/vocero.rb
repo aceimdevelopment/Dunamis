@@ -19,7 +19,7 @@ class Vocero < ActiveRecord::Base
   end
   
   def nombre_descripcion
-    "#{nombre} - #{descripcion}"
+    descripcion ? "#{nombre} - #{descripcion}" : nombre
   end
   def descripcion_completa
     

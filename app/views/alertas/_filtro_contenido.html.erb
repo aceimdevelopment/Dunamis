@@ -1,0 +1,23 @@
+
+	<%= text_field_tag 'filtro', nil ,{:onkeyup => "return filtrar()", :placeholder=>"Filtrar...", :autofocus => true}%>
+	<a id="text"></a>
+
+
+<script type="text/javascript" charset="utf-8">
+	function filtrar() {
+		var filtro = document.getElementById("filtro").value.toLowerCase();
+		var total_mach = 0
+		$("tr.filtrables").each(function(){
+			var temp = $(this).text().toLowerCase();
+			if (temp.match(filtro) == null) {
+				$(this).hide();
+			}else {
+				$(this).show();
+				total_mach += 1;
+			}
+			
+		});
+		$("#text").text(filtro+" ("+total_mach+" coincidencias)");
+		return false;
+		}
+</script>

@@ -1,12 +1,29 @@
+
+<link href="http://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.min.css" rel="stylesheet">
+<link href="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet">
+<link href="lib/bootstrap-filterable.css" rel="stylesheet" type="text/css">
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
+<script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script> 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.4/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+<script src="src/jquery.filterable.js"></script>
+
+<div >
+<%= render :partial => 'filtro_contenido'%>	
+</div>
+
+
 <%= link_to 'Nueva Alerta', new_alerta_path, :class => 'btn btn-primary' %>
 
 <h1>Lista de alertas</h1>
 
-<table class = 'table  table-striped table-bordered table-hover'>
+<table class = 'table table-striped table-bordered table-hover table-condensed'>
   <tr>
+		<th>Id</th>
     <th>Fecha</th>
     <th>Contenido</th>
-    <th>Resumen</th>
+    <th style="width:50%;" >Resumen</th>
     <th>Temas</th>
     <th>Tipos alertas</th>
     <th>Voceros</th>
@@ -14,25 +31,29 @@
   </tr>
 
 <% @alertas.each do |alerta| %>
-  <tr>
+  <tr class='filtrables'>
+	  <td>
+			<b class='tooltip-btn' data_toggle='tooltip' title='Ver Alerta' >
+				<%= link_to alerta.id, alerta %></td>
+			</b>
     <td><%= alerta.fecha %></td>
     <td><%= alerta.contenido %></td>
 		<td><%= alerta.resumen %></td>
     <td><%= alerta.tema.full_descripcion %></td>
     <td><%= alerta.tipo_alerta.descripcion.capitalize %></td>
-    <td><%= "#{alerta.vocero.nombre} - #{alerta.vocero.descripcion if alerta.vocero.descripcion}"  %></td>
-    <!-- <td><%# link_to 'Ver', alerta %>
-    |<%# link_to 'Editar', edit_alerta_path(alerta) %>
-    |<%# link_to 'Eliminar', alerta, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
-
+    <td><%= alerta.vocero.nombre_descripcion %></td>
     <td>
-      <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                  edit_alerta_path(alerta), :class => 'btn btn-mini' %>
-      <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                  alerta_path(alerta),
-                  :method => :delete,
-                  :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => '¿Estas seguro de esta acción?')) },
-                  :class => 'btn btn-mini btn-danger' %>
+			<b class='tooltip-btn' data_toggle='tooltip' title='Editar Alerta' >
+				<%= link_to edit_alerta_path(alerta), { :role => 'button', :class => 'btn btn-info btn-mini'} do %>
+					<%= content_tag(:i, "", class: "icon-edit icon-white") %>
+				<% end %>
+			</b>	
+
+			<b class='tooltip-btn' data_toggle='tooltip' title='Eliminar Alerta' >
+				<%= link_to alerta_path(alerta), { :role => 'button', :class => 'btn btn-danger btn-mini', :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => '¿Estas seguro de esta acción?')) }} do %>
+					<%= content_tag(:i, "", class: "icon-trash icon-white") %>
+				<% end %>
+			</b>
     </td>
 
   </tr>
@@ -42,3 +63,10 @@
 <br />
 
 <%= link_to 'Nueva Alerta', new_alerta_path, :class => 'btn btn-primary' %>
+
+
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$('.tooltip-btn').tooltip();
+	});
+</script>
