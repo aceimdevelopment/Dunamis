@@ -1,8 +1,7 @@
-
+<div class='label label-info' style='float:right;'>
+	<a id="text" style='color:white;'></a>
 	<%= text_field_tag 'filtro', nil ,{:onkeyup => "return filtrar()", :placeholder=>"Filtrar...", :autofocus => true}%>
-	<a id="text"></a>
-
-
+</div>
 <script type="text/javascript" charset="utf-8">
 	function filtrar() {
 		var filtro = document.getElementById("filtro").value.toLowerCase();
