@@ -26,7 +26,8 @@
   <div class="control-group">
 		<%= f.label :vocero_id, :class => 'control-label' %>
 		<div class='controls'>
-			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :onChange => "mostrar_edit();", :class => 'selects2 span3'} %>
+			<%# f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :onChange => "mostrar_edit();", :class => 'selects2 span3'} %>
+			<%= f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :descripcion_completa, {:prompt => "Vocero"}, {:required => true, :style => 'width: 50%;', :onChange => "mostrar_edit();"} %>
 			<%# f.collection_select :vocero_id, Vocero.order('nombre ASC'), :id, :nombre_descripcion, {:prompt => "Vocero"}, {:required => true, :onChange => "return mostrar_edit();", :class => 'selects2 span3'} %>
 			<b class='tooltip-btn' data_toggle='tooltip' title='Editar Vocero' >
 				<%= link_to (""), { :role => 'button',:class => 'btn btn-info btn-mini', :id => 'boton_editar_vocero', :style => 'display: none;', :data => {:toggle => 'modal'}, :onclick => "return form_editar_vocero();"} do %>
@@ -110,7 +111,7 @@
 	function format(vocero) {
 	    return vocero.text;
 	}
-	$("#resumen_vocero_id").select2({
+	$("#alerta_vocero_id").select2({
 	    formatResult: format,
 	    formatSelection: format,
 	    escapeMarkup: function(m) { return m; }
@@ -123,7 +124,7 @@
 	
 	function form_editar_vocero(){
 		
-		var vocero_selected = $("#resumen_vocero_id");
+		var vocero_selected = $("#alerta_vocero_id");
 
 		// document.getElementById("vocero_nombre").value = vocero_selected.text();
 		
