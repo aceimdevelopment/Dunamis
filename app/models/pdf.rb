@@ -6,6 +6,26 @@ class Pdf
     ic_ignore.iconv(valor)
   end
   
+  def self.descargar_alertas_excel alertas
+    require 'spreadsheet'
+    @book = Spreadsheet::Workbook.new
+    @sheet = @book.create_worksheet :name => "reporte de alertas"
+    # @sheet = @book.create_worksheet :name => "reporte de alertas#{DateTime.now.strftime('%d %m %Y %h')}"
+    data = %w{ID FECHA CONTENIDO RESUMEN ASUNTO TEMA TIPO VOCERO}
+    @sheet.row(0).concat data
+    
+    data = []
+    
+    alertas.each_with_index do |alerta,i|
+      aux = {"ID" => alerta.id, "FECHA" => alerta.fecha, "CONTENIDO" => to_utf16(alerta.contenido), "RESUMEN" => to_utf16(alerta.resumen), "ASUNTO" => alerta.tema.asunto.nombre, "TEMA" => alerta.tema.nombre, "TIPO" => alerta.tipo_alerta.descripcion, "VOCERO" => alerta.vocero.nombre}
+      @sheet.row(i+1).concat aux.values
+    end
+    file_name = "Reporte_alertas_#{DateTime.now.strftime('%d_%m_%Y_%H_%M')}.xls"
+    return file_name if @book.write file_name
+    
+  end
+  
+  
   def self.generar_reporte_candidatos_excel fecha_inicial, fecha_final
       require 'spreadsheet'
       

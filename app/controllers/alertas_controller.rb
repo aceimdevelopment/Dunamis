@@ -3,6 +3,17 @@ class AlertasController < ApplicationController
   # GET /alertas
   # GET /alertas.json
   before_filter :filtro_logueado
+
+  def descargas
+
+    ids = params[:id]
+    alertas = Alerta.where(:id => ids.split(","))
+    file_name = Pdf.descargar_alertas_excel(alertas)
+    send_file file_name, :type => "application/vnd.ms-excel", :filename => file_name, :stream => false
+
+    File.delete(file_name)    
+  end
+  
   def index
     @alertas = Alerta.order('fecha DESC')
 

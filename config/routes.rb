@@ -1,8 +1,11 @@
 Dunamis::Application.routes.draw do
 
   
-  resources :alertas
-
+  resources :alertas do
+    collection do
+      get 'descargas'
+    end
+  end
   resources :tipos_alertas
 
   resources :usuarios
