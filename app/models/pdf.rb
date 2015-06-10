@@ -1,4 +1,4 @@
-# coding: utf-8
+# encoding: utf-8
 class Pdf
   require 'iconv'
   def self.to_utf16(valor)
@@ -17,7 +17,7 @@ class Pdf
     data = []
     
     alertas.each_with_index do |alerta,i|
-      aux = {"ID" => alerta.id, "FECHA" => alerta.fecha, "CONTENIDO" => to_utf16(alerta.contenido), "RESUMEN" => to_utf16(alerta.resumen), "ASUNTO" => alerta.tema.asunto.nombre, "TEMA" => alerta.tema.nombre, "TIPO" => alerta.tipo_alerta.descripcion, "VOCERO" => alerta.vocero.nombre}
+      aux = {"ID" => alerta.id, "FECHA" => alerta.fecha, "CONTENIDO" => alerta.contenido, "RESUMEN" => alerta.resumen, "ASUNTO" => alerta.tema.asunto.nombre, "TEMA" => alerta.tema.nombre, "TIPO" => alerta.tipo_alerta.descripcion, "VOCERO" => alerta.vocero.nombre}
       @sheet.row(i+1).concat aux.values
     end
     file_name = "Reporte_alertas_#{DateTime.now.strftime('%d_%m_%Y_%H_%M')}.xls"
