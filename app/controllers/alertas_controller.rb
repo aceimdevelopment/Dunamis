@@ -9,9 +9,9 @@ class AlertasController < ApplicationController
     ids = params[:id]
     alertas = Alerta.where(:id => ids.split(","))
     file_name = Pdf.descargar_alertas_excel(alertas)
-    send_file file_name, :type => "application/vnd.ms-excel", :filename => file_name, :stream => false
+    send_file file_name, :type => "application/vnd.ms-excel", :filename => "reporte_alertas.xls", :stream => false
 
-    File.delete(file_name)    
+    File.delete(file_name)
   end
   
   def index
