@@ -10,7 +10,7 @@ class Resumen < ActiveRecord::Base
   has_many :notas
   accepts_nested_attributes_for :notas
   
-  attr_accessible :contenido, :titulo, :vocero_id, :tema_id, :informe_id
+  attr_accessible :contenido, :titulo, :vocero_id, :tema_id, :informe_id, :otro_vocero
   
   scope :creados_hoy, -> {where("created_at >= ?", Date.today)}
   

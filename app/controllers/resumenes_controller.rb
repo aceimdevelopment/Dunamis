@@ -269,7 +269,7 @@ class ResumenesController < ApplicationController
     @resumen.destroy
     
     respond_to do |format|
-      url = params[:url] ? params[:url] : paso1_resumenes_path
+      url = params[:url] ? params[:url] : paso2_wizard_path
       format.html { redirect_to url }
       format.json { head :no_content }
     end

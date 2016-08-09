@@ -44,7 +44,7 @@ class WizardController < ApplicationController
     # Website.limpiar_usuario session[:usuario].id if session[:website_selecionada].blank?
     @websites = Website.all
     @websites_disponibles = Website.all.delete_if {|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
-    @titulo = "Paso 1 > Seleccione Notas"
+    @titulo = "Paso 1: Seleccionar Notas"
     #manejo de website activa mediante el uso de la sesion
     @total_notas = 0
   	@websites.each {|website| @total_notas += website.notas.creadas_hoy.count}    
@@ -69,7 +69,7 @@ class WizardController < ApplicationController
   
   def paso2
     @websites_disponibles = Website.all.delete_if {|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
-    @titulo = "Paso 2 > Seleccione Vocero"
+    @titulo = "Paso 2: Seleccionar Vocero"
     # params[:mensaje] = nil
     unless params[:id]
       @resumen = Resumen.new
@@ -102,13 +102,18 @@ class WizardController < ApplicationController
     
     unless params[:id].blank?
       @resumen = Resumen.find(params[:id])
+      @resumen.otro_vocero = params[:resumen][:otro_vocero] if params[:resumen][:otro_vocero]
       @resumen.vocero_id = params[:resumen][:vocero_id]
-      # saved = @resumen.update_attributes(params[:resumen])
+      # DEbo crear un vocero llamado otro_vocero con id fijo el cual sirva para identificar los resumenes con otros voceros
       
+      # saved = @resumen.update_attributes(params[:resumen])
     else
       @resumen = Resumen.new(params[:resumen])
     end
     
+    # Primero debo preguntar por vocero inusual y luego por el vocero_id
+    # if params[:resumen][:otro_vocero]
+
     if @resumen.save
       flash[:success] = "Vocero Seleccionado" 
       redirect_to :action => "paso3/#{@resumen.id}" #, notice: 'Resumen was successfully created.'
@@ -119,7 +124,7 @@ class WizardController < ApplicationController
   end
   
   def paso3
-    @titulo = "Paso 3 > Unifique Notas"
+    @titulo = "Paso 3 : Unificar Notas"
     @url = params[:url] if params[:url]
     @websites_disponibles = Website.all.delete_if {|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
     #manejo de website activa mediante el uso de la sesion

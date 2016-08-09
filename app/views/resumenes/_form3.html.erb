@@ -18,8 +18,8 @@
 				<% end %>
 			</b>
 			
-			<b class='tooltip-btn' data_toggle='tooltip' title='Vocero Inusual'>
-				<%= f.text_field :otro_vocero, :class => 'input-medium', :placeholder => "nombre del otro vocero…", :style => 'display:none' %>
+			<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Vocero Inusual'>
+				<%= f.text_field :otro_vocero, :class => 'input', :placeholder => "nombre del otro vocero…", :style => 'display:none' %>
 				<%= link_to (""), { :role => 'button', :class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "	incluir_vocero_inusual();"} do %>
 					<%= content_tag(:i, "", class: "icon-user icon-white") %>
 					<%= content_tag(:i, "", class: 'icon-question-sign icon-white') %>					
@@ -166,6 +166,8 @@
 	function incluir_vocero_inusual() {
 		$('#resumen_otro_vocero').show('slow');
 		$('#resumen_vocero_id').removeAttr('required');
+		$('#resumen_vocero_id').hide('slow');	
+		$('#resumen_otro_vocero').addAttr('autofocus');			
 	}
 
 	function format(vocero) {

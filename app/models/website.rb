@@ -11,6 +11,10 @@ class Website < ActiveRecord::Base
   has_many :tipos_webnotas
   accepts_nested_attributes_for :tipos_webnotas
 
+  def url_sin_backslash
+    url[0..url.length-2]
+  end
+
   def self.limpiar_usuario usuario_id
     Website.all.each{|w| w.usuario_id = nil if (w.usuario_id.eql? usuario_id) ; w.save}
   end

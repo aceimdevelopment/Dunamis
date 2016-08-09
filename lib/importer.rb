@@ -4,8 +4,41 @@ module Importer
   require 'uri'
   require 'mechanize'
   
+  def self.temporal
+    index = cargar_website "http://www.ultimasnoticias.com.ve/"
+    return index
+  end
+  
   def self.limpio text
     text.gsub(/[\t\n\r]/, '')
+  end
+
+  def self.cargar_website url
+    url = URI.parse url
+    agente = Mechanize.new
+    # Importante para los tiempos
+    # agente.open_timeout = 1
+    # agente.read_timeout = 5
+    begin
+      return agente.get(url)
+    rescue Exception => ex
+      return ex
+    end
+  end
+
+#   POSIBLE FUNCIÓN PARA INCLUIR EN ERROR DE CARGA
+  def self.cargar_website_low website
+    begin
+      url = URI.parse website.url
+      agente = Mechanize.new
+    rescue Exception => ex
+      puts "Time out connection request#{ex}"
+      agente = nil
+    end 
+
+    return agente if agente.nil?
+    return agente.get(url)
+
   end
 
   def self.importar_notas_noticias24
@@ -50,11 +83,119 @@ module Importer
      end
     
   end
-
-
-
-
+  # Correcto
   def self.import_notas_globovision
+    website = Website.find_by_nombre("globovision")
+    # PÁGINA PRINCIPAL DEL SITIO WEB
+    index = cargar_website website.url
+    notas_web = index.search ".nota"
+
+    # PÁGINA NACIONALES 
+    enlace = index.link_with(:text => 'Nacionales')
+    pagina = enlace.click
+    notas_web += pagina.search ".article"
+    
+    # PÁGINA ECONOMÍA
+    enlace = index.link_with(:text => 'Economía')
+    pagina = enlace.click
+    notas_web += pagina.search ".article"
+
+    #Pruebas
+    puts "Iniciando carga página particulares"
+    begin
+      # index = cargar_website "#{website.url}programas/analisis-situacional"
+      # notas_web += index.search ".article"
+      index = cargar_website "#{website.url}programas/vladimir-a-la-1"
+      notas_web += index.search ".article"
+      # index = cargar_website "#{website.url}programas/primera-pagina"
+      # notas_web += index.search ".article"
+
+      # index = cargar_website "#{website.url}programas/primera-pagina/"
+      # notas_web += index.search ".article"
+      # 
+      # index = cargar_website "#{website.url}programas/vladimir-a-la-1/"
+      # notas_web += index.search ".article"
+      # index = cargar_website "#{website.url}programas/con-todo-y-penzini/"
+      # notas_web += index.search ".article"
+
+    rescue Exception => ex
+      puts "----------------ERROR----------------------"
+      puts "-------------------------------------------"
+      puts ex
+      puts "-------------------------------------------"
+      puts "-------------------------------------------"            
+    end
+
+    # PÁGINA PROGRAMAS PENDIENTE
+    # enlace = index.link_with(:text => 'Programas')
+    # pagina = enlace.click
+    # enlace = pagina.link_with(:text => 'Todos los programas')
+    # pagina = enlace.click
+    # enlace = pagina.link_with(:text => 'Todos los programas')
+    # 
+    # notas_web += pagina.search ".article"
+    # index = cargar_website "#{website.url}programas/primera-pagina/"
+    # notas_web += index.search ".article"
+    # index = cargar_website "#{website.url}programas/vladimir-a-la-1/"
+    # notas_web += index.search ".article"
+    # index = cargar_website "#{website.url}programas/con-todo-y-penzini/"
+    # notas_web += index.search ".article"
+        
+     notas_web.each do |nota_web|
+       # Creación del Hast para la Nota
+       nota_temp = Hash.new
+       nota_temp[:website_id] = website.id
+       nota_temp[:tipo_nota_id] = 1
+       
+       # Gestión de titulo y url
+       nota_temp[:titulo] = nota_web.search(".title a")
+       nota_temp[:url] = (nota_temp[:titulo].attr "href").value unless nota_temp[:titulo].blank?
+       nota_temp[:url] = website.url_sin_backslash + nota_temp[:url] unless nota_temp[:url].include? website.url
+       nota_temp[:titulo] = nota_temp[:titulo].text unless nota_temp[:titulo].blank?
+
+       # nota_temp[:titulo] = nota_temp[:titulo].attr "text" if nota_temp[:titulo].attributes
+       # Gestión de Resumen de la nota
+       aux = nota_web.search(".description")
+       if aux.count > 0
+         nota_temp[:contenido] = aux
+       else
+         aux = nota_web.search("p")
+         nota_temp[:contenido] = aux if aux.count > 0
+       end
+       nota_temp[:contenido] = (limpio nota_temp[:contenido].text) if not nota_temp[:contenido].blank?
+       
+       # Gestión de la Imagen
+       nota_temp[:imagen] = nota_web.search(".image img")
+       nota_temp[:imagen] = nota_web.search("img") if nota_temp[:imagen].blank?
+       
+       unless nota_temp[:imagen].blank?
+         
+         aux = nota_temp[:imagen].attr "data-src"
+         unless aux.blank?
+           nota_temp[:imagen] = aux.text
+         else
+           aux = nota_temp[:imagen].attr "src"
+           nota_temp[:imagen] = aux.value if aux
+         end
+       end
+       # nota_temp[:imagen] = (nota_temp[:imagen].attr "data-src").text if (nota_temp[:imagen].blank? or nota_temp[:imagen].attr "data-src")
+       
+       # Gestión de la Fecha de publicación
+       aux = nota_web.search(".date")
+       nota_temp[:fecha_publicacion] = aux if aux.count > 0
+       # nota_temp[:fecha_publicacion] = nota_web.search(".postTime") if nota_temp[:fecha_publicacion].blank?
+       # nota_temp[:fecha_publicacion] = nota_web.search(".postMeta") if nota_temp[:fecha_publicacion].blank?
+       nota_temp[:fecha_publicacion] = (limpio nota_temp[:fecha_publicacion].text) unless nota_temp[:fecha_publicacion].blank?
+       
+       # Crear Nota
+       Nota.create nota_temp
+       
+     end
+  end
+
+  # Correcto
+
+  def self.import_notas_globovision_old
     website = Website.find_by_nombre("globovision")
     puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
@@ -116,7 +257,7 @@ module Importer
 
 
   
-  def self.import_notas_globovision_old
+  def self.import_notas_globovision_old_old
 
     website = Website.find_by_nombre("globovision")
     puts website.nombre
@@ -205,8 +346,63 @@ module Importer
       nota_local.save
     end
   end
-  
+
+
+
   def self.import_notas_union_radio
+
+    website = Website.find_by_nombre "unionradio"
+    puts website.nombre
+    
+    # Se Carga la Pagina Principal del WebSite
+    index = cargar_website website.url
+    
+    # Se Buscan las Todas las Notas de la Web
+    notas_web = index.search ".col-xs-4"
+    notas_web += index.search ".row.polymer-box-sm"
+    notas_web += index.search "col-xs-6.col-md-12"
+
+    index = cargar_website "http://unionradio.net/category/pais/politica/"
+    notas_web += index.search ".col-xs-4"
+    total_notas_importadas = 0
+    total_notas_no_importadas = 0
+    notas_web.each do |nota_web|
+      # Se buscan titulos (<a></a>) y contenidos
+      nota_temp = Hash.new
+      nota_temp[:website_id] = website.id
+      nota_temp[:tipo_nota_id] = 1
+            
+      titulo = nota_web.search "a"
+      
+      unless titulo.blank?
+        # Si la Nota tiene titulo y contenido
+        nota_temp[:url] = (titulo.search("a").attr "href").value
+        
+        nota_temp[:titulo] = titulo.text.gsub(/[\t\n\r\s+]/, '')
+        # Buscamos Fecha
+        nota_temp[:fecha_publicacion] = (nota_web.search ".text-size-08").text
+        
+        # Buscamos Imagen
+        nota_temp[:imagen] = (nota_web.search("img").attr "src").value        
+
+        # Se guarda la nota_local
+        if nota.save
+          total_notas_importadas += 1 if Nota.create nota_temp
+        else
+          total_notas_no_importadas += 1
+        end
+      else
+        total_notas_no_importadas += 1
+      end
+    end
+    puts "================================================<<<<<<<>>>>>>>>>>>>>>================================================"    
+    puts "Total de notas encontradas: #{notas_web.count}"
+    puts "Total de notas importadas: #{total_notas_importadas}"
+    puts "Total de notas No Importadas: #{total_notas_no_importadas}"
+  end
+
+  
+  def self.import_notas_union_radio_old
 
     website = Website.find_by_nombre "unionradio"
     puts website.nombre
@@ -272,6 +468,7 @@ module Importer
     end
 
   end  
+
 
   def self.import_notas_noticierodigital
 
@@ -350,6 +547,7 @@ module Importer
 
     end
   end
+
     
   def self.import_notas_noticierovenevision
     website = Website.find_by_nombre "noticierovenevision"
@@ -460,6 +658,52 @@ module Importer
   end
 
   def self.import_notas_laverdad
+    
+    website = Website.find_by_nombre("laverdad")
+    index = cargar_website website.url
+    # notas_web = index.search ".a"
+    notas_web = index.search "li.a,li.b"
+    # notas_web = index.search "li.a"
+    notas_cargadas = 0
+    # .search(".a").at("span").parent.text
+     notas_web.each do |nota_web|
+       # Creación del Hast para la Nota
+       nota_temp = Hash.new
+       nota_temp[:website_id] = website.id
+       nota_temp[:tipo_nota_id] = 1
+       
+       # Gestión de titulo y url
+       nota_temp[:titulo] = nota_web.search("h2 a").first
+       nota_temp[:url] = (nota_temp[:titulo].attr "href") unless nota_temp[:titulo].blank?
+       nota_temp[:titulo] = (limpio "Titulo: #{nota_temp[:titulo].text}") unless nota_temp[:titulo].blank?
+       
+       # Gestión de Resumen de la nota
+       nota_temp[:contenido] = nota_web.search("p").text
+       # nota_temp[:contenido] = nota_temp[:contenido].text if nota_temp[:contenido].blank? 
+       # nota_temp[:contenido] = (limpio nota_temp[:contenido].text) unless nota_temp[:contenido].blank?
+       
+       # Gestión de la Imagen
+       nota_temp[:imagen] = nota_web.search(".loader")
+       # nota_temp[:imagen] = nota_web.search("img") if nota_temp[:imagen].blank?
+       nota_temp[:imagen] = (nota_temp[:imagen].attr "data-original").text unless nota_temp[:imagen].blank?
+       
+       # Gestión de la Fecha de publicación
+       nota_temp[:fecha_publicacion] = nota_web.search(".fecha")
+       nota_temp[:fecha_publicacion] = nota_temp[:fecha_publicacion].text unless nota_temp[:fecha_publicacion].blank?
+       
+       
+       # Crear Nota
+       notas_cargadas +=1 if Nota.create nota_temp
+     end
+     puts "Resumen en #{website.nombre}:".center(100,"=")
+     puts "Total de Notas a Cargar: #{notas_web.count}"
+     puts "Total de Notas Cargadas: #{notas_cargadas}"
+     puts "".center(100,"=")
+
+  end
+
+
+  def self.import_notas_laverdad_old
     website = Website.find_by_nombre "laverdad"
     puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
@@ -991,33 +1235,7 @@ module Importer
 # page2 = page.link_with(:href => cunas_fichas_url).click
 
   
-  def self.cargar_website url
-    url = URI.parse url
-    agente = Mechanize.new
-    # Importante para los tiempos
-    # agente.open_timeout = 1
-    # agente.read_timeout = 5
-    begin
-      return agente.get(url)
-    rescue Exception => ex
-      return ex
-    end
-  end
 
-#   POSIBLE FUNCIÓN PARA INCLUIR EN ERROR DE CARGA
-  def self.cargar_website_low website
-    begin
-      url = URI.parse website.url
-      agente = Mechanize.new
-    rescue Exception => ex
-      puts "Time out connection request#{ex}"
-      agente = nil
-    end 
-    
-    return agente if agente.nil?
-    return agente.get(url)
-
-  end
   
   # BARRER WEBSITES PRUEBA
   
