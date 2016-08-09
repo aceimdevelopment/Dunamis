@@ -386,8 +386,8 @@ module Importer
         nota_temp[:imagen] = (nota_web.search("img").attr "src").value        
 
         # Se guarda la nota_local
-        if nota.save
-          total_notas_importadas += 1 if Nota.create nota_temp
+        if Nota.create nota_temp
+          total_notas_importadas += 1 
         else
           total_notas_no_importadas += 1
         end
@@ -469,9 +469,74 @@ module Importer
 
   end  
 
-
   def self.import_notas_noticierodigital
 
+
+    website = Website.find_by_nombre "noticierodigital"
+    index = cargar_website website.url
+    # notas_web = index.search ".a"
+    notas_web = index.search ".highlighted, .mainnotes"
+    # notas_web = index.search "li.a"
+    notas_cargadas = 0
+    # .search(".a").at("span").parent.text
+     notas_web.each do |nota_web|
+       # Creación del Hast para la Nota
+       nota_temp = Hash.new
+       nota_temp[:website_id] = website.id
+       nota_temp[:tipo_nota_id] = 1
+       
+       # Gestión de titulo y url
+       
+
+       # Se buscan titulos (<a></a>) y contenidos       
+       nota_temp[:titulo] = nota_web.search("h2 a").first
+       nota_temp[:url] = (nota_temp[:titulo].attr "href") unless nota_temp[:titulo].blank?
+       nota_temp[:titulo] = (limpio nota_temp[:titulo].text) unless nota_temp[:titulo].blank?
+       
+       # Gestión de Resumen de la nota
+       nota_temp[:contenido] = nota_web.search("p.lead").text
+       # nota_temp[:contenido] = nota_temp[:contenido].text if nota_temp[:contenido].blank? 
+       # nota_temp[:contenido] = (limpio nota_temp[:contenido].text) unless nota_temp[:contenido].blank?
+
+       #Limpieza del contenido, quitamos titulos y fechas
+       # msg = contenido[1].text
+       # msg = nota.text if msg.include? "ver artículo completo »"      
+       # msg.slice! titulo if msg.include? titulo
+       # msg.slice! fecha if msg.include? fecha
+       # 
+       # if msg.include? "opinan los foristas"  
+       #   indice = msg.index "opinan los foristas"
+       #   aux = msg[indice..-1]
+       #   msg.slice! aux
+       # end
+       # 
+       # contenido = msg#.slice! "ver artículo completo »"
+       # 
+       
+       # Gestión de la Imagen
+       nota_temp[:imagen] = nota_web.search("img")
+       # nota_temp[:imagen] = nota_web.search("img") if nota_temp[:imagen].blank?
+       nota_temp[:imagen] = (nota_temp[:imagen].attr "src").text unless nota_temp[:imagen].blank?
+       
+       # Gestión de la Fecha de publicación
+       # nota_temp[:fecha_publicacion] = nota_web.search(".fecha")
+       # nota_temp[:fecha_publicacion] = nota_temp[:fecha_publicacion].text unless nota_temp[:fecha_publicacion].blank?
+       
+       
+       # Crear Nota
+       notas_cargadas +=1 if Nota.create nota_temp
+     end
+     puts "Resumen en #{website.nombre}:".center(100,"=")
+     puts "Total de Notas a Cargar: #{notas_web.count}"
+     puts "Total de Notas Cargadas: #{notas_cargadas}"
+     puts "".center(100,"=")
+    
+  end
+
+
+  def self.import_notas_noticierodigital_old
+    
+    # Noticiero Digital = ".highlighted, .mainnotes"
     website = Website.find_by_nombre "noticierodigital"
     puts website.nombre
     # Eliminando las notas no asociadas a algun resumen
@@ -675,7 +740,7 @@ module Importer
        # Gestión de titulo y url
        nota_temp[:titulo] = nota_web.search("h2 a").first
        nota_temp[:url] = (nota_temp[:titulo].attr "href") unless nota_temp[:titulo].blank?
-       nota_temp[:titulo] = (limpio "Titulo: #{nota_temp[:titulo].text}") unless nota_temp[:titulo].blank?
+       nota_temp[:titulo] = (limpio nota_temp[:titulo].text) unless nota_temp[:titulo].blank?
        
        # Gestión de Resumen de la nota
        nota_temp[:contenido] = nota_web.search("p").text
