@@ -1,0 +1,59 @@
+<%= form_for @pagina, :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :url, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :url, :class => 'text_field', :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :articulo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :articulo, :class => 'text_field', :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :titulo, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :titulo, :class => 'text_field', :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :contenido, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :contenido, :class => 'text_field', :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :imagen, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :imagen, :class => 'text_field', :required => true %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :fecha, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :fecha, :class => 'text_field', :required => true %>
+    </div>
+  </div>
+			<%- if @website -%>
+				<%= hidden_field_tag 'website_id', @website.id  %>
+		  	<%= hidden_field_tag 'pagina[website_id]', @website.id  %>
+			<% else %>
+			  <div class="control-group">
+			    <div class="controls">
+			    	<%= f.label :website_id, :class => 'control-label' %>
+			  		<%= f.label :website_id %><br />
+		  			<%= f.collection_select :website_id, Website.all, :id, :nombre, {:prompt => true}, { :required => true, :class => "selectpicker"} %>
+				   </div>
+				</div>
+			<% end %>
+
+	<%# hidden_field_tag 'url', @url if @url %>
+
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                paginas_path, :class => 'btn' %>
+  </div>
+<% end %>

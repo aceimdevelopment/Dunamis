@@ -1,0 +1,63 @@
+
+<div class="page-header">
+  <h2>Páginas:</h2>
+</div>
+<table class = 'table table-striped table-bordered table-hover table-condensed'>
+	<thead>
+	  <tr>
+			<th>Id</th>
+			<th>Url</th>		
+	    <th>Articulo</th>
+	    <th>Titulo</th>
+	    <th>Contenido</th>
+	    <th>Imagen</th>
+	    <th>Fecha</th>
+	    <th>Opicones</th>
+	  </tr>
+	</thead>
+	<tbody>
+		<% @paginas.each do |pagina| %>
+			<tr>
+				<td><%= pagina.id %></td>
+				<td><%= pagina.url %></td>
+				<td><%= pagina.articulo %></td>
+				<td><%= pagina.titulo %></td>
+				<td><%= pagina.contenido %></td>
+				<td><%= pagina.imagen %></td>
+				<td><%= pagina.fecha %></td>
+
+				<td>
+
+					<b class='tooltip-btn' data_toggle='tooltip' title='Editar Página'>
+						<%= link_to "", {:href => edit_pagina_path(pagina), :class => 'btn btn-info btn-mini'}, { :role => 'button', :data => {:toggle => 'modal'}} do %>
+							<%= content_tag(:i, "", class: "icon-edit icon-white") %>
+						<% end %>
+					</b>
+					<b class='tooltip-btn' data_toggle='tooltip' title='Eliminar Página'>
+						<%= link_to "", {:href => pagina_path(pagina), :class => 'btn btn-mini btn-danger', :method => :delete, 'data-confirm' => '¿Está Seguro?'}, {:role => 'button', :data => {:toggle => 'modal'}} do %>
+							<%= content_tag(:i, "", class: "icon-trash icon-white") %>
+						<% end %>
+					</b>						
+				</td>					
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<b class='tooltip-btn' data_toggle='tooltip' title='Agregar Nueva Pagina' >
+<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini ', :data => {:toggle => 'modal'}, :onclick => " $('#pagina_nueva').modal();"} do %>
+	<%= content_tag(:i, "", class: "icon-plus icon-white") %>
+	<%= content_tag(:i, "", class: "icon-file icon-white") %>
+<% end %>
+</b>
+
+<%- @url = request.original_url %>
+<div id="pagina_nueva" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-header">
+	  <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+	  <h3 id="myModalLabel">Nueva Página</h3>
+	</div>
+	<div class="modal-body">
+	  <%= render 'paginas/form', :@url => @url %>
+	</div>
+</div>
