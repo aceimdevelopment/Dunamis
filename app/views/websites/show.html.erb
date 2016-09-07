@@ -4,13 +4,55 @@
 </div>
 
 <dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:nombre) %>:</strong></dt>
+  <dd><%= @website.nombre %></dd>	
   <dt><strong><%= model_class.human_attribute_name(:url) %>:</strong></dt>
   <dd><%= @website.url %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:nombre) %>:</strong></dt>
-  <dd><%= @website.nombre %></dd>
   <dt><strong><%= model_class.human_attribute_name(:descripcion) %>:</strong></dt>
   <dd><%= @website.descripcion %></dd>
 </dl>
+
+<div class='well small'>
+<%- @paginas = @website.paginas -%>
+<%- if @paginas.count > 0 -%>
+	<h2><%= "Páginas de #{@website.nombre.capitalize}:" %></h2>
+	<table class = 'table table-striped table-bordered table-hover table-condensed'>
+		<thead>
+		  <tr>
+				<th>Id</th>
+				<th>Url</th>		
+		    <th>Articulo</th>
+		    <th>Titulo</th>
+		    <th>Contenido</th>
+		    <th>Imagen</th>
+		    <th>Fecha</th>
+		  </tr>
+		</thead>
+		<tbody>
+			<% @paginas.each do |pagina| %>
+				<tr>
+					<td><%= pagina.id %></td>
+					<td><%= pagina.url %></td>
+					<td><%= pagina.articulo %></td>
+					<td><%= pagina.titulo %></td>
+					<td><%= pagina.contenido %></td>
+					<td><%= pagina.imagen %></td>
+					<td><%= pagina.fecha %></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+	
+<% end %>
+
+	<div id="pagina" class= 'well small' style= 'display:block'>
+		<h3>Agregar Nueva Página:</h3>
+		<%= render 'paginas/form' %>
+	</div>
+</div>
+<%# link_to "Agregar Articulo" , 'javascript:void(0)' , :class => "btn", :onclick => "$(#pagina).show('slow'); $(this).remove();" %>
+
+
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),

@@ -1,6 +1,8 @@
 Dunamis::Application.routes.draw do
 
   
+  resources :paginas
+
   resources :alertas do
     collection do
       get 'descargas'
@@ -73,7 +75,9 @@ Dunamis::Application.routes.draw do
     resources :resumenes
   end
 
-  resources :websites
+  resources :websites do
+    resources :paginas
+  end
 
   resources :apariciones
 

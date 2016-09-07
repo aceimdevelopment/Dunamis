@@ -13,6 +13,10 @@ module Importer
     text.gsub(/[\t\n\r]/, '')
   end
 
+  def self.url_limpio text
+    text.gsub(/[\t\n\r\ ]/, '')
+  end
+
   def self.cargar_website url
     url = URI.parse url
     agente = Mechanize.new
@@ -522,7 +526,6 @@ module Importer
        # nota_temp[:fecha_publicacion] = nota_web.search(".fecha")
        # nota_temp[:fecha_publicacion] = nota_temp[:fecha_publicacion].text unless nota_temp[:fecha_publicacion].blank?
        
-       
        # Crear Nota
        notas_cargadas +=1 if Nota.create nota_temp
      end
@@ -825,7 +828,48 @@ module Importer
     end
   end
 
+
+
   def self.import_notas_informe21
+    
+    website = Website.find_by_nombre("informe21")
+    index = cargar_website website.url
+    notas_web = index.search "li"
+
+    notas_cargadas = 0
+    # .search(".a").at("span").parent.text
+    notas_web.each do |nota_web|
+      # Creación del Hash para la Nota
+      nota_temp = Hash.new
+      nota_temp[:website_id] = website.id
+      nota_temp[:tipo_nota_id] = 1
+
+      # Gestión de titulo y url
+      nota_temp[:titulo] = nota_web.search("h3 a").first
+      nota_temp[:url] = (nota_temp[:titulo].attr "href") unless nota_temp[:titulo].blank?
+      nota_temp[:titulo] = (limpio nota_temp[:titulo].text) unless nota_temp[:titulo].blank?
+
+      # Gestión de Resumen de la nota
+      nota_temp[:contenido] = nota_web.search("p").text
+
+      # Gestión de la Imagen
+      nota_temp[:imagen] = nota_web.search("img")
+      nota_temp[:imagen] = (nota_temp[:imagen].attr "src").text unless nota_temp[:imagen].blank?
+
+      # Gestión de la Fecha de publicación
+      fecha_temp = nota_web.search("span.created").first
+      nota_temp[:fecha_publicacion] = fecha_temp.text unless fecha_temp.blank?
+
+      # Crear Nota
+      notas_cargadas +=1 if Nota.create nota_temp
+    end
+    puts "Resumen en #{website.nombre}:".center(100,"=")
+    puts "Total de Notas a Cargar: #{notas_web.count}"
+    puts "Total de Notas Cargadas: #{notas_cargadas}"
+    puts "".center(100,"=")
+  end
+
+  def self.import_notas_informe21_old
     website = Website.find_by_nombre "informe21"
     puts website.nombre    
     # Eliminando las notas no asociadas a algun resumen
@@ -880,7 +924,152 @@ module Importer
     end
   end
 
-  def self.import_notas_eluniversal
+  def self.plantilla_general website_nombre, formato
+    f_notas = formato[:notas]
+    f_titulo = formato[:titulo]
+    f_contenido = formato[:contenido]
+    f_fecha = formato[:fecha]
+    f_imagen = formato[:imagen]
+        
+    website = Website.find_by_nombre(website_nombre)
+    index = cargar_website website.url
+    notas_web = index.search f_notas
+
+    notas_cargadas = 0
+    # .search(".a").at("span").parent.text
+    notas_web.each do |nota_web|
+      # Creación del Hash para la Nota
+      nota_temp = Hash.new
+      nota_temp[:website_id] = website.id
+      nota_temp[:tipo_nota_id] = 1
+
+      # Gestión de titulo y url
+      nota_temp[:titulo] = nota_web.search(f_titulo).first
+
+      unless nota_temp[:titulo].blank?
+        nota_temp[:url] = (nota_temp[:titulo].attr "href")
+        
+        nota_temp[:url] = website.url+nota_temp[:url] if !(nota_temp[:url].include? website.descripcion)
+        unless nota_temp[:titulo].blank?
+          titulo = nota_temp[:titulo].text
+          titulo = nota_temp[:titulo].attr "title" if titulo.blank?
+          nota_temp[:titulo] = limpio titulo
+        end
+
+      end
+
+      # Gestión de Resumen de la nota
+      nota_temp[:contenido] = nota_web.search(f_contenido).text
+
+      # Gestión de la Imagen
+      nota_temp[:imagen] = nota_web.search(f_imagen)
+      nota_temp[:imagen] = (nota_temp[:imagen].attr "src").text unless nota_temp[:imagen].blank? or !(nota_temp[:imagen].attr "src")
+      nota_temp[:imagen] = nota_temp[:imagen].to_s
+      nota_temp[:imagen] = url_limpio nota_temp[:imagen]
+      nota_temp[:imagen] = website.url+nota_temp[:imagen] unless nota_temp[:imagen].blank? or !(nota_temp[:imagen].include? website.descripcion)
+
+      # Gestión de la Fecha de publicación
+      fecha_temp = nota_web.search(f_fecha).first
+      nota_temp[:fecha_publicacion] = fecha_temp.text unless fecha_temp.blank?
+
+      # Crear Nota
+      nota = Nota.new nota_temp
+
+      puts "".center(100,"-")
+      puts nota_temp
+      puts "Nota: #{nota.id}"
+      puts "Titular: #{nota.titulo}"
+      puts "url: #{nota.url}"
+      puts "contenido: #{nota.contenido}"
+      puts nota.save
+      puts "".center(100,"-")
+
+      notas_cargadas +=1 if nota.save
+    end
+    puts " Resumen en #{website.nombre}: ".center(100,"=")
+    puts "Total de Notas a Cargar: #{notas_web.count}"
+    puts "Total de Notas Cargadas: #{notas_cargadas}"
+    puts "".center(100,"=")
+    
+  end
+
+# BARRIDOS 2.0
+
+  def self.importar_notas_noticias24
+
+    @website = Website.find 34
+    
+    @website.paginas.each do |pagina|
+      formato = Hash.new
+      formato[:notas] = pagina.articulo
+      formato[:titulo] = pagina.titulo
+      formato[:contenido] = pagina.contenido
+      formato[:fecha] = pagina.fecha
+      formato[:imagen] = pagina.imagen
+      plantilla_general @website.nombre, formato
+    end
+  end
+
+  def self.importar_notas_laverdad
+    formato = Hash.new
+    formato[:notas] = 'li.a,li.b'
+    formato[:titulo] = 'h2 a'
+    formato[:contenido] = 'p'
+    formato[:fecha] = '.fecha'
+    formato[:imagen] = '.loader'
+
+    plantilla_general "laverdad", formato
+  end
+
+
+
+  def self.importar_notas_caraotadigital
+    formato = Hash.new
+    formato[:notas] = '.td_module_1'
+    formato[:titulo] = 'h3 a'
+    formato[:contenido] = 'p'
+    formato[:fecha] = '.td-post-date'
+    formato[:imagen] = 'img'
+
+    plantilla_general "caraotadigital", formato
+  end
+
+
+  def self.importar_notas_ultimasnoticias
+    formato = Hash.new
+    formato[:notas] = 'article'
+    formato[:titulo] = 'a'
+    formato[:contenido] = 'p'
+    formato[:fecha] = '.updated'
+    formato[:imagen] = 'img'
+
+    plantilla_general "ultimasnoticias", formato
+  end
+
+  def self.importar_notas_panorama
+    formato = Hash.new
+    formato[:notas] = 'article'
+    formato[:titulo] = 'a'
+    formato[:contenido] = 'p'
+    formato[:fecha] = '.n3_creditos span'
+    formato[:imagen] = 'img'
+
+    plantilla_general "panorama", formato
+  end
+
+  def self.importar_notas_eluniversal
+    formato = Hash.new
+    formato[:notas] = 'article'
+    formato[:titulo] = 'h3 a'
+    formato[:contenido] = 'p'
+    formato[:fecha] = '.epigraph span'
+    formato[:imagen] = 'img'
+
+    Importer.plantilla_general "eluniversal", formato
+
+  end
+
+  def self.import_notas_eluniversal_old
     website = Website.find_by_nombre "eluniversal"
     puts website.nombre    
     # Eliminando las notas no asociadas a algun resumen

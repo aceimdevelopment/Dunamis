@@ -8,6 +8,9 @@ class Website < ActiveRecord::Base
   has_many :notas
   accepts_nested_attributes_for :notas
 
+  has_many :paginas, dependent: :destroy
+  accepts_nested_attributes_for :paginas
+
   has_many :tipos_webnotas
   accepts_nested_attributes_for :tipos_webnotas
 
@@ -52,6 +55,10 @@ class Website < ActiveRecord::Base
       tiempo_ultima_carga = tiempo_ultima_carga*-1 if tiempo_ultima_carga < 0
       return tiempo_ultima_carga < tiempo_retardo
     end
+  end
+
+  def importar_notas_website_2
+    paginas.each{|pagina|pagina.importar_notas}
   end
 
   def importar_notas_website 

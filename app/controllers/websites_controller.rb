@@ -15,7 +15,7 @@ class WebsitesController < ApplicationController
   # GET /websites/1.json
   def show
     @website = Website.find(params[:id])
-
+    @pagina = Pagina.new
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @website }
