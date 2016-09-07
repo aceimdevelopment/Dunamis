@@ -24,7 +24,11 @@
 					<% end %>
 
 		      <b class="media-heading">
-						<%= "#{@nota.fecha_publicacion}: " unless @nota.fecha_publicacion.blank? %>
+						<%- unless @nota.fecha_publicacion.blank? -%>
+							<div class="label">
+								<%= "#{@nota.fecha_publicacion}: "%>
+							</div>
+						<% end %>
 						<%= @nota.titulo.to_s[0..100] %>
 					</b>
 					<%- unless @nota.imagen.blank? -%>
