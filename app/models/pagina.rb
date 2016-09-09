@@ -98,8 +98,8 @@ class Pagina < ActiveRecord::Base
     dir_url = URI.parse dir_url
     agente = Mechanize.new
     # Importante para los tiempos
-    # agente.open_timeout = 1
-    # agente.read_timeout = 5
+      agente.open_timeout = 10
+      agente.read_timeout = 10
     begin
       return agente.get(dir_url)
     rescue Exception => ex
