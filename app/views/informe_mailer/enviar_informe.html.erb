@@ -27,39 +27,40 @@
 				<% if resumenes_final.count > 0 %>
 					<p><i><%= tema.nombre %></i></p>
 					<div style="text-align:justify; background-color: #eee;border-radius: 5px;">
-					<% resumenes_final.each_with_index do |resumen, i| %>
-						<% if resumen.resumen_id.nil? %>
+						<p>
+							<% resumenes_final.each_with_index do |resumen, i| %>
+								<% if resumen.resumen_id.nil? %>
 							
-								<% resumen.orden = i+1 if resumen.orden.nil? %>
+										<% resumen.orden = i+1 if resumen.orden.nil? %>
 
-						    <b><%= resumen.vocero.nombre %></b>
-								<%= resumen.contenido if resumen.contenido %>
-								<% if resumen.notas %>
-									<% resumen.notas.each_with_index do |nota,i| %>
-										<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-										<%= "-" if i < resumen.notas.count-1 %>
-									<% end %>
-								<% end %>
-
-
-								<% sub_resumenes = resumen.resumenes %>
-								<% sub_resumenes.each do |sub_resumen| %>
-									/
-									<b><%= sub_resumen.vocero.nombre if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </b>
-									<%= sub_resumen.contenido %>
-
-									<% if sub_resumen.notas %>
-										<% sub_resumen.notas.each_with_index do |nota,i| %>
-											<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
-											<%= "-" if i < sub_resumen.notas.count-1 %>
+								    <b><%= resumen.vocero.nombre %></b>
+										<%= resumen.contenido if resumen.contenido %>
+										<% if resumen.notas %>
+											<% resumen.notas.each_with_index do |nota,i| %>
+												<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+												<%= "-" if i < resumen.notas.count-1 %>
+											<% end %>
 										<% end %>
-									<% end %>
-								<% end %>
 
-							<br>
-							<br>
-						<% end %>
-					<% end %>
+										<% sub_resumenes = resumen.resumenes %>
+										<% sub_resumenes.each do |sub_resumen| %>
+											/
+											<b><%= sub_resumen.vocero.nombre if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </b>
+											<%= sub_resumen.contenido %>
+
+											<% if sub_resumen.notas %>
+												<% sub_resumen.notas.each_with_index do |nota,i| %>
+													<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+													<%= "-" if i < sub_resumen.notas.count-1 %>
+												<% end %>
+											<% end %>
+										<% end %>
+
+									<br>
+									<br>
+								<% end %>
+							<% end %>
+						</p>
 					</div>
 				<% end %>
 			<% end %>
