@@ -27,7 +27,7 @@
 				<% if resumenes_final.count > 0 %>
 					<p><i><%= tema.nombre %></i></p>
 					<div style="text-align:justify; background-color: #eee;border-radius: 5px;">
-						<p>
+						<p style="padding: 10px;">
 							<% resumenes_final.each_with_index do |resumen, i| %>
 								<% if resumen.resumen_id.nil? %>
 							
@@ -56,8 +56,6 @@
 											<% end %>
 										<% end %>
 
-									<br>
-									<br>
 								<% end %>
 							<% end %>
 						</p>
