@@ -11,9 +11,11 @@ class InformeMailer < ActionMailer::Base
     @asuntos = @asuntos.joins(:informes_asuntos).where('informes_asuntos.informe_id' => @informe.id).order(:orden)
     @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
     @informes_asuntos = InformeAsunto.where(:informe_id => @informe.id).order(:orden)    
+    
+    @correos = Usuario.all.collect{|u| u.correo}
 
-    titulo = "#{@informe.fecha} #{@informe.titulo}"
-    mail(to: 'development.cne@gmail.com', subject: titulo)
+    titulo = "#{@informe.fecha.strftime("%d-%m-%Y")} #{@informe.titulo}"
+    mail(to: @correos, subject: titulo)
     
   end
 end

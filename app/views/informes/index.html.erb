@@ -53,6 +53,7 @@
   </tbody>
 </table>
 <% end %>
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_informe_path,
-            :class => 'btn btn-primary' %>
+
+<% if @informes.count > 10 %>
+	<%= link_to 'Nuevo Informe','informes/paso1', :class => 'btn btn-primary' %>
+<% end %>
