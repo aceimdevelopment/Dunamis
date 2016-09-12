@@ -406,10 +406,10 @@ class InformesController < ApplicationController
   # DELETE /informes/1.json
   def destroy
     @informe = Informe.find(params[:id])
-    @informe.resumenes.each { |resumen| resumen.destroy}
-    
-    @informe.informes_temas.each{|it| it.destroy}
-    @informe.informes_asuntos.each{|ia| ia.destroy}
+    # @informe.resumenes.each { |resumen| resumen.destroy}
+    # 
+    # @informe.informes_temas.each{|it| it.destroy}
+    # @informe.informes_asuntos.each{|ia| ia.destroy}
     
     flash[:success] = 'Informe completamente eliminado del sistema.' if @informe.destroy
     
