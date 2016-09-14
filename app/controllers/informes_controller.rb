@@ -40,13 +40,14 @@ class InformesController < ApplicationController
       @resumenes_con_tema = @informe.resumenes
       temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
     else
-      @resumenes_con_tema = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+      @resumenes_con_tema = Resumen.creados_hoy.sin_informe.con_tema.order("vocero_id DESC")
       temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
 
     end
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @titulo = "Asignar Tema"
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema.order("vocero_id DESC")
+    @voceros_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema.group(:vocero_id).order("vocero_id DESC")
     @tema = Tema.new
   end
   
@@ -63,7 +64,7 @@ class InformesController < ApplicationController
     end    
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)    
     @titulo = "Unir Resumenes"
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema.order("vocero_id DESC")
     @tema = Tema.new
   end
 
@@ -74,12 +75,13 @@ class InformesController < ApplicationController
       @resumenes = @informe.resumenes
       temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
     else
-      @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+      @resumenes = Resumen.creados_hoy.sin_informe.con_tema.order("vocero_id DESC")
       temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     end
     @titulo = "Fusionar Resumenes"
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema.order("vocero_id DESC")
+    @tema = Tema.new
   end
 
 
@@ -91,13 +93,13 @@ class InformesController < ApplicationController
       @resumenes = @informe.resumenes
       temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
     else
-      @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+      @resumenes = Resumen.creados_hoy.sin_informe.con_tema.order("vocero_id DESC")
       temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     end
     
     @titulo = "Ordenar resúmenes dentro de los Temas"
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
-    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema#.order("vocero_id DESC")
+    @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema.order("vocero_id DESC")
     @tema = Tema.new
   end
   
