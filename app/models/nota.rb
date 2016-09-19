@@ -30,6 +30,19 @@ class Nota < ActiveRecord::Base
       return true
     end 
   end
+
+  # def validar
+  #   tipo_nota_id = 2
+  #   if save
+  #     return true
+  #   else
+  #     return false
+  #   end
+  # end
+  # 
+  # def invalidar
+  #   
+  # end
   
   def self.creadas_hoy_no_incluidas (resumen_id)
     creadas_hoy.where("resumen_id != ? OR resumen_id IS ?", resumen_id, nil)    

@@ -74,13 +74,11 @@
 									<td><b><%= nota.website.nombre %></b></td>
 									<td><%= link_to nota.titulo.truncate(100, :omission => "..."), nota.url, {:class => 'btn btn-link contenido_nota', :target => '_blank'} %></td>
 									<td>
-										<%= link_to ("/wizard/desagregar_nota?website_name=#{nota.website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-danger btn-mini"} do %>
-											<%= content_tag(:i, "", class: "icon-arrow-down icon-black") %>
+										<%= link_to ("/wizard/desagregar_nota?website_name=#{nota.website.nombre}&nota_id=#{nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-info btn-mini"} do %>
+											<%= content_tag(:i, "", class: "icon-arrow-down icon-white") %>
 										<% end %>
 										|
-										<%= link_to "/wizard/invalidar/#{nota.id}?resumen_id=#{@resumen.id}&action_name=#{action_name}", :resumen_id => @resumen.id, :class => 'btn btn-mini btn-danger', :data => {:confirm => '¿Esta Seguro?', :method => 'delete'} do %>
-										<%= content_tag(:i, "", class: "icon-trash icon-black") %>
-										<% end %>
+										<%= link_descartar_nota nota.id, @resumen.id %>
 
 									</td>
 								</tr>

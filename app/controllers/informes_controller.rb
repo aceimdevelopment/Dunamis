@@ -58,7 +58,7 @@ class InformesController < ApplicationController
       @resumenes = @informe.resumenes
       temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
     else
-      @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
+      @resumenes = Resumen.creados_hoy.sin_informe.con_tema.order("vocero_id DESC")
       temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
 
     end    
@@ -93,7 +93,7 @@ class InformesController < ApplicationController
       @resumenes = @informe.resumenes
       temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
     else
-      @resumenes = Resumen.creados_hoy.sin_informe.con_tema.order("vocero_id DESC")
+      @resumenes = Resumen.creados_hoy.sin_informe.con_tema#.order("vocero_id DESC")
       temas_id = Tema.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL', Date.today)
     end
     

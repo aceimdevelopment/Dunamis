@@ -1,4 +1,32 @@
 
+
+	<div id="tema_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">Nuevo Tema</h3>
+	  </div>
+	  <div class="modal-body">
+	    <%= render :partial => 'temas/form' %>
+
+	  </div>
+	</div>
+
+<!-- Javascript -->
+
+<script type="text/javascript" charset="utf-8">
+	function ver_agregar(resumen){
+		document.getElementById("ver_"+resumen).style.display="inline-block";
+		return false;
+
+	}
+	
+</script>
+
+
+
+
+
+
   <div class="thumbnail">
 		<div class="caption">
 			<h3>Resúmenes Pendientes por Asignar Tema</h3>

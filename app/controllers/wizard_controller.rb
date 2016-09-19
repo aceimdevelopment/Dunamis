@@ -143,7 +143,13 @@ class WizardController < ApplicationController
   def invalidar
     nota = Nota.find params[:id]
     nota.tipo_nota_id = 1
-    if nota.save
+    
+    resumen = nota.resumen
+    
+    nota.resumen_id = nil
+    resumen.contenido = resumen.contenido.sub("| #{nota.titulo}",'') 
+    
+    if nota.save and resumen.save
       flash[:notice] = "Nota descartada" 
     else
       flash[:alert] = "La nota no pudo ser descartada"
