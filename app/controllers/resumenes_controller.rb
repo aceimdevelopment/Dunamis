@@ -264,12 +264,16 @@ class ResumenesController < ApplicationController
   # DELETE /resumenes/1.json
   def destroy
     @resumen = Resumen.find(params[:id])
-    @resumen.notas.each {|nota| nota.tipo_nota_id = 1; nota.save}
+    @resumen.notas.each do |nota| 
+      nota.tipo_nota_id = 1
+      nota.resumen_id = nil      
+      nota.save
+    end
     
     @resumen.destroy
     
     respond_to do |format|
-      url = params[:url] ? params[:url] : paso2_wizard_path
+      url = params[:url] ? params[:url] : "/wizard/paso2"
       format.html { redirect_to url }
       format.json { head :no_content }
     end

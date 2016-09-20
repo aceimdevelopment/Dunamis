@@ -1,3 +1,31 @@
 
 <%# link_to 'Candidatos', candidates_path, :class => 'btn btn-success' %>
 <%# link_to 'Notas', {:action => 'paso1', :controller => 'wizard'}, :class => 'btn btn-success' %>
+
+
+<ol class='example default vertical'>
+  <li>First</li>
+  <li>Second</li>
+  <li>Third</li>
+</ol>
+
+
+<%= javascript_include_tag "jquery-sortable" %>
+
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$("ol.example").sortable();
+	});
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
