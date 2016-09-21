@@ -19,6 +19,61 @@ class InformesController < ApplicationController
     redirect_to :action => url
     
   end
+
+  def agregar_vocero
+    @resumenes_vocero = Resumen.creados_hoy.sin_informe.where(vocero_id: params[:id])
+    resultado = ""
+    total_exitos = 0
+    total_errores = 0
+    @resumenes_vocero.each do |resumen|
+      resumen.tema_id = params[:resumen][:tema_id]
+      resumen.informe_id = params[:informe_id] if params[:informe_id]
+
+      if resumen.save
+        total_exitos += 1
+      else
+        total_errores +=1
+      end
+
+    end
+
+    
+    flash[:success] = "#{total_exitos} resumen(es) agregado(s)." if total_exitos > 0
+    flash[:alert] = "#{total_exitos} Disculpe, #{total_errores} resumen(es) no fue posible agregarlo(s)." if total_errores > 0
+      
+    url = params[:accion]
+    url +=  "/#{params[:informe_id]}" if params[:informe_id]
+    redirect_to :action => url
+
+  end
+
+  def desagregar_vocero
+
+    @resumenes_vocero = Resumen.creados_hoy.sin_informe.where(vocero_id: params[:id])
+    resultado = ""
+    total_exitos = 0
+    total_errores = 0
+    @resumenes_vocero.each do |resumen|
+      resumen.tema_id = nil
+      resumen.informe_id = nil
+
+      if resumen.save
+        total_exitos += 1
+      else
+        total_errores +=1
+      end
+
+    end
+    
+    flash[:success] = "#{total_exitos} resumen(es) desagregado(s)." if total_exitos > 0
+    flash[:alert] = "#{total_exitos} Disculpe, #{total_errores} resumen(es) no fue posible desagregarlo(s)." if total_errores > 0
+      
+    url = params[:accion]
+    url +=  "/#{params[:informe_id]}" if params[:informe_id]
+    redirect_to :action => 'paso1'
+    
+  end
+
   
   def desagregar_resumen
     resumen = Resumen.find(params[:id])
@@ -47,7 +102,8 @@ class InformesController < ApplicationController
     @asuntos = Asunto.joins(:temas).where('temas.id' => temas_id).group(:id)
     @titulo = "Asignar Tema"
     @resumenes_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema.order("vocero_id DESC")
-    @voceros_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema.group(:vocero_id).order("vocero_id DESC")
+    @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ? and resumenes.informe_id IS NULL and tema_id IS NULL', Date.today).order('nombre ASC').group(:vocero_id)
+    @voceros_sin_tema = Resumen.creados_hoy.sin_informe.sin_tema.group(:vocero_id).order("vocero_id ASC")
     @tema = Tema.new
   end
   

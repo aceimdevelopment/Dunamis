@@ -24,60 +24,71 @@
 
 
 
+<% @voceros.each do |vocero| %>
+	<%= vocero.nombre %>
+<% end %>
 
 
 
-  <div class="thumbnail">
-		<div class="caption">
-			<h3>Resúmenes Pendientes por Asignar Tema</h3>
+
+
+<div class="thumbnail">
+	<div class="caption">
+		<h3>Voceros Pendientes por Asignar Tema</h3>			
+	</div>
+	<% if @voceros.count.count > 0 %>
+		<div class ="well contenido_scroll_200">
+			<table border="0" cellspacing="5" cellpadding="5">
+				<tr><td>
+					<ul>
+						<li style = 'display:block;'>
+
+							<% @voceros.each do |vocero| %>
+								<%- resumen = vocero.resumenes.creados_hoy.first -%>
+								<div id="<%= resumen.id %>" class="well" style="padding: 5px; margin: 5px;">
+										<p>
+											<b>
+												<%= vocero.nombre %>
+											</b>
+												<%= "#{resumen.contenido[0..100]}..." %>
+										</p>
+
+										<%= form_for resumen, :url=>{:action => "agregar_vocero/#{vocero.id}", :accion => action_name} do |f| %>
+											<%= hidden_field_tag "informe_id", @informe.id if @informe %>
+											<div style = "text-align: right;background-color: #ddd; padding: 5px;">
+												<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
+
+												<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
+													<i class="icon-plus icon-white"></i>
+													<i class="icon-th-list icon-white"></i>
+												<% end %>
+
+												<%= button_tag(:id => "ver_#{resumen.id}", :class => 'btn btn-success btn-mini',:style => 'display: none;', :type => 'submit') do %>
+													<i class="icon-arrow-up icon-white"></i>
+												<% end %>
+											</div>
+										<% end %>
+								</div>	
+							<% end %><!-- each resumenes  -->
+						</li>
+					</ul>
+				</td></tr>
+			</table>
 		</div>
-		<% if @resumenes_sin_tema.count > 0 %>
-			<div class ="well contenido_scroll_200">
-				<table border="0" cellspacing="5" cellpadding="5">
-					<tr><td>
-						<ul>
-							<li style = 'display:block;'>
+	<% end %>
 
-								<% @resumenes_sin_tema.each do |resumen| %>
-									<div id="<%= resumen.id %>" class="well" style="padding: 5px; margin: 5px;">
+</div>
 
-											<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-											<%= form_for resumen, :url=>{:action => "agregar/#{resumen.id}", :accion => action_name} do |f| %>
-												<%= hidden_field_tag "informe_id", @informe.id if @informe %>
-												<div style = "text-align: right;background-color: #ddd; padding: 5px;">
-													<%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %>
-
-													<%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %>
-														<i class="icon-plus icon-white"></i>
-														<i class="icon-th-list icon-white"></i>
-													<% end %>
-
-													<%= button_tag(:id => "ver_#{resumen.id}", :class => 'btn btn-success btn-mini',:style => 'display: none;', :type => 'submit') do %>
-														<i class="icon-arrow-up icon-white"></i>
-													<% end %>
-												</div>
-											<% end %>
-									</div>	
-								<% end %><!-- each resumenes  -->
-							</li>
-						</ul>
-					</td></tr>
-				</table>
-			</div>
-		<% end %>
+<div id="tema_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Nuevo Tema</h3>
+  </div>
+  <div class="modal-body">
+    <%= render :partial => 'temas/form' %>
 
   </div>
-
-	<div id="tema_nuevo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-header">
-	    <button type="button" class="close fade" data-dismiss="modal" aria-hidden="true">×</button>
-	    <h3 id="myModalLabel">Nuevo Tema</h3>
-	  </div>
-	  <div class="modal-body">
-	    <%= render :partial => 'temas/form' %>
-
-	  </div>
-	</div>
+</div>
 
 <!-- Javascript -->
 
