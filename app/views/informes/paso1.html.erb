@@ -1,6 +1,6 @@
 <% if (@resumenes_sin_tema.count <= 0 and @resumenes_con_tema.count > 0) %>
 	<div class='well'>
-		<% @accion = "paso2" %>
+		<% @accion = "paso2b" %>
 		<% @accion += "/#{@informe.id}" if @informe%>
 		<%= link_to "Siguiente", {:action => @accion}, :class => 'btn btn-primary pull-right', :style=>"text-align: right;", :type => "submit"%>
 	</div>
