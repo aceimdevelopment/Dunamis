@@ -16,6 +16,7 @@
 //= require twitter/bootstrap
 //= require select2
 //= require select2_locale_es
+//= require jquery-sortable
 //= require_self
 //= require_tree .
 

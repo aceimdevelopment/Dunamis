@@ -220,7 +220,7 @@ class WizardController < ApplicationController
     resumen = Resumen.find params[:resumen_id]
     if (nota and resumen)
       nota.resumen_id =resumen.id
-      resumen.contenido = "#{resumen.contenido} | #{nota.titulo}"
+      resumen.contenido = "#{nota.titulo}"
       session[:website_activa] = params[:website_name]
       if nota.save and resumen.save
         flash[:success] = "#{resumen.notas.count} Notas Agregadas a este resumen" 

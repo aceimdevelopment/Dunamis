@@ -49,71 +49,88 @@
 								<span>
 							<% end %>							
 						</div>
-						<div class='well well-small'>
-							<ul>
-								<% temas.each do |tema| %>
-									<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id).order(:orden) %>
-									<% if resumenes_final.count > 0 %> 
-										<li style = 'display:block;'>
-											<div class = 'asunto_tema_titulo'><strong><em><%= tema.nombre %></em></strong>
-												<% if (controller_name=="informes" and action_name=="paso4") and  temas.count > 1 %>
-													<% @informe_tema = tema.informes_temas.where(:informe_id => @informe.id).first %>
-													<span class="label label-success pull-right">
-														<%= number_field_tag "orden_temas[#{tema.id}]", (@informe_tema.orden if @informe_tema) , :in => 1...temas.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
-													<span>
-												<% end %>
-											</div>
-											<div class="well well-small">
-												<%# resumenes_final.order("titulo ASC") %>
-												<% resumenes_final.each_with_index do |resumen, i| %>
-													<% if resumen.resumen_id.nil? %>
-														<div class="well justificar" style="padding: 2px; margin: 2px;">
-															<% resumen.orden = i+1 if resumen.orden.nil? %>
-															<% if @informe %>
-																<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}/#{@informe.id}", @informe.id %>
-															<% else %>
-																<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-															<% end %>
-															<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso2b" or action_name=="paso3") %>
-																<% case action_name %>
-																<% when "paso2" %>
+							<% @paso4 = "ordenable" if action_name.eql? "paso4"  %>
+						<ol class="default vertical well well-small <%= @paso4 %>" >
+							<% temas.each do |tema| %>
+								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id).order(:orden) %>
+								<% if resumenes_final.count > 0 %> 
+									<li>
+										<div class = 'asunto_tema_titulo'><strong><em><%= tema.nombre %></em></strong>
+											<% if (controller_name=="informes" and action_name=="paso4") and  temas.count > 1 %>
+												<% @informe_tema = tema.informes_temas.where(:informe_id => @informe.id).first %>
+												<span class="label label-success pull-right">
+													<%= number_field_tag "orden_temas[#{tema.id}]", (@informe_tema.orden if @informe_tema) , :in => 1...temas.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
+												<span>
+											<% end %>
+										</div>
+											<%# resumenes_final.order("titulo ASC") %>
+											<% @paso3 = "ordenable" if action_name.eql? "paso3"  %>
+										<ol class="default vertical well well-small <%= @paso3 %>" >
+											<% resumenes_final.each_with_index do |resumen, i| %>
+												<% if resumen.resumen_id.nil? %>
+													<li class="justificar" style="padding: 2px; margin: 2px;">
+														<% resumen.orden = i+1 if resumen.orden.nil? %>
+														<% if @informe %>
+															<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}/#{@informe.id}", @informe.id %>
+														<% else %>
+															<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
+														<% end %>
+														<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso2b" or action_name=="paso3") %>
+															<% case action_name %>
+															<% when "paso2" %>
+																<div class = 'pull-right'>
+																	<span class="label label-success">
+																		<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
+																		<%= @proceso if @proceso %>
+																	</span>
+																</div>
+															<% when "paso2b" %>
+																<div class = 'pull-right'>
+																	<span class="label label-success">
+																		<%= check_box_tag "fusionar_resumenes_ids[]", resumen.id %>
+																		<%= @proceso if @proceso %>
+																	</span>
+																</div>
+															<% when "paso3" %>
+																<%- if (resumenes_final.count > 1) %>
 																	<div class = 'pull-right'>
 																		<span class="label label-success">
-																			<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
+																			<%= number_field_tag "orden_resumenes[#{resumen.id}]", resumen.orden, :in => 1...resumenes_final.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
 																			<%= @proceso if @proceso %>
 																		</span>
-																	</div>
-																<% when "paso2b" %>
-																	<div class = 'pull-right'>
-																		<span class="label label-success">
-																			<%= check_box_tag "fusionar_resumenes_ids[]", resumen.id %>
-																			<%= @proceso if @proceso %>
-																		</span>
-																	</div>
-																<% when "paso3" %>
-																	<%- if (resumenes_final.count > 1) %>
-																		<div class = 'pull-right'>
-																			<span class="label label-success">
-																				<%= number_field_tag "orden_resumenes[#{resumen.id}]", resumen.orden, :in => 1...resumenes_final.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
-																				<%= @proceso if @proceso %>
-																			</span>
-																		</div>																		
-																	<% end %>
+																	</div>																		
 																<% end %>
-
 															<% end %>
-														</div>
-													<% end %>
+														<% end %>
+													</li>
 												<% end %>
-											</div>
-										</li>
-									<% end %>	
-								<% end %>
-							</ul>
-						</div>	
+											<% end %>
+										</ol>
+									</li>
+								<% end %>	
+							<% end %>
+						</ol>
 					<% end %>
 				<% end %>
 				
 			<% end %>
-
 </div>
+
+<form action="save_order.php" method="POST" style="display: none;">
+<input name="new_order" value="" type="hidden" />
+</form>
+
+
+<%= javascript_include_tag "jquery-sortable" %>
+
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		$("ol.ordenable").sortable({
+			function ($item, container, _super, event) {
+			  $item.removeClass(container.group.options.draggedClass).removeAttr("style")
+			  $("body").removeClass(container.group.options.bodyClass)
+			}
+					}
+			);
+	});
+</script>
