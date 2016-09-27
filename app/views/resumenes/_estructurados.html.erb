@@ -126,11 +126,19 @@
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
 		$("ol.ordenable").sortable({
-			function ($item, container, _super, event) {
-			  $item.removeClass(container.group.options.draggedClass).removeAttr("style")
-			  $("body").removeClass(container.group.options.bodyClass)
-			}
-					}
+		    stop: function(event, ui) {
+		        var data = "";
+
+		        $(".ordenable li").each(function(i, el){
+		            var p = $(el).text().toLowerCase().replace(" ", "_");
+		            data += p+"="+$(el).index()+",";
+		        });
+						alert(data);
+
+		        $("form > [action='/informes/ordenar_temas']").val(data.slice(0, -1));
+		        $("form").submit();
+		    }
+		}
 			);
 	});
 </script>

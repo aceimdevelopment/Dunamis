@@ -199,7 +199,7 @@ class WizardController < ApplicationController
     resumen = Resumen.find params[:resumen_id]
     if (nota and resumen)
       nota.resumen_id = nil
-      resumen.contenido = resumen.contenido.sub("| #{nota.titulo}",'') 
+      resumen.contenido = resumen.contenido.sub("#{nota.titulo}",'') unless resumen.contenido.blank?
       session[:website_activa] = params[:website_name]
       if nota.save and resumen.save
         flash[:notice] = " Nota desagregada del resumen actual" 
@@ -220,7 +220,14 @@ class WizardController < ApplicationController
     resumen = Resumen.find params[:resumen_id]
     if (nota and resumen)
       nota.resumen_id =resumen.id
-      resumen.contenido = "#{nota.titulo}"
+      if params[:nota]
+        if resumen.contenido.blank?
+            resumen.contenido = "#{nota.titulo}"
+        else
+            resumen.contenido += ". #{nota.titulo}"          
+        end 
+      end
+
       session[:website_activa] = params[:website_name]
       if nota.save and resumen.save
         flash[:success] = "#{resumen.notas.count} Notas Agregadas a este resumen" 

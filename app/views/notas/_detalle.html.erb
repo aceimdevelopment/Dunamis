@@ -17,9 +17,13 @@
 					
 					<% if action_name.eql? 'paso3' %>
 					|
-						<%= link_to ("/wizard/agregar_nota?website_name=#{@website.nombre}&nota_id=#{@nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-success btn-mini"} do %>
+						<%= link_to ("/wizard/agregar_nota?website_name=#{@website.nombre}&nota_id=#{@nota.id}&resumen_id=#{@resumen.id}&nota=true"), {:class => "btn btn-success btn-mini"} do %>
 							<%= content_tag(:i, "", class: "icon-arrow-up icon-white") %> 
 						<% end %>
+						|
+							<%= link_to ("/wizard/agregar_nota?website_name=#{@website.nombre}&nota_id=#{@nota.id}&resumen_id=#{@resumen.id}"), {:class => "btn btn-info btn-mini"} do %>
+								<%= content_tag(:i, "", class: "icon-arrow-up icon-white") %> 
+							<% end %>						
 					<% end %>
 
 		      <b class="media-heading">

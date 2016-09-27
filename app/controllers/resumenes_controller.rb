@@ -265,7 +265,7 @@ class ResumenesController < ApplicationController
   def destroy
     @resumen = Resumen.find(params[:id])
     @resumen.notas.each do |nota| 
-      nota.tipo_nota_id = 1
+      nota.tipo_nota_id = 2
       nota.resumen_id = nil      
       nota.save
     end

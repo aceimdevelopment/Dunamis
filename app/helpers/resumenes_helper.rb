@@ -51,7 +51,7 @@ module ResumenesHelper
     						<i class='icon-trash icon-black'></i>
     </a> | "
     mensaje += "<a href='/wizard/paso3/#{resumen.id}#{url_val}' class='btn btn-mini btn-info'>
-    						<i class='icon-edit icon-black'></i>
+    						<i class='icon-edit icon-white'></i>
     </a>"
     return mensaje
   end
