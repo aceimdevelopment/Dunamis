@@ -21,24 +21,26 @@ module ResumenesHelper
     # resumen.contenido = resumen.contenido[1..resumen.contenido.size-1]
     # mensaje += "<strong><#{resumen.contenido[1]}></strong>"
     if resumen.contenido
-      resumen.contenido = resumen.contenido.squeeze
-      if resumen.contenido[0].eql? '"' or resumen.contenido[1].eql? '"'
-        resumen.contenido = ": " + resumen.contenido
-      else
-        resumen.contenido = ", " + resumen.contenido
-      end
-      mensaje += resumen.contenido
+      # resumen.contenido = resumen.contenido#.squeeze
+      # if resumen.contenido[0].eql? '"' or resumen.contenido[1].eql? '"'
+      #   resumen.contenido = ": " + resumen.contenido
+      # else
+      #   resumen.contenido = ", " + resumen.contenido
+      # end
+      mensaje += " "+resumen.contenido
     end
     mensaje += enlaces_notas resumen 
 		sub_resumenes = resumen.resumenes
 		sub_resumenes.each do |sub_resumen|
 		  if action_name.eql? "paso2"
 		    mensaje += link_to "separar", {:controller => 'resumenes', :action => "separar", :id => sub_resumen.id, :informe_id => informe_id},  {:class => 'btn btn-mini'} 	#if (not informe_id.nil? and action_name!="paso4")
+		    mensaje += " "
 	    else
 	      mensaje += " / "
       end
+      mensaje += crud_botones sub_resumen, url unless (controller_name=="informes" and (action_name=="paso4" or action_name=="show"))
 			mensaje +=  "<strong> / #{sub_resumen.vocero.nombre}: </strong>" if not resumen.vocero_id.eql? sub_resumen.vocero_id
-			mensaje += sub_resumen.contenido
+			mensaje += " "+sub_resumen.contenido
 			mensaje += enlaces_notas sub_resumen
 		end		
 		

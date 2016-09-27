@@ -255,6 +255,7 @@ class InformesController < ApplicationController
   end
   
   def ordenar_temas
+    1/0
     # informe_id = session[:compilando_informe_id]
     informe_id = params[:id]
     orden_temas = params[:orden_temas]

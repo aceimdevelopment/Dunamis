@@ -21,7 +21,7 @@
 				<%# @informe.id %>
 				<%# @informe.resumenes.count %>
 				<% if ((action_name=="paso2" or action_name=="paso3" or action_name=="paso2b" or action_name=="paso4" or action_name=="paso5")  and controller_name=="informes") %>
-					<div class= 'derecha'>
+					<div style="padding-left:20px;position: fixed;">
 						<% if action_name=="paso2b" %>
 							<%= submit_tag @proceso.humanize, {:class => "btn btn-success", 'data-confirm'=> 'Este proceso es irreversible, ¿Está Seguro?'} %>
 						<% else %>
@@ -70,37 +70,27 @@
 												<% if resumen.resumen_id.nil? %>
 													<li class="justificar" style="padding: 2px; margin: 2px;">
 														<% resumen.orden = i+1 if resumen.orden.nil? %>
+														<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso2b" or action_name=="paso3") %>
+															<label class='label label-success '>
+
+																<% case action_name %>
+																<% when "paso2" %>
+																	<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
+																<% when "paso2b" %>
+																	<%= check_box_tag "fusionar_resumenes_ids[]", resumen.id %>
+																<% when "paso3" %>
+																	<%= number_field_tag "orden_resumenes[#{resumen.id}]", resumen.orden, :in => 1...resumenes_final.count+1, :class => 'span1', :style => 'margin-bottom: 0' if (resumenes_final.count > 1)%>																
+																<% end %>
+																<%= @proceso if @proceso %>
+															</label>
+															|
+														<% end %>
+
+
 														<% if @informe %>
 															<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}/#{@informe.id}", @informe.id %>
 														<% else %>
 															<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-														<% end %>
-														<% if controller_name=="informes" and (action_name=="paso2" or action_name=="paso2b" or action_name=="paso3") %>
-															<% case action_name %>
-															<% when "paso2" %>
-																<div class = 'pull-right'>
-																	<span class="label label-success">
-																		<%= check_box_tag "unir_resumenes_ids[]", resumen.id %>
-																		<%= @proceso if @proceso %>
-																	</span>
-																</div>
-															<% when "paso2b" %>
-																<div class = 'pull-right'>
-																	<span class="label label-success">
-																		<%= check_box_tag "fusionar_resumenes_ids[]", resumen.id %>
-																		<%= @proceso if @proceso %>
-																	</span>
-																</div>
-															<% when "paso3" %>
-																<%- if (resumenes_final.count > 1) %>
-																	<div class = 'pull-right'>
-																		<span class="label label-success">
-																			<%= number_field_tag "orden_resumenes[#{resumen.id}]", resumen.orden, :in => 1...resumenes_final.count+1, :class => 'span1', :style => 'margin-bottom: 0' %>
-																			<%= @proceso if @proceso %>
-																		</span>
-																	</div>																		
-																<% end %>
-															<% end %>
 														<% end %>
 													</li>
 												<% end %>
@@ -116,29 +106,23 @@
 			<% end %>
 </div>
 
-<form action="save_order.php" method="POST" style="display: none;">
+<form action="ordenar_temas" method="POST">
 <input name="new_order" value="" type="hidden" />
 </form>
 
 
 <%= javascript_include_tag "jquery-sortable" %>
 
+
+
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
 		$("ol.ordenable").sortable({
-		    stop: function(event, ui) {
-		        var data = "";
-
+		    serialize: function() {
 		        $(".ordenable li").each(function(i, el){
-		            var p = $(el).text().toLowerCase().replace(" ", "_");
-		            data += p+"="+$(el).index()+",";
+		            $(el).find("input").val($(el).index()+1);
 		        });
-						alert(data);
-
-		        $("form > [action='/informes/ordenar_temas']").val(data.slice(0, -1));
-		        $("form").submit();
 		    }
-		}
-			);
+		});
 	});
 </script>

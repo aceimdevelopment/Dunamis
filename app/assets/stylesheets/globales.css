@@ -22,6 +22,26 @@
 	max-height:150px; 
 }
 
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.ordenable li.placeholder {
+  position: relative;
+  /** More li styles **/
+}
+ol.ordenable li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}
+
+
 #banner {
 	background-image: url('header.png');
 	background-size: contain;
