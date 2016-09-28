@@ -48,19 +48,20 @@
 					<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
 					<% if temas.count > 0 %>
 						</br>
-
 						<dd><u><%= asunto.nombre %></u>
 								<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
 								<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>								
 						</dd>
-
 						</br>
 						<ul>
 							<% temas.each do |tema| %>
 								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
 								<% if resumenes_final.count > 0 %> 
 									<li style = 'display:block;'>
-										<dd style = 'background-color: #ddd;'><strong><em><%= tema.nombre %></em></strong></dd>
+										
+										<% unless tema.nombre.eql? "General" or tema.nombre.eql? "Gestión"  %>
+											<dd style = 'background-color: #ddd;'><strong><em><%= tema.nombre %></em></strong></dd>
+										<% end %>
 										<div class="well well-small">
 											<% resumenes_final.each_with_index do |resumen, i| %>
 												<% if resumen.resumen_id.nil? %>

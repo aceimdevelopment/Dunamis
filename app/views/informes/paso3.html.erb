@@ -1,14 +1,8 @@
-<% if @informe %>
-	<% @siguiente = "paso4/#{@informe.id}" %>
-<% else %>
-	<% @siguiente = "paso3_guardar" %>
-<% end %>
-<div class='well'>
-	<%= link_to t('.back', :default => t("helpers.links.back")), {:action => "paso2"}, :class => 'btn pull-left'%>
-	<%= link_to "Siguiente", {:action => @siguiente}, :class => 'btn btn-primary pull-right' %>	
+<div id="mensaje2" class="alert alert-success" style="display:none;">
+	<a class="close" data-dismiss="alert">×</a>
+	<p><strong>Notas resumens ordenadas</strong></p>
 </div>
 
-
-
+<%= render :partial => 'wizard'%>
 <%= render :partial => 'resumenes/estructurados' %>
 <%= render :partial => 'resumenes_sin_tema' if @resumenes_sin_tema.count > 0 %>

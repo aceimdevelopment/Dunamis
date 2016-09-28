@@ -155,7 +155,7 @@ class ResumenesController < ApplicationController
       resumen.resumen_id = nil
       resumen.informe_id = params[:informe_id] if params[:informe_id]
       if resumen.save
-        flash[:info] = "Separación completada" 
+        flash[:success] = "Separación completada con éxito" 
       else
         flash[:alert] = "Error al intentar separar los resumenes" 
       end
@@ -247,16 +247,21 @@ class ResumenesController < ApplicationController
       resumen = Resumen.find k
       resumen.orden = v
       unless resumen.save
-        flash[:alert] = "No se Pudo ordenar el tema"
+        @mensaje = "No se pudo ordenar el tema"
       else
-        flash[:success] = "Notas ordenadas de correctamente"
+        @mensaje = "Notas ordenadas correctamente"
       end
     end
-    if params[:id]
-      redirect_to :controller => 'informes', :action => "paso3/#{params[:id]}"
-    else
-      redirect_to :controller => 'informes', :action => "paso3"
-    end
+
+    # respond_to do |format|
+    #   format.html {redirect_to :back}
+    #   format.js
+    # end
+    # if params[:id]
+    #   redirect_to :controller => 'informes', :action => "paso3/#{params[:id]}"
+    # else
+    #   redirect_to :controller => 'informes', :action => "paso3"
+    # end
     
   end
   

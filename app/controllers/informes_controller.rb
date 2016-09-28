@@ -108,6 +108,9 @@ class InformesController < ApplicationController
   end
   
   def paso2 #unir Resumenes
+
+    @controlador = 'resumenes'
+    @proceso = 'unir'
     
     if params[:id]
       @informe = Informe.where(:id => params[:id]).limit(1).first
@@ -126,6 +129,8 @@ class InformesController < ApplicationController
   end
 
   def paso2b #unir Resumenes
+		@controlador = 'resumenes'
+		@proceso = 'fusionar'
 
     if params[:id]
       @informe = Informe.where(:id => params[:id]).limit(1).first
@@ -145,7 +150,9 @@ class InformesController < ApplicationController
 
   
   def paso3 #Ordenar entre temas
-    
+	  @controlador = 'resumenes'
+		@proceso = 'ordenar'
+    @remote = true
     if params[:id]
       @informe = Informe.where(:id => params[:id]).limit(1).first
       @resumenes = @informe.resumenes
@@ -175,6 +182,9 @@ class InformesController < ApplicationController
 
   def paso4
 
+		@controlador = 'informes'
+		@proceso = 'ordenar_temas'
+		
     @informe = Informe.where(:id => params[:id]).limit(1).first
     @resumenes = @informe.resumenes
     temas_id = Tema.joins(:resumenes).where('resumenes.informe_id = ?', @informe.id)
@@ -189,6 +199,9 @@ class InformesController < ApplicationController
 
 
   def paso5
+		@controlador = 'informes'
+		@proceso = 'ordenar_asuntos'
+
     @informe = Informe.where(:id => params[:id]).limit(1).first
 
     @informes_temas = InformeTema.where(:informe_id => @informe.id).order(:orden)
@@ -255,7 +268,6 @@ class InformesController < ApplicationController
   end
   
   def ordenar_temas
-    1/0
     # informe_id = session[:compilando_informe_id]
     informe_id = params[:id]
     orden_temas = params[:orden_temas]

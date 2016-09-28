@@ -5,6 +5,10 @@
 <% when "paso2b" %>
 	<% @atras = "paso1" %>
 	<% @siguiente = "paso2" %>
+<% when "paso3" %>
+	<% @atras = "paso2" %>
+	<% @siguiente = "paso3_guardar" %>
+	<% @siguiente = "paso4" if @informe %>
 <% when "paso4" %>
 	<% @atras = "paso3" %>
 	<% @siguiente = "paso5" %>
@@ -15,6 +19,7 @@
 
 <% @atras += "/#{@informe.id}" if @informe %>
 <% @siguiente += "/#{@informe.id}" if @informe %>
+
 <div class='well'>
 	<%= link_to t('.back', :default => t("helpers.links.back")), {:action => @atras}, :class => 'btn pull-left'%>
 	<%= link_to "Siguiente", {:action => @siguiente}, :class => 'btn btn-primary pull-right' %>	
