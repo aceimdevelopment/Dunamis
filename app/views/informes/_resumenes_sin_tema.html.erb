@@ -35,7 +35,7 @@
 
 					<tr> <%= form_for resumen, url: {action: "agregar_vocero/#{vocero.id}", accion: action_name}, html: { class: 'form-inline'} do |f| %> <%= hidden_field_tag "informe_id", @informe.id if @informe %>
 
- <td> <label> <b> <%= vocero.nombre %>: </b> <%= "#{resumen.contenido[0..200]}..." %> </label> </td> <td> <%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2 input-small', :style => 'width: 50%;', :onchange => "return ver_agregar(#{resumen.id})"} %> </td> <td> <%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %> <i class="icon-plus icon-white"></i> <i class="icon-th-list icon-white"></i> <% end %>
+ <td> <label> <b> <%= vocero.nombre %>: </b> <%= "#{resumen.contenido[0..200]}..." %> </label> </td> <td> <%= f.grouped_collection_select :tema_id, Asunto.all, :temas, :nombre, :id, :nombre, {:prompt => "Tema"}, {:id => "tema_#{resumen.id}", :required => true, :class => 'selects2 input-small', :onchange => "return ver_agregar(#{resumen.id})"} %> </td> <td> <%= link_to (""), { :role => 'button',:class => 'btn btn-success btn-mini', :data => {:toggle => 'modal'}, :onclick => "return $('#tema_nuevo').modal();"} do %> <i class="icon-plus icon-white"></i> <i class="icon-th-list icon-white"></i> <% end %>
 
 									<%= button_tag(:id => "ver_#{resumen.id}", :class => 'btn btn-success btn-mini',:style => 'display: none;', :type => 'submit') do %>
 										<i class="icon-arrow-up icon-white"></i>
