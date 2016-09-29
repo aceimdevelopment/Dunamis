@@ -25,7 +25,7 @@
 			<% temas.each do |tema| %>
 				<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
 				<% if resumenes_final.count > 0 %>
-					<% unless tema.nombre.eql? "General" or tema.nombre.eql? "Gestión"  %>				
+					<% unless tema.nombre.eql? "General" or tema.asunto_id.eql? 3 %>
 						<p><i><%= tema.nombre %></i></p>
 					<% end %>
 					<div style="text-align:justify; background-color: #eee;border-radius: 5px;">

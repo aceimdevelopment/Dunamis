@@ -59,7 +59,7 @@
 								<% if resumenes_final.count > 0 %> 
 									<li style = 'display:block;'>
 										
-										<% unless tema.nombre.eql? "General" or tema.nombre.eql? "Gestión"  %>
+										<% unless tema.nombre.eql? "General" or tema.asunto_id.eql? 3 %>
 											<dd style = 'background-color: #ddd;'><strong><em><%= tema.nombre %></em></strong></dd>
 										<% end %>
 										<div class="well well-small">
