@@ -75,7 +75,7 @@ class VocerosController < ApplicationController
     respond_to do |format|
       if @vocero.update_attributes(params[:vocero])
       if params[:controlador]  
-        format.html { redirect_to :controller => params[:controlador], :action => params[:accion], :mensaje => @mensaje, :tipo => @tipo }
+        format.html { redirect_to :controller => params[:controlador], :action => params[:accion], :mensaje => @mensaje, :tipo => @tipo, :vocero_id => @vocero.id }
       else
         format.html { redirect_to @vocero, notice: 'Vocero was successfully updated.' }
       end

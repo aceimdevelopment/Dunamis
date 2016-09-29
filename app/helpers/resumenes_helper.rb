@@ -15,7 +15,7 @@ module ResumenesHelper
       end
       resumen.contenido = contenido
     else
-      vocero = resumen.vocero.nombre if resumen.vocero
+      vocero = resumen.vocero.nombre_descripcion if resumen.vocero
     end
     mensaje += " <strong>#{vocero}</strong>" 
     # resumen.contenido = resumen.contenido[1..resumen.contenido.size-1]
@@ -61,8 +61,9 @@ module ResumenesHelper
    # Agrega enlaces de notas 
   def enlaces_notas resumen
     mensaje = ""
-    if resumen.notas
-			resumen.notas.each_with_index do |nota,i|
+    notas = resumen.notas.order "updated_at DESC"
+    if notas.count > 0
+			notas.each_with_index do |nota,i|
 				mensaje += link_nota nota
 				mensaje += "-" if i < resumen.notas.count-1
 			end

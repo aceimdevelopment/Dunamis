@@ -185,15 +185,16 @@
 	
 	function form_editar_vocero(){
 		
-		var vocero_selected = $("#resumen_vocero_id");
+		var vocero_id = $("#resumen_vocero_id").val();
 
-		// document.getElementById("vocero_nombre").value = vocero_selected.text();
-		
-		// if (vocero_selected.val()==39) {
-		// 	$('#otro_vocero').show('slow');
-		// }
-		
-		document.getElementById("edit_vocero").action="/voceros/update/"+vocero_selected.val();
+		$.getJSON( "/voceros/"+vocero_id+" .json", function( vocero ) {
+			var form = $('form#edit_vocero');
+			form.attr('action',"/voceros/update/"+vocero.id);
+			form.find('#vocero_nombre').val(vocero.nombre);
+			form.find('#vocero_foto').val(vocero.foto);
+			form.find('#vocero_descripcion').val(vocero.descripcion);						
+		 });
+
 		$('#vocero_editar').modal();
 		return false;
 	}

@@ -26,7 +26,7 @@
 
 			<% seleccionada = website.usuario_id.eql?(session[:usuario].id) %>
 
-			<%- @notas = website.notas.creadas_hoy.order('created_at DESC') %>
+			<%- @notas = website.notas.creadas_hoy.order('updated_at DESC') %>
 			<%- @notas = (action_name.eql? 'paso1') ? @notas.sin_resumen : @notas.validas.sin_resumen %>
 
 			<% if @notas.count > 0 %>

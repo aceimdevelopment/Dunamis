@@ -82,7 +82,7 @@ class WizardController < ApplicationController
     end   
       
     # @voceros = Vocero.joins(:resumenes).where('resumenes.created_at >= ?', Date.today)
-    @resumenes = Resumen.creados_hoy.sin_informe.order "updated_at DESC"
+    @resumenes = Resumen.joins(:vocero).where("resumenes.created_at >= ?", Date.today).where("resumenes.informe_id IS ?", nil).order "voceros.nombre ASC, resumenes.created_at DESC"
     @vocero = Vocero.new
     @nota = Nota.new
     @websites = Website.all
