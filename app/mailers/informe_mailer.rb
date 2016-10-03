@@ -1,5 +1,5 @@
 class InformeMailer < ActionMailer::Base
-  default from: "salaseguimiento@gmail.com"
+  default from: "SALA DE SEGUIMIENTO"
   
   def enviar_informe(informe_id)
 
@@ -15,7 +15,7 @@ class InformeMailer < ActionMailer::Base
     @correos = Usuario.all.collect{|u| u.correo}
 
     titulo = "#{@informe.fecha.strftime("%d-%m-%Y")} #{@informe.titulo}"
-    mail(to: @correos, subject: titulo)
+    mail(to: "salaseguimiento@gmail.com", bcc: @correos, subject: titulo)
     
   end
 end

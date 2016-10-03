@@ -1,88 +1,69 @@
-
-		
-	<div class ="well well-small">
-		<div style = "text-align:center;">
-			<p>
-				<strong><%= @informe.autor %></strong>
-				<%# f.text_field :autor, :class => 'text_field span5', :required => true, :style => 'text-align:center;' %>
-			</p>
-			
-			<!-- <strong><h6>Dirección de Seguimiento de la Información Electoral</h6></strong> -->
-			<!-- <strong><h6>AGENDA TEMÁTICA DE MEDIOS</h6></strong> -->
-			<p>
-				<strong><%= @informe.tema %></strong>
-				<%# f.text_field :tema, :class => 'text_field span4', :required => true, :style => 'text-align:center;' %>
-			</p>
-			<p>
-				<strong><%= @informe.fecha.strftime('%A, %d de %B de %Y') %></strong>
-				<%# fecha = @informe.fecha ? @informe.fecha : Date.today %>
-				<!-- <strong><h6><%# fecha.strftime('%A, %d de %B de %Y')%></h6></strong> -->
-				<%# f.date_select :fecha, {:style => "width:60px;"}, {:required => true, :class => 'date_select span2'} %>
-			</p>
-			<strong>
-				<h5 style = "background-color: black; color: white; height:30px; padding-top:10px;">
-					<!-- MONITOREO DE MEDIOS (de 10:00am a 04:00pm) -->
-					<strong><%= @informe.titulo %></strong>
-					<%# f.text_field :titulo, :class => 'text_field span5', :required => true, :style => 'text-align:center;'%>
-					<%# f.text_field :titulo, :value => "MONITOREO DE MEDIOS (de 10:00am a 04:00pm)", :class=> "span5" %> 
-				</h5>
-			</strong>				
-		</div>
-
-		<%= @informe.resumen %>
-    <%# f.text_area :resumen, :class => 'input-block-level', :data => {"spy" => "scroll", "target" => ".navbar"}, :required => true, :style => "height:100px;"%>
-		<%# @resumenes.collect do |r| %>
-			<%# hidden_field_tag "resumenes_ids[]", r.id %> 
-		<%# end %>
-		</br>
-		</br>
+<div style="font-family:Verdana, sans-serif;font-size:11pt">
+	<div style="margin-bottom:0cm;line-height:100%;text-align:center;">
+		<p><b><%= @informe.autor %></b></p>
+		<p><b><%= @informe.tema %></b></p>		
+		<p><b><%= @informe.fecha.strftime('%A, %d de %B de %Y').capitalize %></b></p>		
+		<p style="background-color:rgb(0,0,0);color:white;">
+			<b><%= @informe.titulo %></b>
+		</p>
+		<p style="text-align:justify;"><%= @informe.resumen %></p>
+		<br>
+		<p><b>Panorama Informativo</b></p>		
 	</div>
 
-<div class ="well well-small">
-	<table border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>
-				<% @asuntos.each do |asunto| %>
-					<% temas = asunto.temas %>
+	<% @asuntos.each do |asunto| %>
+	
+		<% temas = asunto.temas %>
+		<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
 
-					<% temas = temas.joins(:informes_temas).where('informes_temas.informe_id' => @informe.id).order(:orden) if (@informes_temas and @informe) %>
-					<% if temas.count > 0 %>
-						</br>
-						<dd><u><%= asunto.nombre %></u>
-								<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
-								<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>								
-						</dd>
-						</br>
-						<ul>
-							<% temas.each do |tema| %>
-								<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
-								<% if resumenes_final.count > 0 %> 
-									<li style = 'display:block;'>
-										
-										<% unless tema.nombre.eql? "General" or tema.asunto_id.eql? 3 %>
-											<dd style = 'background-color: #ddd;'><strong><em><%= tema.nombre %></em></strong></dd>
-										<% end %>
-										<div class="well well-small">
-											<% resumenes_final.each_with_index do |resumen, i| %>
-												<% if resumen.resumen_id.nil? %>
-													<div class="well justificar" style="padding: 5px; margin: 5px; text-align:justify;">
-														<% resumen.orden = i+1 if resumen.orden.nil? %>
-														<% if controller_name %>
-															<%= notas_estructuradas resumen, "/#{controller_name}/#{action_name}" %>
-														<% else %>
-														  <%= notas_estructuradas resumen %>
-														<% end %>
-													</div>
-												<% end %>
-											<% end %>
-										</div>
-									</li>
-								<% end %>
-							<% end %>
-						</ul>
+		<% if temas.count > 0 %>
+			<p><u><%= asunto.nombre %></u></p>
+
+			<% @informe_asunto = asunto.informes_asuntos.where(:informe_id => @informe.id).first %>
+			<% @informe_asunto = @informes_asuntos.where(:asunto_id => asunto.id).limit(1).first %>
+			<% temas.each do |tema| %>
+				<% resumenes_final = @resumenes.where('tema_id = ? AND resumen_id IS NULL', tema.id) %>
+				<% if resumenes_final.count > 0 %>
+					<% unless tema.nombre.eql? "General" or tema.asunto_id.eql? 3 %>
+						<p><i><%= tema.nombre %></i></p>
 					<% end %>
-				<% end %>
-		</td></tr>
-	</table>
-</div>
+					<div style="text-align:justify; background-color: #eee;border-radius: 5px;">
+						<% resumenes_final.each_with_index do |resumen, i| %>
+							<% if resumen.resumen_id.nil? %>
+							
+								<% resumen.orden = i+1 if resumen.orden.nil? %>
+								<p style="padding: 10px;">
+							    <b><%= resumen.vocero.nombre %></b>
+									<%= resumen.contenido if resumen.contenido %>
+									<% if resumen.notas %>
+										<% resumen.notas.each_with_index do |nota,i| %>
+											<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+											<%= "-" if i < resumen.notas.count-1 %>
+										<% end %>
+									<% end %>
 
+									<% sub_resumenes = resumen.resumenes %>
+									<% sub_resumenes.each do |sub_resumen| %>
+										/
+										<b><%= sub_resumen.vocero.nombre if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </b>
+										<%= sub_resumen.contenido %>
+
+										<% if sub_resumen.notas %>
+											<% sub_resumen.notas.each_with_index do |nota,i| %>
+												<%= link_to nota.website.descripcion, nota.url, {:class => 'btn btn-link', :target => '_blank'} %>
+												<%= "-" if i < sub_resumen.notas.count-1 %>
+											<% end %>
+										<% end %>
+									<% end %>
+								</p>
+							<% end #if resumen.resumen_id.nil?%>
+						<% end #each resumenes_final%>
+					</div>
+				<% end %>
+			<% end %>
+
+		<% end %>
+
+	<% end %>
+	
+</div>
