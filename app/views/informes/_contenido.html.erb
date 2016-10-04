@@ -32,8 +32,9 @@
 							<% if resumen.resumen_id.nil? %>
 							
 								<% resumen.orden = i+1 if resumen.orden.nil? %>
+
 								<p style="padding: 10px;">
-							    <b><%= resumen.vocero.nombre %></b>
+							    <b><%= resumen.vocero.nombre_descripcion if resumen.vocero %></b>
 									<%= resumen.contenido if resumen.contenido %>
 									<% if resumen.notas %>
 										<% resumen.notas.each_with_index do |nota,i| %>
@@ -45,7 +46,7 @@
 									<% sub_resumenes = resumen.resumenes %>
 									<% sub_resumenes.each do |sub_resumen| %>
 										/
-										<b><%= sub_resumen.vocero.nombre if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </b>
+										<b><%= sub_resumen.vocero.nombre_descripcion if not resumen.vocero_id.eql? sub_resumen.vocero_id %> </b>
 										<%= sub_resumen.contenido %>
 
 										<% if sub_resumen.notas %>
