@@ -52,15 +52,13 @@ class Pagina < ActiveRecord::Base
           aux = nota_temp[:imagen].attr "src"
           nota_temp[:imagen] = aux.value if aux
         end
-        
-        nota_temp[:imagen] = nil if nota_temp[:imagen].eql? "http://anonymouse.org/images/stop.gif"
       end
 
       nota_temp[:imagen] = nota_temp[:imagen].to_s
       nota_temp[:imagen] = url_limpio nota_temp[:imagen]
       puts "IMAGEN: #{nota_temp[:imagen]}"
       nota_temp[:imagen] = website.url+nota_temp[:imagen] if !nota_temp[:imagen].blank? and !(nota_temp[:imagen].include? website.descripcion)
-
+      nota_temp[:imagen] = nil if nota_temp[:imagen].eql? "http://anonymouse.org/images/stop.gif"
 
       # Gestión de la Fecha de publicación
       fecha_temp = nota_web.search(fecha).first
