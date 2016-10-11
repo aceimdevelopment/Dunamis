@@ -52,6 +52,8 @@ class Pagina < ActiveRecord::Base
           aux = nota_temp[:imagen].attr "src"
           nota_temp[:imagen] = aux.value if aux
         end
+        
+        nota_temp[:imagen] = nil if nota_temp[:imagen].eql? "http://anonymouse.org/images/stop.gif"
       end
 
       nota_temp[:imagen] = nota_temp[:imagen].to_s
