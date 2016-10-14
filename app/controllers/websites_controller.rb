@@ -27,7 +27,7 @@ class WebsitesController < ApplicationController
       @websites = Website.all
       total = ""
       @websites.each do |web|
-        total += "#{we.descripcion}: #{web.importar_notas_website_2}"
+        total += "#{web.descripcion}: #{web.importar_notas_website_2}"
       end
       flash[:success] = "Resultado: #{total}."
     end
