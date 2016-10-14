@@ -1,3 +1,4 @@
+# encoding: utf-8
 class WebsitesController < ApplicationController
   # GET /websites
   # GET /websites.json
@@ -9,6 +10,29 @@ class WebsitesController < ApplicationController
       format.html # index.html.erb
       format.json { render json: @websites }
     end
+  end
+
+  def barrer
+    if params[:id]
+      @website = Website.find(params[:id])
+      total = @website.importar_notas_website_2
+
+      if total.is_a? Numeric and total > 0 
+        flash[:success] = "Barrido exitoso de #{total} página(s)."
+      else
+        flash[:alert] = "No se cargaron nuevas páginas"
+      end
+      
+    else
+      @websites = Website.all
+      total = ""
+      @websites.each do |web|
+        total += "#{we.descripcion}: #{web.importar_notas_website_2}"
+      end
+      flash[:success] = "Resultado: #{total}."
+    end
+            
+    redirect_to :back
   end
 
   # GET /websites/1

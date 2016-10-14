@@ -1,6 +1,15 @@
 <%- paso1 = action_name.eql? 'paso1' -%>
-<p class= 'label label-info'><b><%= @total_notas %> <%= "Nota".pluralize(@total_notas) %> <%= "Disponible".pluralize(@total_notas) %></b>
+<p class= 'center label label-info'><b><%= @total_notas %> <%= "Nota".pluralize(@total_notas) %> <%= "Disponible".pluralize(@total_notas) %></b>
 		<%= render :partial => 'resumenes/filtro_lista' if not paso1%>
+
+		<% if paso1 %>
+			<b class='tooltip-btn' data_toggle='tooltip' title= "Puede ser un proceso lento" >
+				<%= link_to "", {:href => "/websites/barrer", :class => 'btn btn-mini'}, { :role => 'button', :data => {:toggle => 'modal'}} do %>
+					Barrer Todos Los Sitios
+					<%= content_tag(:i, "", class: "icon-refresh") %>
+				<% end %>
+			</b>
+		<% end %>
 </p>
 <%= render :partial => 'panel_website' if paso1 %>
 
@@ -15,6 +24,13 @@
 					<th id="<%= website.nombre %>_titulo" style="background:skyblue; <%= 'display:none;' unless seleccionada %>">
 						<%= website.nombre %>
 						<span class="badge badge-inverse"><%= contador_notas %></span>
+						<% if action_name.eql? "paso1" and controller_name.eql? "wizard" %>
+							<b class='tooltip-btn' data_toggle='tooltip' title= "Barrer <%= website.descripcion %> " >
+								<%= link_to "", {:href => "/websites/barrer/#{website.id}", :class => 'btn btn-mini'}, { :role => 'button', :data => {:toggle => 'modal'}} do %>
+									<%= content_tag(:i, "", class: "icon-refresh") %>
+								<% end %>
+							</b>
+						<% end %>
 					</th>
 				<% end %>
 			

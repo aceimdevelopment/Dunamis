@@ -58,7 +58,15 @@ class Website < ActiveRecord::Base
   end
 
   def importar_notas_website_2
-    paginas.each{|pagina|pagina.importar_notas}
+    total = 0
+    begin
+      paginas.each do |pagina|
+        total = pagina.importar_notas
+      end
+      return total
+    rescue Exception => ex
+      return ex
+    end
   end
 
   def importar_notas_website 

@@ -83,7 +83,7 @@ class Pagina < ActiveRecord::Base
     puts "Total de Notas a Cargar: #{notas_web.count}"
     puts "Total de Notas Cargadas: #{notas_cargadas}"
     puts "".center(100,"=")
-  
+    return notas_cargadas
   end
   
   def limpio text

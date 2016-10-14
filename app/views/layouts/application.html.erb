@@ -21,10 +21,9 @@
 	<%= render 'layouts/sesion' unless session[:usuario] %>
 
 		<%= render 'layouts/messages' %>
-		<div class="container">
-			<%= yield %>			
-		</div>
-
+			<div class="container">
+				<%= yield %>			
+			</div>
 
 </body>
 </html>

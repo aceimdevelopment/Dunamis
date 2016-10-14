@@ -76,6 +76,10 @@ Dunamis::Application.routes.draw do
   end
 
   resources :websites do
+    collection do
+      get 'barrer'
+    end
+
     resources :paginas
   end
 

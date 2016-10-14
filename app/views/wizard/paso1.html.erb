@@ -2,10 +2,11 @@
 <% unless session[:website_selecionada] %>
 	<%= render :partial => 'seleccionar_website' %>	
 <% else %>
+	
 	<div >
-	<%= render :partial => 'resumenes/filtro_lista'%>	
+		<%= render :partial => 'resumenes/filtro_lista'%>	
 	</div>
-  	
+
 	<%= form_tag(:action => "#{action_name}_guardar") do %>
 
 		<% if action_name == "paso1" %>
@@ -16,12 +17,16 @@
 						<%= content_tag(:i, "", class: "icon-list icon-white") %>
 					<% end %>
 				</b>
-				||
+				|
 				<%= submit_tag "Guardar Selección", :id => "submit", :name => "submit", :class => "btn btn-primary", :disabled => false, :disable_with => "Enviando..." %>	
 			</div>
 		<% end %>
-	
-		<%= render :partial => 'notas/lista' %>
+
+		<br></br>
+		<div class= 'container-fluid'>
+			<%= render :partial => 'notas/lista' %>			
+		</div>
+
 	
 	<% end %>
 <% end %>

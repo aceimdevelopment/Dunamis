@@ -30,7 +30,13 @@ class WizardController < ApplicationController
         end
         flash[:success] = "Selección guardada"
       end
+    else
+      Website.all.each do |w|
+        w.usuario_id = nil if w.usuario_id.eql? session[:usuario].id
+        w.save
+      end
     end
+    
     session[:website_selecionada] = true
     
     # if params[:url]
@@ -43,6 +49,7 @@ class WizardController < ApplicationController
   def paso1
     # Website.limpiar_usuario session[:usuario].id if session[:website_selecionada].blank?
     @websites = Website.all
+    #@websites.each{|web| web.importar_notas_website_2}
     @websites_disponibles = Website.all.delete_if {|w| (not (w.usuario_id.eql? session[:usuario].id) and not (w.usuario_id.nil?)) }
     @titulo = "Paso 1: Seleccionar Notas"
     #manejo de website activa mediante el uso de la sesion
