@@ -28,6 +28,7 @@ Dunamis::Application.routes.draw do
       get 'paso2'
       get 'unir'
       get 'separar'
+      get 'descargar'      
     end
     resources :notas
     collection do

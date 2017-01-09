@@ -24,6 +24,31 @@ class Pdf
     return file_name if @book.write file_name
     
   end
+
+
+  def self.descargar_resumenes_excel resumenes
+    require 'spreadsheet'
+    @book = Spreadsheet::Workbook.new
+    @sheet = @book.create_worksheet :name => "reporte de resumenes"
+    # @sheet = @book.create_worksheet :name => "reporte de alertas#{DateTime.now.strftime('%d %m %Y %h')}"
+    # data = %w{ID FECHA CONTENIDO RESUMEN ASUNTO TEMA TIPO VOCERO}
+    data = %w{ID FECHA CONTENIDO VOCERO ASUNTO TEMA}    
+    @sheet.row(0).concat data
+    
+    data = []
+    
+    resumenes.each_with_index do |resumen,i|
+      aux_vocero = resumen.vocero ? resumen.vocero.nombre_descripcion : ""
+      
+      aux_asunto = (resumen.tema and resumen.tema.asunto) ? resumen.tema.asunto.nombre : ""
+      aux_tema = resumen.tema ? resumen.tema.nombre : ""
+      aux = {"ID" => resumen.id, "FECHA" => resumen.created_at, "CONTENIDO" => resumen.contenido, "VOCERO" => aux_vocero, "ASUNTO" => aux_asunto, "TEMA" => aux_tema}
+      @sheet.row(i+1).concat aux.values
+    end
+    file_name = "Reporte_resumenes_#{DateTime.now.strftime('%d_%m_%Y_%H_%M')}.xls"
+    return file_name if @book.write file_name
+    
+  end
   
   
   def self.generar_reporte_candidatos_excel fecha_inicial, fecha_final

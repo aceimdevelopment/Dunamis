@@ -3,8 +3,20 @@ class ResumenesController < ApplicationController
   # GET /resumenes
   # GET /resumenes.json
   before_filter :filtro_logueado  
+  
+  def descargar
+
+    ids = params[:id]
+    resumenes = Resumen.where(:id => ids.split(","))
+    file_name = Pdf.descargar_resumenes_excel(resumenes)
+    send_file file_name, :type => "application/vnd.ms-excel", :filename => "reporte_resumenes.xls", :stream => false
+
+    File.delete(file_name)
+  end  
+  
+  
   def index
-    @resumenes = Resumen.all
+    @resumenes = Resumen.order('created_at DESC')
 
     respond_to do |format|
       format.html # index.html.erb

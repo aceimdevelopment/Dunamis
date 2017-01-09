@@ -1,0 +1,25 @@
+<div class='label label-info' style='float:right;'>
+	<a id="text" style='color:white;'></a>
+	<%= text_field_tag 'filtro', nil ,{:onkeyup => "return filtrar()", :placeholder=>"Filtrar...", :autofocus => true}%>
+</div>
+<script type="text/javascript" charset="utf-8">
+	function filtrar() {
+		var filtro = document.getElementById("filtro").value.toLowerCase();
+		var total_mach = 0
+		ids = ""
+		$("tr.filtrables").each(function(){
+			var temp = $(this).text().toLowerCase();
+			if (temp.match(filtro) == null) {
+				$(this).hide();
+			}else {
+				$(this).show();
+				total_mach += 1;
+				ids = ids + $(this).find('td').first().text() + ",";
+			}
+			
+		});
+		$("#text").text(total_mach+" coincidencias (Descargar Excel)");
+		$("#text").attr('href', "/resumenes/descargar?id="+ids)
+		return false;
+		}
+</script>
